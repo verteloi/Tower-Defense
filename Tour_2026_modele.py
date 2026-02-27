@@ -2,24 +2,24 @@
 '''
 Jeu de defense de Tours_2026
  deux patrons de parcours
- les niveaux incremente la difficulté
+ les niveaux incremente la difficultï¿½
     en augmentant la force des creeps
     en augmentant le nombre de creeps
 
-les Tours_2026 peuvent bénéficier d'ameliorations
-   en terme de morts occasionées
+les Tours_2026 peuvent bï¿½nï¿½ficier d'ameliorations
+   en terme de morts occasionï¿½es
    et d'argent disponible
 '''
 
 import random
 from helper import *
 class Parcours():
-    def __init__(self):
+    def __init__(self, parcourChoisi):
+        self.parcourChoisi=parcourChoisi
         self.noeuds1=[[0,10],
                      [50,10],
                      [50,80],
                      [100,80]]
-        
         self.noeuds2=[[0,10],
                      [20,10],
                      [20,40],
@@ -45,8 +45,22 @@ class Tour():
         self.parent=parent
         self.pos=pos
         self.cible=[0,0]
-        self.vitesse=5
-        self.force=1
+        self.niveauTour = 1
+
+
+class Tour_de_glace(Tour):
+    def __init__(self,parent):
+        Tour.__init__(self,parent)
+        self.vitesseTir = 1
+        self.force = 1
+        self.cout = 125
+
+class Projectile():
+    def __init__(self, parent, pos, cible):
+        self.parent = parent
+        self.pos = pos
+        self.cible = cible
+             
 
 class Creep():
     def __init__(self,parent):
@@ -68,13 +82,21 @@ class Creep():
         self.vitesse=2
         self.force=10
 
+class Creep_lent(Creep):
+    def __init__(self,parent):
+        Tour.__init__(self,parent)
+        self.degat = 5
+        self.vitesse = 1
+        self.argent = 50
+        self.vie = 100
+
     def bouge(self):
-        # 1. Vérifier si on a fini le parcours (Sécurité)
+        # 1. Vï¿½rifier si on a fini le parcours (Sï¿½curitï¿½)
         if self.cible >= len(self.parent.parcours.noeuds):
             self.perdre_vie_joueur()
             return
 
-        # 2. Identifier le point de destination immédiat
+        # 2. Identifier le point de destination immï¿½diat
         cible_x, cible_y = self.parent.parcours.noeuds[self.cible]
         curr_x, curr_y = self.pos
 
@@ -84,11 +106,11 @@ class Creep():
 
         # 4. Logique de mouvement
         if dist_restante <= self.vitesse:
-            # CAS A : On dépasse ou on atteint la cible ce tour-ci
+            # CAS A : On dï¿½passe ou on atteint la cible ce tour-ci
             self.pos = [cible_x, cible_y]  # On se "snap" exactement sur le point
             self.cible += 1  # On passe au prochain noeud
 
-            # Si c'était le dernier noeud, on blesse le joueur
+            # Si c'ï¿½tait le dernier noeud, on blesse le joueur
             if self.cible >= len(self.parent.parcours.noeuds):
                 self.perdre_vie_joueur()
         else:
@@ -103,19 +125,20 @@ class Creep():
         print("une vie de moins")
         
 class Nivo():
-    def __init__(self,parent):
-        self.parent=parent
-        self.parcours = Parcours()
-        self.densiteCreep=3
-        self.tours=[]
-        self.creeps=[]
-        self.creepsEnCours=[]
+    def __init__(self,parent, numero):
+        self.parent = parent
+        self.wave_active = True
+        self.parcours = parent.parcourChoisi
+        self.densiteCreep = 3
+        self.creeps = [[1, 1, 1, 1, 1],[1, 1, 1, 2, 2, 2]]
+        self.creepsEnCours = []
+        self.numeroVague = numero
         self.creeCreep()
         
     def ajouteTour(self,pos):
         self.tours.append(Tour(self,pos))
         
-        
+    # dependament quel numero de self.creep creer creep de ce type
     def creeCreep(self):
         for i in range(self.parent.creepparnivo):
             self.creeps.append(Creep(self))
@@ -126,7 +149,7 @@ class Nivo():
             c=self.creeps[0]
             if self.creepsEnCours:
                 cPrecedent=self.creepsEnCours[0]
-                if cPrecedent.cible==1: # onverifie si le dernier creep parti est assez loin seulement s'il est sur le même tronçon
+                if cPrecedent.cible==1: # onverifie si le dernier creep parti est assez loin seulement s'il est sur le mï¿½me tronï¿½on
                     if cPrecedent.pos[c.axe]>c.pos[c.axe]+c.parent.densiteCreep:
                         ajoute=1
             else:
@@ -144,19 +167,37 @@ class Nivo():
     def setTour(self,pos):
         print("NIVO",pos)
         self.tours.append(Tour(self,pos))
+
+class Partie():
+    def __init__(self, parent, parcour):
+        self.parent=parent
+        self.vie = 100
+        self.cash = 500
+        self.nivo = 0
+        self.score = 0
+        self.nivoActif = None
+        self.listeTourEnJeu = []
+        self.parcourChoisi = Parcours(self, parcour)
+
+    def demarrerVague(self):
+        self.nivo = self.nivo + 1
+        self.nivoActif = Nivo(self, self.nivo)
+
         
 class Modele():
     def __init__(self, parent):
-        self.parent=parent
-        self.vie=20
-        self.cash=0
-        self.creepparnivo=12
-        self.creepforce=5
-        self.nivo=0
+        self.parent = parent
+        self.partieCourante = None
+        self.parcourChoisi = 0
+        self.difficulteChoisi = 0
+        self.previewTours = [Tour_de_glace(self, (0,0))]
         
     def demarrePartie(self):
-        self.nivo=self.nivo+1
-        self.nivoActif=Nivo(self)
+        self.partieCourante = Partie(self.parcourChoisi)
+
+    def parcourCliquer(self, numero):
+        self.parcourChoisi=numero
+
     def setTour(self,pos):
         print("MODELE",pos)
         self.nivoActif.setTour(pos)
