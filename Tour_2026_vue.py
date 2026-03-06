@@ -22,8 +22,8 @@ class Vue():
 
     def afficheModele(self):
         pos = []
-        # On assume que nivoActif est initialisé au moment de l'affichage
-        for i in self.parent.modele.nivoActif.parcours.noeuds:
+        # On assume que nivoActif est initialisï¿½ au moment de l'affichage
+        for i in self.parent.modele.partieCourante.parcourChoisi.noeuds:
             pos.append(i[0] * 5)
             pos.append(i[1] * 5)
         self.canevas.create_line(pos, width=2, fill="black", tags=("chemin",))
@@ -33,16 +33,16 @@ class Vue():
         self.canevas.delete("tour")
         self.canevas.delete("bombe")
 
-        # Logique originale préservée (via nivoActif)
-        for i in self.parent.modele.nivoActif.creepsEnCours:
+        # Logique originale prï¿½servï¿½e (via nivoActif)
+        for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
             x1 = i.pos[0] * 5 - 3
             y1 = i.pos[1] * 5 - 3
             x2 = i.pos[0] * 5 + 3
             y2 = i.pos[1] * 5 + 3
             self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
 
-        # Logique originale préservée (via nivoActif)
-        for i in self.parent.modele.nivoActif.tours:
+        # Logique originale prï¿½servï¿½e (via nivoActif)
+        for i in self.parent.modele.partieCourante.listeTourEnJeu:
             x1 = i.pos[0] * 5 - 3
             y1 = i.pos[1] * 5 - 5
             x2 = i.pos[0] * 5 + 3
