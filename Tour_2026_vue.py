@@ -20,7 +20,7 @@ class Vue():
         b = tk.Button(self.root, text="Demarrer", command=self.parent.demarrePartie)
         b.pack()
         self.canevas = tk.Canvas(self.root, width=self.width, height=self.hight) 
-        #self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
+        self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
         self.canevas.bind("<Button-1>", self.getPosTour)
         self.canevas.pack()
         #sidebar try
@@ -39,7 +39,7 @@ class Vue():
         for i in self.parent.modele.partieCourante.parcourChoisi.noeuds:
             pos.append(i[0] * (self.width/100))
             pos.append(i[1] * (self.hight/100))
-        self.canevas.create_line(pos, width=2, fill="black", tags=("chemin",))  # ------ on n'a pas besoin de la ligne noire
+        #self.canevas.create_line(pos, width=2, fill="black", tags=("chemin",))  # ------ on n'a pas besoin de la ligne noire
 
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
@@ -55,11 +55,10 @@ class Vue():
             self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
 
         # Logique originale pr�serv�e (via nivoActif)
-        for i in self.parent.modele.partieCourante.listeTourEnJeu:
-            x1 = i.pos[0] * (self.width/100) - 3
-            y1 = i.pos[1] * (self.hight/100) - 5
-            x2 = i.pos[0] * (self.width/100) + 3
-            y2 = i.pos[1] * (self.hight/100) + 5
+        for i in self.parent.modele.partieCourante.toursEnJeu:
+            x1 = i.pos[0] * 5 - 10
+            y1 = i.pos[1] * 5 - 10
+            x2 = i.pos[0] * 5 + 10
+            y2 = i.pos[1] * 5 + 10
             # print("LOCtour",i.pos,x1,y1,x2,y2)
             self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))
-
