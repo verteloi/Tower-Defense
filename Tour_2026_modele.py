@@ -20,25 +20,25 @@ class Parcours():
                      [50,10],
                      [50,80],
                      [100,80]]
-        self.noeuds2=[[0,10],
-                     [20,10],
-                     [20,40],
-                     [50,40],
+        self.noeuds2=[[0,30],
+                     [40,30],
                      [50,20],
-                     [80,20],
-                     [80,60],
-                     [30,60],
-                     [30,80],
-                     [100,80]]
-        self.noeuds = [[0, 10],
-                       [20, 40],
-                       [50, 40],
-                       [50, 20],
-                       [80, 20],
-                       [80, 60],
-                       [30, 60],
-                       [30, 80],
-                       [100, 80]]
+                     [90,20],
+                     [90,50],
+                     [20,50],
+                     [20,90],
+                     [50,90],
+                     [60,70],
+                     [100,70]]
+        self.noeuds = [[0, 20],
+                       [20, 48], 
+                       [51, 48],
+                       [51, 27],
+                       [84, 27],
+                       [84, 70],
+                       [30, 70],
+                       [30, 91],
+                       [100, 91]]
 
 class Tour():
     def __init__(self,parent,pos):
@@ -48,12 +48,37 @@ class Tour():
         self.niveauTour = 1
 
 
-class Tour_de_glace(Tour):
+class Tour_glace(Tour):
     def __init__(self, parent, pos):
         Tour.__init__(self, parent, pos)
         self.vitesseTir = 1
         self.force = 1
-        self.cout = 125
+        self.cout = 250
+        self.effet = "ralentir"
+
+class Tour_poison(Tour):
+    def __init__(self, parent, pos):
+        Tour.__init__(self, parent, pos)
+        self.vitesseTir = 1
+        self.force = 1
+        self.cout = 250
+        self.effet = "poison"  
+
+class Tour_laser(Tour):
+    def __init__(self, parent, pos):
+        Tour.__init__(self, parent, pos)
+        self.vitesseTir = 1
+        self.force = 1
+        self.cout = 300
+        self.effet = "none"
+
+class Tour_classique(Tour):
+    def __init__(self, parent, pos):
+        Tour.__init__(self, parent, pos)
+        self.vitesseTir = 1
+        self.force = 1
+        self.cout = 150
+        self.effet = "none"
 
 class Projectile():
     def __init__(self, parent, pos, cible):
@@ -105,6 +130,7 @@ class Creep():
             # Si c'�tait le dernier noeud, on blesse le joueur
             if self.cible >= len(self.parent.parcours.noeuds):
                 self.perdre_vie_joueur()
+                
         else:
             # CAS B : On est encore en chemin
             # On calcule l'angle vers la cible
@@ -115,6 +141,7 @@ class Creep():
 
     def perdre_vie_joueur(self):
         print("une vie de moins")
+        
 
 # LENT ET FORT
 class Creep_ours(Creep):
@@ -204,10 +231,6 @@ class Nivo():
         for i in self.creepsEnCours:
             n=n+1
             i.bouge()
-            
-    def setTour(self,pos):
-        print("NIVO",pos)
-        self.tours.append(Tour(self,pos))
 
 class Partie():
     def __init__(self, parent, parcour):
@@ -218,7 +241,7 @@ class Partie():
         self.score = 0
         # a changer pour self.creep dans le boucle creeCreep
         self.creepparnivo = 12
-        self.listeTourEnJeu = []
+        self.toursEnJeu = []
         self.parcourChoisi = Parcours(self, parcour)
         self.nivoActif = Nivo(self, self.nivo)
 
@@ -233,7 +256,7 @@ class Modele():
         self.partieCourante = None
         self.parcourChoisi = 0
         self.difficulteChoisi = 0
-        self.previewTours = [Tour_de_glace(self, (0,0))]
+        self.previewTours = [Tour_glace(self, (0,0))]
         
     def demarrePartie(self):
         self.partieCourante = Partie(self, self.parcourChoisi)
@@ -243,7 +266,7 @@ class Modele():
 
     def setTour(self,pos):
         print("MODELE",pos)
-        self.partieCourante.nivoActif.setTour(pos)
+        self.partieCourante.toursEnJeu.append(Tour(self,pos))
 
 if __name__ == '__main__':
     m=Modele(1)
