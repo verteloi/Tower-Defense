@@ -34,7 +34,7 @@ class Vue():
         self.canevas.delete("bombe")
 
         # Logique originale pr�serv�e (via nivoActif)
-        for i in self.parent.modele.nivoActif.creepsEnCours:
+        for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
             x1 = i.pos[0] * 5 - 3
             y1 = i.pos[1] * 5 - 3
             x2 = i.pos[0] * 5 + 3
@@ -42,7 +42,7 @@ class Vue():
             self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
 
         # Logique originale pr�serv�e (via nivoActif)
-        for i in self.parent.modele.nivoActif.tours:
+        for i in self.parent.modele.partieCourante.listeTourEnJeu:
             x1 = i.pos[0] * 5 - 3
             y1 = i.pos[1] * 5 - 5
             x2 = i.pos[0] * 5 + 3

@@ -82,14 +82,6 @@ class Creep():
         self.vitesse=2
         self.force=10
 
-class Creep_lent(Creep):
-    def __init__(self,parent):
-        Creep.__init__(self,parent)
-        self.degat = 5
-        self.vitesse = 1
-        self.argent = 50
-        self.vie = 100
-
     def bouge(self):
         # 1. V�rifier si on a fini le parcours (S�curit�)
         if self.cible >= len(self.parent.parcours.noeuds):
@@ -123,6 +115,51 @@ class Creep_lent(Creep):
 
     def perdre_vie_joueur(self):
         print("une vie de moins")
+
+# LENT ET FORT
+class Creep_ours(Creep):
+    def __init__(self,parent):
+        Creep.__init__(self,parent)
+        self.degat = 25
+        self.vitesse = 0.5
+        self.argent = 100 * 3
+        self.vie = 1000
+
+# MOYEN VITE ET MOYEN FORT
+class Creep_renard(Creep):
+    def __init__(self,parent):
+        Creep.__init__(self,parent)
+        self.degat = 15
+        self.vitesse = 1.2
+        self.argent = 100 * 2
+        self.vie = 200
+
+# VITE ET FAIBLE
+class Creep_ecureuil(Creep):
+    def __init__(self,parent):
+        Creep.__init__(self,parent)
+        self.degat = 5
+        self.vitesse = 2
+        self.argent = 100 * 1.5
+        self.vie = 50
+
+# VITESSE NORMALE ET VIE NORMALE
+class Creep_moufette(Creep):
+    def __init__(self,parent):
+        Creep.__init__(self,parent)
+        self.degat = 5
+        self.vitesse = 1
+        self.argent = 100
+        self.vie = 100
+
+# VITESSE NORMALE ET VIE NORMALE
+class Creep_porcepique(Creep):
+    def __init__(self,parent):
+        Creep.__init__(self,parent)
+        self.degat = 5
+        self.vitesse = 1
+        self.argent = 100
+        self.vie = 100
         
 class Nivo():
     def __init__(self,parent, numero):
@@ -130,7 +167,11 @@ class Nivo():
         self.wave_active = True
         self.parcours = parent.parcourChoisi
         self.densiteCreep = 3
-        #self.tousLesCreeps = [[Creep_lent(self), Creep_lent(self)],[Creep_lent(self), Creep_lent(self)]]
+        self.tousLesCreeps = [
+            [Creep_ours(self), Creep_ours(self)],      # wave 0
+            [Creep_ours(self), Creep_ours(self)],      # wave 1
+            [Creep_ours(self), Creep_ours(self)],      # wave 2
+        ]
         self.creeps = []
         self.creepsEnCours = []
         self.numeroVague = numero
@@ -141,11 +182,8 @@ class Nivo():
         
     # dependament quel numero de self.creep creer creep de ce type
     def creeCreep(self):
-        for i in range(self.parent.creepparnivo):
-            
-            self.creeps.append(Creep(self))
-            #self.creeps.append(self.tousLesCreeps[i])
-            
+        self.creeps = self.tousLesCreeps[self.numeroVague][:]
+                
     def bougeCreep(self):
         if self.creeps:
             ajoute=0
@@ -205,7 +243,7 @@ class Modele():
 
     def setTour(self,pos):
         print("MODELE",pos)
-        self.nivoActif.setTour(pos)
+        self.partieCourante.nivoActif.setTour(pos)
 
 if __name__ == '__main__':
     m=Modele(1)
