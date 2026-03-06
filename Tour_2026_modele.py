@@ -14,7 +14,7 @@ les Tours_2026 peuvent b�n�ficier d'ameliorations
 import random
 from helper import *
 class Parcours():
-    def __init__(self, parcourChoisi):
+    def __init__(self, parent, parcourChoisi):
         self.parcourChoisi=parcourChoisi
         self.noeuds1=[[0,10],
                      [50,10],
@@ -49,8 +49,8 @@ class Tour():
 
 
 class Tour_de_glace(Tour):
-    def __init__(self,parent):
-        Tour.__init__(self,parent)
+    def __init__(self, parent, pos):
+        Tour.__init__(self, parent, pos)
         self.vitesseTir = 1
         self.force = 1
         self.cout = 125
@@ -84,7 +84,7 @@ class Creep():
 
 class Creep_lent(Creep):
     def __init__(self,parent):
-        Tour.__init__(self,parent)
+        Creep.__init__(self,parent)
         self.degat = 5
         self.vitesse = 1
         self.argent = 50
@@ -130,7 +130,8 @@ class Nivo():
         self.wave_active = True
         self.parcours = parent.parcourChoisi
         self.densiteCreep = 3
-        self.creeps = [[1, 1, 1, 1, 1],[1, 1, 1, 2, 2, 2]]
+        #self.tousLesCreeps = [[Creep_lent(self), Creep_lent(self)],[Creep_lent(self), Creep_lent(self)]]
+        self.creeps = []
         self.creepsEnCours = []
         self.numeroVague = numero
         self.creeCreep()
@@ -141,7 +142,9 @@ class Nivo():
     # dependament quel numero de self.creep creer creep de ce type
     def creeCreep(self):
         for i in range(self.parent.creepparnivo):
+            
             self.creeps.append(Creep(self))
+            #self.creeps.append(self.tousLesCreeps[i])
             
     def bougeCreep(self):
         if self.creeps:
@@ -149,7 +152,7 @@ class Nivo():
             c=self.creeps[0]
             if self.creepsEnCours:
                 cPrecedent=self.creepsEnCours[0]
-                if cPrecedent.cible==1: # onverifie si le dernier creep parti est assez loin seulement s'il est sur le m�me tron�on
+                if cPrecedent.cible==1: # on verifie si le dernier creep parti est assez loin seulement s'il est sur le m�me tron�on
                     if cPrecedent.pos[c.axe]>c.pos[c.axe]+c.parent.densiteCreep:
                         ajoute=1
             else:
@@ -175,9 +178,11 @@ class Partie():
         self.cash = 500
         self.nivo = 0
         self.score = 0
-        self.nivoActif = None
+        # a changer pour self.creep dans le boucle creeCreep
+        self.creepparnivo = 12
         self.listeTourEnJeu = []
         self.parcourChoisi = Parcours(self, parcour)
+        self.nivoActif = Nivo(self, self.nivo)
 
     def demarrerVague(self):
         self.nivo = self.nivo + 1
@@ -193,7 +198,7 @@ class Modele():
         self.previewTours = [Tour_de_glace(self, (0,0))]
         
     def demarrePartie(self):
-        self.partieCourante = Partie(self.parcourChoisi)
+        self.partieCourante = Partie(self, self.parcourChoisi)
 
     def parcourCliquer(self, numero):
         self.parcourChoisi=numero
@@ -205,5 +210,4 @@ class Modele():
 if __name__ == '__main__':
     m=Modele(1)
     m.demarrePartie()
-    print(m.nivo.creeps)
     print("FIN")
