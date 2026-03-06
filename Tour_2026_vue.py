@@ -23,9 +23,16 @@ class Vue():
         #self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
         self.canevas.bind("<Button-1>", self.getPosTour)
         self.canevas.pack()
+        self.parcour1()
         #sidebar try
         #self.sidebar = tk.Frame(self.mainframe, bg="lightblue", width=300, height=self.hight)
         #self.sidebar.grid(column=1,row=0)
+
+    def parcour1(self):
+        #import des images
+        self.img_parcour1 = PhotoImage(file="images\img_parcour1.png")
+        self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
+
 
     def getPosTour(self, evt):
         x = evt.x / 5
