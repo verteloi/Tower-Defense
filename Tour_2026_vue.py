@@ -2,6 +2,10 @@
 from tkinter import *
 import tkinter as tk
 
+#liste de frames pour toutes les affaires que je veux dessiner
+#frames = petites boites
+#fonctionb pour créer chq frame (comme des inits)
+#dictionnaire avedc les fenetres avec les tags
 
 class Vue():
     def __init__(self, parent):
@@ -16,7 +20,7 @@ class Vue():
         b = tk.Button(self.root, text="Demarrer", command=self.parent.demarrePartie)
         b.pack()
         self.canevas = tk.Canvas(self.root, width=self.width, height=self.hight) 
-        self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
+        #self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
         self.canevas.bind("<Button-1>", self.getPosTour)
         self.canevas.pack()
         #sidebar try
@@ -33,9 +37,9 @@ class Vue():
         pos = []
         # On assume que nivoActif est initialis� au moment de l'affichage
         for i in self.parent.modele.partieCourante.parcourChoisi.noeuds:
-            pos.append(i[0] * 5)
-            pos.append(i[1] * 5)
-        #self.canevas.create_line(pos, width=2, fill="black", tags=("chemin",)) ----- # on n'a pas besoin de la ligne noire
+            pos.append(i[0] * (self.width/100))
+            pos.append(i[1] * (self.hight/100))
+        self.canevas.create_line(pos, width=2, fill="black", tags=("chemin",))  # ------ on n'a pas besoin de la ligne noire
 
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
@@ -58,3 +62,4 @@ class Vue():
             y2 = i.pos[1] * (self.hight/100) + 5
             # print("LOCtour",i.pos,x1,y1,x2,y2)
             self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))
+

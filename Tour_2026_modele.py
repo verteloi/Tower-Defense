@@ -16,10 +16,20 @@ from helper import *
 class Parcours():
     def __init__(self, parent, parcourChoisi):
         self.parcourChoisi=parcourChoisi
-        self.noeuds1=[[0,10],
-                     [50,10],
-                     [50,80],
-                     [100,80]]
+        self.noeuds=[[0,50],
+                     [15,50],
+                     [15,20],
+                     [30,20],
+                     [30,80],
+                     [45,80],
+                     [45,30],
+                     [60,30],
+                     [60,70],
+                     [70,70],
+                     [70,40],
+                     [85,40],
+                     [85,60],
+                     [100,60]]
         self.noeuds2=[[0,30],
                      [40,30],
                      [50,20],
@@ -30,7 +40,7 @@ class Parcours():
                      [50,90],
                      [60,70],
                      [100,70]]
-        self.noeuds = [[0, 20],
+        self.noeuds1 = [[0, 20],
                        [20, 48], 
                        [51, 48],
                        [51, 27],
