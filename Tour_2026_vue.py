@@ -16,7 +16,7 @@ class Vue():
         #self.mainframe = tk.Frame(self.root,bg="gray", width=self.width, height=self.hight, cursor="man") # **** main frame
         #import des images
         self.img_parcour1 = PhotoImage(file="images\img_parcour1.png")
-        self.img_parcour2 = PhotoImage(file="images\img_parcour2.png")
+        self.img_parcour2 = PhotoImage(file="images\img_parcour2_resized3.png")
         self.img_parcour3 = PhotoImage(file="images\img_parcour3.png")
         self.img_creep_ours = PhotoImage(file="images\ours.png")
         self.img_creep_por = PhotoImage(file="images\porcupine.png")

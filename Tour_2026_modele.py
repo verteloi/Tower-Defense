@@ -63,8 +63,16 @@ class Tour():
         self.pos=pos
         self.cible=[0,0]
         self.niveauTour = 1
+        self.range = 50
         self.tag=parent.getTagTour()
         print(self.tag)
+
+    def scan():
+        print("dans scan")
+        for creep in self.parent.nivoActif.creeps:
+            if creep.pos[0] > self.pos[0]:
+                print ("tirer")
+
 
 
 class Tour_glace(Tour):
@@ -258,6 +266,14 @@ class Nivo():
         for i in self.creepsEnCours:
             n=n+1
             i.bouge()
+    
+    def tourScan(self):
+        print("dans toursScan")
+        if self.parent.toursEnJeu and self.creeps:
+            print("dans le if")
+            for i in self.parent.toursEnJeu:
+                i.scan()
+
 
 class Partie():
     def __init__(self, parent, parcour):
