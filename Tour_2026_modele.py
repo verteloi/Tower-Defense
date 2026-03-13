@@ -56,6 +56,8 @@ class Tour():
         self.pos=pos
         self.cible=[0,0]
         self.niveauTour = 1
+        self.tag=parent.getTagTour()
+        print(self.tag)
 
 
 class Tour_glace(Tour):
@@ -258,8 +260,9 @@ class Partie():
         self.nivo = 0
         self.score = 0
         self.tagCreep = 0
-        # a changer pour self.creep dans le boucle creeCreep
-        self.creepparnivo = 12
+        self.tagTours = 0
+        self.dictCreeps = {}
+        self.dictTours = {}
         self.toursEnJeu = []
         self.tousLesCreeps = [
             [1, 1],      # wave 0 - ours, ours
@@ -276,6 +279,14 @@ class Partie():
     def getTagCreep(self):
         self.tagCreep = self.tagCreep + 1
         return "creep_"+str(self.tagCreep)
+    
+    def getTagTour(self):
+        self.tagTours = self.tagTours + 1
+        return "tour_"+str(self.tagTours)
+    
+    def setTour(self,pos):
+        print("MODELE",pos)
+        self.toursEnJeu.append(Tour(self,pos))
 
         
 class Modele():
@@ -284,7 +295,6 @@ class Modele():
         self.partieCourante = None
         self.parcourChoisi = 0
         self.difficulteChoisi = 0
-        self.previewTours = [Tour_glace(self, (0,0))]
         
     def demarrePartie(self):
         self.partieCourante = Partie(self, self.parcourChoisi)
@@ -292,9 +302,7 @@ class Modele():
     def parcourCliquer(self, numero):
         self.parcourChoisi=numero
 
-    def setTour(self,pos):
-        print("MODELE",pos)
-        self.partieCourante.toursEnJeu.append(Tour(self,pos))
+
 
 
 

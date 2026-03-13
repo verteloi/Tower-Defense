@@ -27,7 +27,7 @@ class Controleur():
             self.vue.root.after(self.delai, self.continuePartie)
 
     def setTour(self, pos):
-        self.modele.setTour(pos)
+        self.modele.partieCourante.setTour(pos)
 
 
 if __name__ == '__main__':
