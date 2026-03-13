@@ -55,7 +55,7 @@ class Vue():
             self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
 
         # Logique originale pr�serv�e (via nivoActif)
-        for i in self.parent.modele.partieCourante.toursEnJeu:
+        for i in self.parent.modele.partieCourante.toursEnJeu.values():
             x1 = i.pos[0] * 5 - 10
             y1 = i.pos[1] * 5 - 10
             x2 = i.pos[0] * 5 + 10

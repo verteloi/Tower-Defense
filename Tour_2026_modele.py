@@ -262,8 +262,7 @@ class Partie():
         self.tagCreep = 0
         self.tagTours = 0
         self.dictCreeps = {}
-        self.dictTours = {}
-        self.toursEnJeu = []
+        self.toursEnJeu = {}
         self.tousLesCreeps = [
             [1, 1],      # wave 0 - ours, ours
             [2, 2],      # wave 1 - renard, renard
@@ -286,7 +285,8 @@ class Partie():
     
     def setTour(self,pos):
         print("MODELE",pos)
-        self.toursEnJeu.append(Tour(self,pos))
+        tour=Tour(self,pos)
+        self.toursEnJeu[tour.tag] = tour
 
         
 class Modele():
