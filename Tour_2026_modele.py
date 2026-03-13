@@ -67,9 +67,8 @@ class Tour():
         self.tag=parent.getTagTour()
         print(self.tag)
 
-    def scan():
-        print("dans scan")
-        for creep in self.parent.nivoActif.creeps:
+    def scan(self):
+        for creep in self.parent.nivoActif.creepsEnCours:
             if creep.pos[0] > self.pos[0]:
                 print ("tirer")
 
@@ -271,10 +270,8 @@ class Nivo():
             i.bouge()
     
     def tourScan(self):
-        print("dans toursScan")
-        if self.parent.toursEnJeu and self.creeps:
-            print("dans le")
-            for i in self.parent.toursEnJeu:
+        if self.parent.toursEnJeu and self.creepsEnCours:
+            for i in self.parent.toursEnJeu.values():
                 i.scan()
 
 
