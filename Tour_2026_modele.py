@@ -40,7 +40,7 @@ class Parcours():
                      [50,90],
                      [60,70],
                      [100,70]]
-        self.noeuds = [[0, 20],
+        self.noeuds0 = [[0, 20],
                        [20, 48], 
                        [51, 48],
                        [51, 27],
@@ -49,6 +49,13 @@ class Parcours():
                        [30, 70],
                        [30, 91],
                        [100, 91]]
+        match parcourChoisi:
+            case 0:
+                self.noeuds=self.noeuds0
+            case 1:
+                self.noeuds=self.noeuds1
+            case 2:
+                self.noeuds=self.noeuds2
 
 class Tour():
     def __init__(self,parent,pos):

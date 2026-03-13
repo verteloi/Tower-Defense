@@ -16,11 +16,29 @@ class Vue():
         #self.mainframe = tk.Frame(self.root,bg="gray", width=self.width, height=self.hight, cursor="man") # **** main frame
         #import des images
         self.img_parcour1 = PhotoImage(file="images\img_parcour1.png")
+        self.img_parcour2 = PhotoImage(file="images\img_parcour2.png")
+        self.img_parcour3 = PhotoImage(file="images\img_parcour3.png")
+        self.img_creep_ours = PhotoImage(file="images\ours.png")
+        self.img_creep_por = PhotoImage(file="images\porcupine.png")
+        self.img_creep_raton = PhotoImage(file="images\\raton.png")
+        self.img_creep_renard = PhotoImage(file="images\\renard.png")
+        self.img_creep_ecur = PhotoImage(file="images\squirrel.png")
         # On garde votre logique de bouton
         b = tk.Button(self.root, text="Demarrer", command=self.parent.demarrePartie)
         b.pack()
         self.canevas = tk.Canvas(self.root, width=self.width, height=self.hight) 
-        self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
+        match self.parent.modele.parcourChoisi:
+            case 0:
+                self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
+                #image=self.img_parcour1
+            case 1:
+                self.canevas.create_image(0,0, image=self.img_parcour3, anchor="nw")
+                #image=self.img_parcour2
+            case 2:
+                self.canevas.create_image(0,0, image=self.img_parcour2, anchor="nw")
+                #image=self.img_parcour3
+
+        
         self.canevas.bind("<Button-1>", self.getPosTour)
         self.canevas.pack()
         #sidebar try
@@ -48,11 +66,12 @@ class Vue():
 
         # Logique originale pr�serv�e (via nivoActif)
         for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
-            x1 = i.pos[0] * (self.width/100) - 3
-            y1 = i.pos[1] * (self.hight/100) - 3
-            x2 = i.pos[0] * (self.width/100) + 3
-            y2 = i.pos[1] * (self.hight/100) + 3
-            self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
+            x1 = i.pos[0] * (self.width/100) - 15
+            y1 = i.pos[1] * (self.hight/100) - 15
+            x2 = i.pos[0] * (self.width/100) + 15
+            y2 = i.pos[1] * (self.hight/100) + 15
+            #self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
+            self.canevas.create_image(x1, y1, image=self.img_creep_ours, anchor="nw",tags=("creep",))
 
         # Logique originale pr�serv�e (via nivoActif)
         for i in self.parent.modele.partieCourante.toursEnJeu.values():
