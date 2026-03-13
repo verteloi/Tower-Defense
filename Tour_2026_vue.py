@@ -15,14 +15,14 @@ class Vue():
         self.width = 700
         #self.mainframe = tk.Frame(self.root,bg="gray", width=self.width, height=self.hight, cursor="man") # **** main frame
         #import des images
-        self.img_parcour1 = PhotoImage(file="images\img_parcour1.png")
-        self.img_parcour2 = PhotoImage(file="images\img_parcour2.png")
-        self.img_parcour3 = PhotoImage(file="images\img_parcour3.png")
-        self.img_creep_ours = PhotoImage(file="images\ours.png")
-        self.img_creep_por = PhotoImage(file="images\porcupine.png")
+        self.img_parcour1 = PhotoImage(file="images\\img_parcour1.png")
+        self.img_parcour2 = PhotoImage(file="images\\img_parcour2.png")
+        self.img_parcour3 = PhotoImage(file="images\\img_parcour3.png")
+        self.img_creep_ours = PhotoImage(file="images\\ours.png")
+        self.img_creep_por = PhotoImage(file="images\\porcupine.png")
         self.img_creep_raton = PhotoImage(file="images\\raton.png")
         self.img_creep_renard = PhotoImage(file="images\\renard.png")
-        self.img_creep_ecur = PhotoImage(file="images\squirrel.png")
+        self.img_creep_ecur = PhotoImage(file="images\\squirrel.png")
         # On garde votre logique de bouton
         b = tk.Button(self.root, text="Demarrer", command=self.parent.demarrePartie)
         b.pack()

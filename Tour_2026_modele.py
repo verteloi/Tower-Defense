@@ -160,8 +160,11 @@ class Creep():
             self.pos = [nouv_x, nouv_y]
 
     def perdre_vie_joueur(self):
-        print("une vie de moins")
-        
+        for creep in self.parent.creepsEnCours:
+            if (creep.pos[0] >= 100):
+                self.parent.parent.vie -= creep.degat 
+                self.parent.creepsEnCours.remove(creep)
+                print(str(creep.tag) + " was deleted")  
 
 # LENT ET FORT
 class Creep_ours(Creep):
