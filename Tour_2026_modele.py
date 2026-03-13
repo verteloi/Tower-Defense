@@ -63,14 +63,16 @@ class Tour():
         self.pos=pos
         self.cible=[0,0]
         self.niveauTour = 1
-        self.range = 50
+        self.range = 20
         self.tag=parent.getTagTour()
         print(self.tag)
 
     def scan(self):
         for creep in self.parent.nivoActif.creepsEnCours:
-            if creep.pos[0] > self.pos[0]:
-                print ("tirer")
+            #les if sont à recheck
+            if creep.pos[0] > (self.pos[0]-self.range) and creep.pos[0] < (self.pos[0]+self.range): #si le x du creep est dans le range
+                if creep.pos[1] > (self.pos[1]-self.range) and creep.pos[1] < (self.pos[1]+self.range): #si le y du creep est dans le range
+                    print ("tirer")
 
 
 
