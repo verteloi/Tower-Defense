@@ -95,12 +95,13 @@ class Projectile():
         self.parent = parent
         self.pos = pos
         self.cible = cible
-             
 
 class Creep():
     def __init__(self,parent):
         self.parent=parent
         self.pos=self.parent.parcours.noeuds[0][:]
+        self.tag=parent.parent.getTagCreep()
+        print(self.tag)
         self.cible=1 #indice du noeud de parcours a atteindre
         if self.pos[0]!=self.parent.parcours.noeuds[1][0]: # on simplifie le mouvement en verifiant uniquement l'axe de deplacement
             self.axe=0
@@ -205,9 +206,9 @@ class Nivo():
         self.parcours = parent.parcourChoisi
         self.densiteCreep = 3
         self.tousLesCreeps = [
-            [Creep_ours(self), Creep_ours(self)],      # wave 0
-            [Creep_ours(self), Creep_ours(self)],      # wave 1
-            [Creep_ours(self), Creep_ours(self)],      # wave 2
+            [1, 1],      # wave 0 - ours, ours
+            [2, 2],      # wave 1 - renard, renard
+            [1, 2],      # wave 2 - ours, renard
         ]
         self.creeps = []
         self.creepsEnCours = []
@@ -219,7 +220,18 @@ class Nivo():
         
     # dependament quel numero de self.creep creer creep de ce type
     def creeCreep(self):
-        self.creeps = self.tousLesCreeps[self.numeroVague][:]
+        for i in self.tousLesCreeps[self.numeroVague][:]:
+            match i: 
+                case 1 :
+                    self.creeps.append(Creep_ours(self))
+                case 2 :
+                    self.creeps.append(Creep_renard(self))
+                case 3 :
+                    self.creeps.append(Creep_ecureuil(self))
+                case 4 :
+                    self.creeps.append(Creep_moufette(self))
+                case 5 :
+                    self.creeps.append(Creep_porcepique(self))
                 
     def bougeCreep(self):
         if self.creeps:
@@ -249,6 +261,7 @@ class Partie():
         self.cash = 500
         self.nivo = 0
         self.score = 0
+        self.tagCreep = 0
         # a changer pour self.creep dans le boucle creeCreep
         self.creepparnivo = 12
         self.toursEnJeu = []
@@ -258,6 +271,10 @@ class Partie():
     def demarrerVague(self):
         self.nivo = self.nivo + 1
         self.nivoActif = Nivo(self, self.nivo)
+
+    def getTagCreep(self):
+        self.tagCreep = self.tagCreep + 1
+        return "creep_"+str(self.tagCreep)
 
         
 class Modele():
@@ -277,6 +294,8 @@ class Modele():
     def setTour(self,pos):
         print("MODELE",pos)
         self.partieCourante.toursEnJeu.append(Tour(self,pos))
+
+
 
 if __name__ == '__main__':
     m=Modele(1)
