@@ -205,11 +205,7 @@ class Nivo():
         self.wave_active = True
         self.parcours = parent.parcourChoisi
         self.densiteCreep = 3
-        self.tousLesCreeps = [
-            [1, 1],      # wave 0 - ours, ours
-            [2, 2],      # wave 1 - renard, renard
-            [1, 2],      # wave 2 - ours, renard
-        ]
+        self.creepsDuNivo = parent.tousLesCreeps[numero]
         self.creeps = []
         self.creepsEnCours = []
         self.numeroVague = numero
@@ -220,7 +216,7 @@ class Nivo():
         
     # dependament quel numero de self.creep creer creep de ce type
     def creeCreep(self):
-        for i in self.tousLesCreeps[self.numeroVague][:]:
+        for i in self.creepsDuNivo:
             match i: 
                 case 1 :
                     self.creeps.append(Creep_ours(self))
@@ -265,6 +261,11 @@ class Partie():
         # a changer pour self.creep dans le boucle creeCreep
         self.creepparnivo = 12
         self.toursEnJeu = []
+        self.tousLesCreeps = [
+            [1, 1],      # wave 0 - ours, ours
+            [2, 2],      # wave 1 - renard, renard
+            [1, 2],      # wave 2 - ours, renard
+        ]
         self.parcourChoisi = Parcours(self, parcour)
         self.nivoActif = Nivo(self, self.nivo)
 
