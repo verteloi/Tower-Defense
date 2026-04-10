@@ -46,14 +46,14 @@ class Vue():
         #self.sidebar.grid(column=1,row=0)
 
     def getPosTour(self, evt):
-        x = evt.x / 5
-        y = evt.y / 5
+        x = evt.x / (self.width/100)
+        y = evt.y / (self.hight/100)
         # print ("POS",x,y)
         self.parent.setTour([x, y])
 
     def afficheModele(self):
         pos = []
-        # On assume que nivoActif est initialis� au moment de l'affichage
+        # On assume que nivoActif est initialis� au moment de l'affichage, pour aficher la ligne noire
         for i in self.parent.modele.partieCourante.parcourChoisi.noeuds:
             pos.append(i[0] * (self.width/100))
             pos.append(i[1] * (self.hight/100))
@@ -68,16 +68,16 @@ class Vue():
         for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
             x1 = i.pos[0] * (self.width/100) - 15
             y1 = i.pos[1] * (self.hight/100) - 15
-            x2 = i.pos[0] * (self.width/100) + 15
-            y2 = i.pos[1] * (self.hight/100) + 15
+            #x2 = i.pos[0] * (self.width/100) + 15
+            #y2 = i.pos[1] * (self.hight/100) + 15
             #self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
             self.canevas.create_image(x1, y1, image=self.img_creep_ours, anchor="nw",tags=("creep",))
 
         # Logique originale pr�serv�e (via nivoActif)
         for i in self.parent.modele.partieCourante.toursEnJeu.values():
-            x1 = i.pos[0] * 5 - 10
-            y1 = i.pos[1] * 5 - 10
-            x2 = i.pos[0] * 5 + 10
-            y2 = i.pos[1] * 5 + 10
+            x1 = i.pos[0] * (self.width/100) - 10
+            y1 = i.pos[1] * (self.hight/100) - 10
+            x2 = i.pos[0] * (self.width/100) + 10
+            y2 = i.pos[1] * (self.hight/100) + 10
             # print("LOCtour",i.pos,x1,y1,x2,y2)
             self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))

@@ -63,7 +63,7 @@ class Tour():
         self.pos=pos
         self.cible=[0,0]
         self.niveauTour = 1
-        self.range = 20
+        self.range = 15
         self.tag=parent.getTagTour()
         print(self.tag)
 
@@ -72,7 +72,7 @@ class Tour():
             #les if sont à recheck
             if creep.pos[0] > (self.pos[0]-self.range) and creep.pos[0] < (self.pos[0]+self.range): #si le x du creep est dans le range
                 if creep.pos[1] > (self.pos[1]-self.range) and creep.pos[1] < (self.pos[1]+self.range): #si le y du creep est dans le range
-                    print ("tirer")
+                    print ("tirer sur " + creep.tag + " creep a (" + str(creep.pos[0]) + "," + str(creep.pos[1]) + ") tour a (" + str(self.pos[0]) + "," + str(self.pos[1]) + ") range de " + str(self.range))
 
 
 
@@ -289,7 +289,7 @@ class Partie():
         self.dictCreeps = {}
         self.toursEnJeu = {}
         self.tousLesCreeps = [
-            [1, 1],      # wave 0 - ours, ours
+            [1],      # wave 0 - ours, ours         ------------------- J'ai enlevé un
             [2, 2],      # wave 1 - renard, renard
             [1, 2],      # wave 2 - ours, renard
         ]
