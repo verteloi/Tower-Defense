@@ -13,6 +13,8 @@ class Vue():
         self.root = tk.Tk()
         self.hight = 700
         self.width = 700
+        self.coefHeight = self.hight/100
+        self.coefWidth = self.width/100
         #self.mainframe = tk.Frame(self.root,bg="gray", width=self.width, height=self.hight, cursor="man") # **** main frame
         #import des images
         self.img_parcour1 = PhotoImage(file="images\\img_parcour1.png")
@@ -46,8 +48,8 @@ class Vue():
         #self.sidebar.grid(column=1,row=0)
 
     def getPosTour(self, evt):
-        x = evt.x / (self.width/100)
-        y = evt.y / (self.hight/100)
+        x = evt.x / self.coefWidth
+        y = evt.y / self.coefHeight
         # print ("POS",x,y)
         self.parent.setTour([x, y])
 
@@ -55,8 +57,8 @@ class Vue():
         pos = []
         # On assume que nivoActif est initialis� au moment de l'affichage, pour aficher la ligne noire
         for i in self.parent.modele.partieCourante.parcourChoisi.noeuds:
-            pos.append(i[0] * (self.width/100))
-            pos.append(i[1] * (self.hight/100))
+            pos.append(i[0] * self.coefWidth)
+            pos.append(i[1] * self.coefHeight)
         #self.canevas.create_line(pos, width=2, fill="black", tags=("chemin",))  # ------ on n'a pas besoin de la ligne noire
 
     def afficheCreepTourBombe(self):
@@ -66,8 +68,8 @@ class Vue():
 
         # Logique originale pr�serv�e (via nivoActif)
         for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
-            x1 = i.pos[0] * (self.width/100) - 15
-            y1 = i.pos[1] * (self.hight/100) - 15
+            x1 = i.pos[0] * self.coefWidth - 15
+            y1 = i.pos[1] * self.coefHeight - 15
             #x2 = i.pos[0] * (self.width/100) + 15
             #y2 = i.pos[1] * (self.hight/100) + 15
             #self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
@@ -75,9 +77,19 @@ class Vue():
 
         # Logique originale pr�serv�e (via nivoActif)
         for i in self.parent.modele.partieCourante.toursEnJeu.values():
-            x1 = i.pos[0] * (self.width/100) - 10
-            y1 = i.pos[1] * (self.hight/100) - 10
-            x2 = i.pos[0] * (self.width/100) + 10
-            y2 = i.pos[1] * (self.hight/100) + 10
+            x1 = i.pos[0] * self.coefWidth - 10
+            y1 = i.pos[1] * self.coefHeight - 10
+            x2 = i.pos[0] * self.coefWidth + 10
+            y2 = i.pos[1] * self.coefHeight + 10
             # print("LOCtour",i.pos,x1,y1,x2,y2)
             self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))
+
+            #def afficher_projectile(self, projectiles):
+        if len(self.parent.modele.partieCourante.projectiles) > 0:
+            self.canevas.delete("projectile")
+            for i in self.parent.modele.partieCourante.projectiles.values():
+                x1 = i.x * self.coefWidth - (i.largeur / self.coefWidth)
+                x2 = i.x * self.coefWidth + (i.largeur / self.coefWidth)
+                y1 = i.y * self.coefHeight - (i.hauteur / self.coefHeight)
+                y2 = i.y * self.coefHeight + (i.hauteur / self.coefHeight)
+                self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile",))

@@ -57,6 +57,37 @@ class Parcours():
             case 2:
                 self.noeuds=self.noeuds2
 
+class Projectile():                                  #largeur et hauteur passées en paramètre sont celles du invador ou du joueur
+    def __init__(self, parent, cible): #une direction (dir) va etre passée en paramètres 
+        self.tag = parent.parent.getTagProjectile()
+        self.largeur = 15
+        self.hauteur = 20
+        if(abs(cible.pos[1]-parent.pos[1])):
+             self.dirY = (cible.pos[1]-parent.pos[1])/abs(cible.pos[1]-parent.pos[1])
+        else:
+            self.dirY = 0
+        if(abs(cible.pos[0]-parent.pos[0])):
+            self.dirX = (cible.pos[0]-parent.pos[0])/abs(cible.pos[0]-parent.pos[0])
+        else:
+            self.dirX = 0
+        self.aimX = cible.pos[0]/parent.pos[0]
+        self.aimY = cible.pos[1]/parent.pos[1]
+        self.y = parent.pos[1]
+        self.x = parent.pos[0]
+        self.speed = 3
+
+    def deplacer(self):
+        #à la verticale
+        if self.dirY > 0:
+            self.y += (self.speed*self.aimY)
+        if self.dirY < 0:
+            self.y -= (self.speed*self.aimY)
+        #à l'horizontale
+        if self.dirX > 0:
+            self.x += (self.speed*self.aimX)
+        if self.dirX < 0:
+            self.x -= (self.speed*self.aimX)
+
 class Tour():
     def __init__(self,parent,pos):
         self.parent=parent
@@ -65,6 +96,7 @@ class Tour():
         self.niveauTour = 1
         self.range = 15
         self.tag=parent.getTagTour()
+        self.compteurTir = 10
         print(self.tag)
 
     def scan(self):
@@ -72,7 +104,11 @@ class Tour():
             #les if sont à recheck
             if creep.pos[0] > (self.pos[0]-self.range) and creep.pos[0] < (self.pos[0]+self.range): #si le x du creep est dans le range
                 if creep.pos[1] > (self.pos[1]-self.range) and creep.pos[1] < (self.pos[1]+self.range): #si le y du creep est dans le range
-                    print ("tirer sur " + creep.tag + " creep a (" + str(creep.pos[0]) + "," + str(creep.pos[1]) + ") tour a (" + str(self.pos[0]) + "," + str(self.pos[1]) + ") range de " + str(self.range))
+                    self.compteurTir-=1
+                    if self.compteurTir == 0:
+                        projectile = Projectile(self,creep)
+                        self.parent.projectiles[projectile.tag] = projectile
+                        self.compteurTir = 10
 
 
 
@@ -107,12 +143,6 @@ class Tour_classique(Tour):
         self.force = 1
         self.cout = 150
         self.effet = "none"
-
-class Projectile():
-    def __init__(self, parent, pos, cible):
-        self.parent = parent
-        self.pos = pos
-        self.cible = cible
 
 class Creep():
     def __init__(self,parent):
@@ -286,8 +316,10 @@ class Partie():
         self.score = 0
         self.tagCreep = 0
         self.tagTours = 0
+        self.tagProjectile = 0
         self.dictCreeps = {}
         self.toursEnJeu = {}
+        self.projectiles = {}
         self.tousLesCreeps = [
             [1],      # wave 0 - ours, ours         ------------------- J'ai enlevé un
             [2, 2],      # wave 1 - renard, renard
@@ -308,10 +340,28 @@ class Partie():
         self.tagTours = self.tagTours + 1
         return "tour_"+str(self.tagTours)
     
+    def getTagProjectile(self): 
+        self.tagProjectile = self.tagProjectile + 1
+        return "tour_"+str(self.tagProjectile)
+    
     def setTour(self,pos):
         print("MODELE",pos)
         tour=Tour(self,pos)
         self.toursEnJeu[tour.tag] = tour
+
+    def bougeProjectile(self):
+        a_supprimer = []
+        if self.projectiles:
+            for p in self.projectiles.values():
+                #deplacer s'il est encore dans le cadre, sinon effacer
+                if p.x > 0 and p.y > 0 and p.x < 100 and p.x < 100:
+                    p.deplacer()
+                else:
+                    a_supprimer.append(p.tag)
+            
+            for tag in a_supprimer:
+                del self.projectiles[tag]
+
 
         
 class Modele():
