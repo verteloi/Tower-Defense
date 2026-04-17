@@ -36,6 +36,7 @@ class Vue():
         self.afficherEcranDemarrage()
 
     def afficherEcranDemarrage(self):
+        self.frame_gameover.pack_forget()
         self.frame_menu.pack_forget()
         self.frame_jeu.pack_forget()
         self.frame_scores.pack_forget()
@@ -52,6 +53,7 @@ class Vue():
         bouton_scores.pack(pady=10)
 
     def afficherMenu(self):
+        self.frame_gameover.pack_forget()
         self.frame_demarrage.pack_forget()
         self.frame_menu.pack()
 
@@ -212,6 +214,6 @@ class Vue():
         self.canevas.delete("cash")
         self.canevas.delete("vie")
         self.canevas.delete("nivo")
-        self.canevas.create_text(625, 10, fill="#FCA510", text=self.parent.modele.partieCourante.cash, font=("Cooper Black", 24), anchor="nw", tags=("cash",))
-        self.canevas.create_text(500, 10, fill="#FF0000", text=self.parent.modele.partieCourante.vie, font=("Cooper Black", 24), anchor="nw", tags=("vie",))
-        self.canevas.create_text(300, 10, fill="#000000", text=self.parent.modele.partieCourante.nivo, font=("Cooper Black", 24), anchor="nw", tags=("nivo",))
+        self.canevas.create_text(600, 10, fill="#FCA510", text= str(self.parent.modele.partieCourante.cash) + "$", font=("Cooper Black", 24), anchor="nw", tags=("cash",))
+        self.canevas.create_text(15, 10, fill="#FF0000", text="health: " + str(self.parent.modele.partieCourante.vie), font=("Cooper Black", 24), anchor="nw", tags=("vie",))
+        self.canevas.create_text(15, 650, fill="#000000", text="wave: " + str(self.parent.modele.partieCourante.nivo + 1), font=("Cooper Black", 24), anchor="nw", tags=("nivo",))

@@ -2,13 +2,12 @@
 import Tour_2026_modele as mod
 import Tour_2026_vue as vue
 
-
 class Controleur():
     def __init__(self):
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self)
         self.actif = 0
-        self.delai = 50  # Vitesse du jeu
+        self.delai = 10  # Vitesse du jeu
 
     def demarrePartie(self):
         if self.actif == 0:
@@ -25,7 +24,7 @@ class Controleur():
             self.modele.partieCourante.nivoActif.tourScan()
             self.modele.partieCourante.nivoActif.creepScan()
             self.modele.partieCourante.bougeProjectile()
-            self.vue.afficheCreepTourBombe()
+            self.vue.afficheCreepTourBombe()    
             self.vue.afficheInformationsPartie()
             self.vue.root.after(self.delai, self.continuePartie)
 
@@ -33,17 +32,16 @@ class Controleur():
         self.modele.partieCourante.setTour(pos)
 
     def changerDifficulte(self, difficulte):
-        self.modele.parcourChoisi = difficulte
+        self.modele.difficulteChoisi = difficulte
 
     def changerParcour(self, parcour):
         self.modele.parcourChoisi = parcour
         self.vue.actualiserPreviewParcour()
 
-    def check_partie_perdu(self):
-        if (self.parent.parent.vie <= 0):
-            self.vue.frame_gameover()
+    def partie_perdu(self):
+        self.actif = 0
+        self.vue.afficherGameover()
         
-
 if __name__ == '__main__':
     c = Controleur()
     c.vue.root.mainloop()
