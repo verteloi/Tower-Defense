@@ -57,36 +57,25 @@ class Parcours():
             case 2:
                 self.noeuds=self.noeuds2
 
-class Projectile():                                  #largeur et hauteur passées en paramètre sont celles du invador ou du joueur
-    def __init__(self, parent, cible): #une direction (dir) va etre passée en paramètres 
+class Projectile():                                  
+    def __init__(self, parent, cible): #la cible est passée en param, puis on calcule la direction 
         self.tag = parent.parent.getTagProjectile()
         self.largeur = 15
         self.hauteur = 20
-        if(abs(cible.pos[1]-parent.pos[1])):
-             self.dirY = (cible.pos[1]-parent.pos[1])/abs(cible.pos[1]-parent.pos[1])
-        else:
-            self.dirY = 0
-        if(abs(cible.pos[0]-parent.pos[0])):
-            self.dirX = (cible.pos[0]-parent.pos[0])/abs(cible.pos[0]-parent.pos[0])
-        else:
-            self.dirX = 0
-        self.aimX = cible.pos[0]/parent.pos[0]
-        self.aimY = cible.pos[1]/parent.pos[1]
         self.y = parent.pos[1]
         self.x = parent.pos[0]
         self.speed = 3
 
+        dx = cible.pos[0] - parent.pos[0]
+        dy = cible.pos[1] - parent.pos[1]
+        angleRad = math.atan2(dy, dx)
+        self.aimX = math.cos(angleRad) * self.speed
+        self.aimY = math.sin(angleRad) * self.speed
+
     def deplacer(self):
-        #à la verticale
-        if self.dirY > 0:
-            self.y += (self.speed*self.aimY)
-        if self.dirY < 0:
-            self.y -= (self.speed*self.aimY)
-        #à l'horizontale
-        if self.dirX > 0:
-            self.x += (self.speed*self.aimX)
-        if self.dirX < 0:
-            self.x -= (self.speed*self.aimX)
+        self.x += self.aimX
+        self.y += self.aimY
+
 
 class Tour():
     def __init__(self,parent,pos):
@@ -105,7 +94,7 @@ class Tour():
             if creep.pos[0] > (self.pos[0]-self.range) and creep.pos[0] < (self.pos[0]+self.range): #si le x du creep est dans le range
                 if creep.pos[1] > (self.pos[1]-self.range) and creep.pos[1] < (self.pos[1]+self.range): #si le y du creep est dans le range
                     self.compteurTir-=1
-                    if self.compteurTir == 0:
+                    if self.compteurTir == 0: #le compteur compte jusqu'à 10 et tire 
                         projectile = Projectile(self,creep)
                         self.parent.projectiles[projectile.tag] = projectile
                         self.compteurTir = 10
@@ -145,10 +134,11 @@ class Tour_classique(Tour):
         self.effet = "none"
 
 class Creep():
-    def __init__(self,parent):
+    def __init__(self,parent, type):
         self.parent=parent
         self.pos=self.parent.parcours.noeuds[0][:]
         self.tag=parent.parent.getTagCreep()
+        self.type = type
         print(self.tag)
         self.cible=1 #indice du noeud de parcours a atteindre
         if self.pos[0]!=self.parent.parcours.noeuds[1][0]: # on simplifie le mouvement en verifiant uniquement l'axe de deplacement
@@ -207,8 +197,8 @@ class Creep():
 
 # LENT ET FORT
 class Creep_ours(Creep):
-    def __init__(self,parent):
-        Creep.__init__(self,parent)
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
         self.degat = 25
         self.vitesse = 0.5
         self.argent = 100 * 3
@@ -216,8 +206,8 @@ class Creep_ours(Creep):
 
 # MOYEN VITE ET MOYEN FORT
 class Creep_renard(Creep):
-    def __init__(self,parent):
-        Creep.__init__(self,parent)
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
         self.degat = 15
         self.vitesse = 1.2
         self.argent = 100 * 2
@@ -225,8 +215,8 @@ class Creep_renard(Creep):
 
 # VITE ET FAIBLE
 class Creep_ecureuil(Creep):
-    def __init__(self,parent):
-        Creep.__init__(self,parent)
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
         self.degat = 5
         self.vitesse = 2
         self.argent = 100 * 1.5
@@ -234,8 +224,8 @@ class Creep_ecureuil(Creep):
 
 # VITESSE NORMALE ET VIE NORMALE
 class Creep_moufette(Creep):
-    def __init__(self,parent):
-        Creep.__init__(self,parent)
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
         self.degat = 5
         self.vitesse = 1
         self.argent = 100
@@ -243,8 +233,8 @@ class Creep_moufette(Creep):
 
 # VITESSE NORMALE ET VIE NORMALE
 class Creep_porcepique(Creep):
-    def __init__(self,parent):
-        Creep.__init__(self,parent)
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
         self.degat = 5
         self.vitesse = 1
         self.argent = 100
@@ -270,15 +260,15 @@ class Nivo():
         for i in self.creepsDuNivo:
             match i: 
                 case 1 :
-                    self.creeps.append(Creep_ours(self))
+                    self.creeps.append(Creep_ours(self, 1))
                 case 2 :
-                    self.creeps.append(Creep_renard(self))
+                    self.creeps.append(Creep_renard(self, 2))
                 case 3 :
-                    self.creeps.append(Creep_ecureuil(self))
+                    self.creeps.append(Creep_ecureuil(self, 3))
                 case 4 :
-                    self.creeps.append(Creep_moufette(self))
+                    self.creeps.append(Creep_moufette(self, 4))
                 case 5 :
-                    self.creeps.append(Creep_porcepique(self))
+                    self.creeps.append(Creep_porcepique(self, 5))
                 
     def bougeCreep(self):
         if self.creeps:
@@ -321,7 +311,7 @@ class Partie():
         self.toursEnJeu = {}
         self.projectiles = {}
         self.tousLesCreeps = [
-            [1],      # wave 0 - ours, ours         ------------------- J'ai enlevé un
+            [1, 2, 3, 4, 5],      # wave 0 - ours, ours         ------------------- J'ai enlevé un
             [2, 2],      # wave 1 - renard, renard
             [1, 2],      # wave 2 - ours, renard
         ]
@@ -354,7 +344,7 @@ class Partie():
         if self.projectiles:
             for p in self.projectiles.values():
                 #deplacer s'il est encore dans le cadre, sinon effacer
-                if p.x > 0 and p.y > 0 and p.x < 100 and p.x < 100:
+                if p.x > 0 and p.y > 0 and p.x < 100 and p.y < 100:
                     p.deplacer()
                 else:
                     a_supprimer.append(p.tag)
@@ -362,8 +352,6 @@ class Partie():
             for tag in a_supprimer:
                 del self.projectiles[tag]
 
-
-        
 class Modele():
     def __init__(self, parent):
         self.parent = parent
