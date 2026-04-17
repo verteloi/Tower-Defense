@@ -113,9 +113,7 @@ class Vue():
         # Sidebar à droite dans frame_jeu
         self.sidebar = tk.Frame(self.frame_jeu, bg="white", width=250, height=self.hight)
         self.sidebar.pack(side="right", fill="y")
-        self.sidebar.pack_propagate(False) #pour qu'elle reste à 250 pixels et pas wrap content
-        self.bouton_vague = tk.Button(self.sidebar, text="Lancer Vague", command=self.parent.demarrePartie).pack(pady=20)
-        
+        tk.Button(self.sidebar, text="Lancer Vague", command=self.parent.demarrePartie).pack(pady=20)
 
         # Canva à gauche dans frame_jeu
         self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black")
@@ -134,9 +132,6 @@ class Vue():
                 #image=self.img_parcour3
             
         self.canevas.bind("<Button-1>", self.getPosTour)
-
-    def update_bouton_prochaine_vague(self):
-        pass
 
     def afficherScores(self):
         return        
