@@ -73,7 +73,18 @@ class Vue():
             #x2 = i.pos[0] * (self.width/100) + 15
             #y2 = i.pos[1] * (self.hight/100) + 15
             #self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
-            self.canevas.create_image(x1, y1, image=self.img_creep_ours, anchor="nw",tags=("creep",))
+            match i.type :
+                case 1 :
+                     self.canevas.create_image(x1, y1, image=self.img_creep_ours, anchor="nw",tags=("creep",))
+                case 2 :
+                     self.canevas.create_image(x1, y1, image=self.img_creep_renard, anchor="nw",tags=("creep",))
+                case 3 :
+                     self.canevas.create_image(x1, y1, image=self.img_creep_ecur, anchor="nw",tags=("creep",))
+                case 4 :
+                     self.canevas.create_image(x1, y1, image=self.img_creep_raton, anchor="nw",tags=("creep",))
+                case 5 :
+                     self.canevas.create_image(x1, y1, image=self.img_creep_por, anchor="nw",tags=("creep",)) 
+           
 
         # Logique originale pr�serv�e (via nivoActif)
         for i in self.parent.modele.partieCourante.toursEnJeu.values():
