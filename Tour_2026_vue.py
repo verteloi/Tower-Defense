@@ -25,10 +25,94 @@ class Vue():
         self.img_creep_raton = PhotoImage(file="images\\raton.png")
         self.img_creep_renard = PhotoImage(file="images\\renard.png")
         self.img_creep_ecur = PhotoImage(file="images\\squirrel.png")
-        # On garde votre logique de bouton
-        b = tk.Button(self.root, text="Demarrer", command=self.parent.demarrePartie)
-        b.pack()
-        self.canevas = tk.Canvas(self.root, width=self.width, height=self.hight) 
+
+        self.frame_demarrage = tk.Frame(self.root, width=self.width, height=self.hight, bg="gray")
+        self.frame_menu = tk.Frame(self.root, width=self.width, height=self.hight, bg="lightgray")
+        self.frame_jeu = tk.Frame(self.root)
+        self.frame_scores = tk.Frame(self.root, width=self.width, height=self.hight, bg="black")
+
+        self.afficherEcranDemarrage()
+
+    def afficherEcranDemarrage(self):
+        self.frame_menu.pack_forget()
+        self.frame_jeu.pack_forget()
+        self.frame_scores.pack_forget()
+        
+        self.frame_demarrage.pack()
+        
+        titre = tk.Label(self.frame_demarrage, text="Tower Defense", font=("Arial", 30))
+        titre.pack(pady=50)
+
+        bouton_demarrer = tk.Button(self.frame_demarrage, text="Demarrer", command=self.afficherMenu)
+        bouton_demarrer.pack(pady=10)
+
+        bouton_scores = tk.Button(self.frame_demarrage, text="Scores", command=self.afficherScores)
+        bouton_scores.pack(pady=10)
+
+    def afficherMenu(self):
+        self.frame_demarrage.pack_forget()
+        self.frame_menu.pack()
+
+        # sidebar
+        sidebar_creer = tk.Frame(self.frame_menu, bg="#99CCFF", width=200, height=self.hight, bd=2, relief="solid")
+        sidebar_creer.pack(side="right", fill="y")
+
+        tk.Label(sidebar_creer, text="MENU", font=("Arial", 18, "bold"), bg="#AAAAAA").pack(pady=10, fill="x")
+
+        # Map
+        tk.Button(sidebar_creer, text="Map 1", command=lambda:self.parent.changerParcour(0)).pack(pady=5, padx=20, fill="x")
+        tk.Button(sidebar_creer, text="Map 2", command=lambda:self.parent.changerParcour(1)).pack(pady=5, padx=20, fill="x")
+        tk.Button(sidebar_creer, text="Map 3", command=lambda:self.parent.changerParcour(2)).pack(pady=5, padx=20, fill="x")
+
+        # Difficulté
+        tk.Label(sidebar_creer, text="difficulte", font=("Arial", 12, "bold"), bg="#AAAAAA").pack(pady=(20, 0), fill="x")
+        diff_frame = tk.Frame(sidebar_creer, bg="#99CCFF")
+        diff_frame.pack(pady=10)
+        
+        bouton_difficulte_facile = tk.Button(diff_frame, text="F", bg="lightgreen", command=lambda:self.parent.changerDifficulte(0))
+        bouton_difficulte_facile.pack(side="left", padx=2)
+
+        bouton_difficulte_moyenne = tk.Button(diff_frame, text="M", bg="orange", command=lambda:self.parent.changerDifficulte(1))
+        bouton_difficulte_moyenne.pack(side="left", padx=2)
+        
+        bouton_difficulte_difficile = tk.Button(diff_frame, text="D", bg="red",  command=lambda:self.parent.changerDifficulte(2))
+        bouton_difficulte_difficile.pack(side="left", padx=2)
+
+        # Démarrer
+        bouton_demarrer = tk.Button(sidebar_creer, text="Demarrer", font=("Arial", 14, "bold"), bg="#A0EC2C", command=self.afficherInterfaceJeu)
+        bouton_demarrer.pack(side="bottom", pady=10, padx=10)
+
+        # Dans afficherMenu :
+        conteneurPreviewParcours = tk.Frame(self.frame_menu, bg="gray", width=self.width, height=self.hight)
+        conteneurPreviewParcours.pack(side="left", expand=True, fill="both")
+
+        # 
+        self.previewParcours = tk.Canvas(conteneurPreviewParcours, width=self.width, height=self.hight)
+        self.previewParcours.pack(expand=True, fill="both")
+
+        self.actualiserPreviewParcour()
+
+    def actualiserPreviewParcour(self):
+        self.previewParcours.delete("all")
+        match self.parent.modele.parcourChoisi:
+            case 0: self.previewParcours.create_image(0, 0, image=self.img_parcour1, anchor="nw")
+            case 1: self.previewParcours.create_image(0, 0, image=self.img_parcour3, anchor="nw")
+            case 2: self.previewParcours.create_image(0, 0, image=self.img_parcour2, anchor="nw")
+
+    def afficherInterfaceJeu(self):
+        self.frame_menu.pack_forget()        
+        self.frame_jeu.pack()
+
+        # Sidebar à droite dans frame_jeu
+        self.sidebar = tk.Frame(self.frame_jeu, bg="white", width=250, height=self.hight)
+        self.sidebar.pack(side="right", fill="y")
+        tk.Button(self.sidebar, text="Lancer Vague", command=self.parent.demarrePartie).pack(pady=20)
+
+        # Canva à gauche dans frame_jeu
+        self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black")
+        self.canevas.pack(side="left")
+
+        # Fond du canevas
         match self.parent.modele.parcourChoisi:
             case 0:
                 self.canevas.create_image(0,0, image=self.img_parcour1, anchor="nw")
@@ -39,13 +123,11 @@ class Vue():
             case 2:
                 self.canevas.create_image(0,0, image=self.img_parcour2, anchor="nw")
                 #image=self.img_parcour3
-
-        
+            
         self.canevas.bind("<Button-1>", self.getPosTour)
-        self.canevas.pack()
-        #sidebar try
-        #self.sidebar = tk.Frame(self.mainframe, bg="lightblue", width=300, height=self.hight)
-        #self.sidebar.grid(column=1,row=0)
+
+    def afficherScores(self):
+        return        
 
     def getPosTour(self, evt):
         x = evt.x / self.coefWidth
@@ -84,7 +166,6 @@ class Vue():
                      self.canevas.create_image(x1, y1, image=self.img_creep_raton, anchor="nw",tags=("creep",))
                 case 5 :
                      self.canevas.create_image(x1, y1, image=self.img_creep_por, anchor="nw",tags=("creep",)) 
-           
 
         # Logique originale pr�serv�e (via nivoActif)
         for i in self.parent.modele.partieCourante.toursEnJeu.values():
@@ -104,3 +185,11 @@ class Vue():
                 y1 = i.y * self.coefHeight - (i.hauteur / self.coefHeight)
                 y2 = i.y * self.coefHeight + (i.hauteur / self.coefHeight)
                 self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile",))
+
+    def afficheInformationsPartie(self):
+        self.canevas.delete("cash")
+        self.canevas.delete("vie")
+        self.canevas.delete("nivo")
+        self.canevas.create_text(625, 10, fill="#FCA510", text=self.parent.modele.partieCourante.cash, font=("Cooper Black", 24), anchor="nw", tags=("cash",))
+        self.canevas.create_text(500, 10, fill="#FF0000", text=self.parent.modele.partieCourante.vie, font=("Cooper Black", 24), anchor="nw", tags=("vie",))
+        self.canevas.create_text(300, 10, fill="#000000", text=self.parent.modele.partieCourante.nivo, font=("Cooper Black", 24), anchor="nw", tags=("nivo",))

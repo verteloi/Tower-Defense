@@ -26,12 +26,19 @@ class Controleur():
             self.modele.partieCourante.nivoActif.creepScan()
             self.modele.partieCourante.bougeProjectile()
             self.vue.afficheCreepTourBombe()
+            self.vue.afficheInformationsPartie()
             # Appel r�cursif via Tkinter
             self.vue.root.after(self.delai, self.continuePartie)
 
     def setTour(self, pos):
         self.modele.partieCourante.setTour(pos)
 
+    def changerDifficulte(self, difficulte):
+        self.modele.parcourChoisi = difficulte
+
+    def changerParcour(self, parcour):
+        self.modele.parcourChoisi = parcour
+        self.vue.actualiserPreviewParcour()
 
 if __name__ == '__main__':
     c = Controleur()

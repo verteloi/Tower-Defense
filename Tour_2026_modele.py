@@ -372,8 +372,6 @@ class Partie():
             for tag in a_supprimer:
                 del self.projectiles[tag]
 
-
-        
 class Modele():
     def __init__(self, parent):
         self.parent = parent
