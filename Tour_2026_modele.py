@@ -274,15 +274,15 @@ class Nivo():
         for i in self.creepsDuNivo:
             match i: 
                 case 1 :
-                    self.creeps.append(Creep_ours(self, 1))
+                    self.creeps.append(Creep_ours(self, i))
                 case 2 :
-                    self.creeps.append(Creep_renard(self, 2))
+                    self.creeps.append(Creep_renard(self, i))
                 case 3 :
-                    self.creeps.append(Creep_ecureuil(self, 3))
+                    self.creeps.append(Creep_ecureuil(self, i))
                 case 4 :
-                    self.creeps.append(Creep_moufette(self, 4))
+                    self.creeps.append(Creep_moufette(self, i))
                 case 5 :
-                    self.creeps.append(Creep_porcepique(self, 5))
+                    self.creeps.append(Creep_porcepique(self, i))
                 
     def bougeCreep(self):
         if self.creeps:
