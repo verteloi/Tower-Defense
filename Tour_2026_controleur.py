@@ -26,7 +26,6 @@ class Controleur():
             self.modele.partieCourante.bougeProjectile()
             self.vue.afficheCreepTourBombe()
             self.vue.afficheInformationsPartie()
-            # Appel r�cursif via Tkinter
             self.vue.root.after(self.delai, self.continuePartie)
 
     def setTour(self, pos):
@@ -38,6 +37,11 @@ class Controleur():
     def changerParcour(self, parcour):
         self.modele.parcourChoisi = parcour
         self.vue.actualiserPreviewParcour()
+
+    def check_partie_perdu(self):
+        if (self.parent.parent.vie <= 0):
+            self.vue.frame_gameover()
+        
 
 if __name__ == '__main__':
     c = Controleur()

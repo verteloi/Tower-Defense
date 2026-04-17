@@ -300,7 +300,7 @@ class Nivo():
 class Partie():
     def __init__(self, parent, parcour):
         self.parent=parent
-        self.vie = 100
+        self.vie = 5
         self.cash = 500
         self.nivo = 0
         self.score = 0
