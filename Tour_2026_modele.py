@@ -191,7 +191,7 @@ class Creep():
             self.pos = [nouv_x, nouv_y]
 
     def perdre_vie_joueur(self):
-        for creep in self.parent.creepsEnCours:
+        for creep in self.parent.creepsEnCours: #quand le creep arrive à la fin, le joueur perd une vie et on le delete de la liste
             if (creep.pos[0] >= 100):
                 self.parent.parent.vie -= creep.degat 
                 self.parent.creepsEnCours.remove(creep)
@@ -303,7 +303,10 @@ class Nivo():
         n=0
         for i in self.creepsEnCours:
             n=n+1
-            i.bouge()
+            if i.vie > 0:
+                i.bouge()
+            else:
+                self.creepsEnCours.remove(i)
     
     def tourScan(self):
         if self.parent.toursEnJeu and self.creepsEnCours:
