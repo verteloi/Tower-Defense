@@ -60,11 +60,11 @@ class Parcours():
 class Projectile():                                  
     def __init__(self, parent, cible): #la cible est passée en param, puis on calcule la direction 
         self.tag = parent.parent.getTagProjectile()
-        self.largeur = 15
-        self.hauteur = 20
+        self.largeur = 25
+        self.hauteur = 25
         self.y = parent.pos[1]
         self.x = parent.pos[0]
-        self.speed = 3
+        self.speed = 1
         self.degat = parent.force * 25
 
         dx = cible.pos[0] - parent.pos[0]
@@ -84,7 +84,7 @@ class Tour():
         self.pos=pos
         self.cible=[0,0]
         self.niveauTour = 1
-        self.range = 15
+        self.range = 20
         self.tag=parent.getTagTour()
         self.vitesseTir = vitesseTir               #à modif quand tour upgrade
         self.compteurTir = 11 - vitesseTir    # à modif quand tour upgrade
@@ -100,7 +100,7 @@ class Tour():
                     if self.compteurTir == 0: #le compteur compte jusqu'à 10 et tire 
                         projectile = Projectile(self,creep)
                         self.parent.projectiles[projectile.tag] = projectile
-                        self.compteurTir = 10
+                        self.compteurTir = 100
 
 
 
@@ -196,6 +196,8 @@ class Creep():
             if (creep.pos[0] >= 100):
                 self.parent.parent.vie -= creep.degat 
                 self.parent.creepsEnCours.remove(creep)
+                if (self.parent.parent.vie <= 0):
+                    self.parent.parent.parent.parent.partie_perdu()
                 print(str(creep.tag) + " was deleted")  
 
     def scan_pour_projectiles(self):
@@ -215,7 +217,7 @@ class Creep_ours(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 25
-        self.vitesse = 0.5
+        self.vitesse = 0.5 / 10
         self.argent = 100 * 3
         self.vie = 1000
 
@@ -224,7 +226,7 @@ class Creep_renard(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 15
-        self.vitesse = 1.2
+        self.vitesse = 1.2 / 10
         self.argent = 100 * 2
         self.vie = 200
 
@@ -233,7 +235,7 @@ class Creep_ecureuil(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 5
-        self.vitesse = 2
+        self.vitesse = 1.8 / 10
         self.argent = 100 * 1.5
         self.vie = 50
 
@@ -242,7 +244,7 @@ class Creep_moufette(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 5
-        self.vitesse = 1
+        self.vitesse = 1 / 10
         self.argent = 100
         self.vie = 100
 
@@ -251,7 +253,7 @@ class Creep_porcepique(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 5
-        self.vitesse = 1
+        self.vitesse = 1 / 10
         self.argent = 100
         self.vie = 100
         
@@ -324,7 +326,7 @@ class Nivo():
 class Partie():
     def __init__(self, parent, parcour):
         self.parent=parent
-        self.vie = 100
+        self.vie = 5
         self.cash = 500
         self.nivo = 0
         self.score = 0

@@ -31,10 +31,12 @@ class Vue():
         self.frame_menu = tk.Frame(self.root, width=self.width, height=self.hight, bg="lightgray")
         self.frame_jeu = tk.Frame(self.root)
         self.frame_scores = tk.Frame(self.root, width=self.width, height=self.hight, bg="black")
+        self.frame_gameover = tk.Frame(self.root, width=self.width, height=self.hight, bg="black")
 
         self.afficherEcranDemarrage()
 
     def afficherEcranDemarrage(self):
+        self.frame_gameover.pack_forget()
         self.frame_menu.pack_forget()
         self.frame_jeu.pack_forget()
         self.frame_scores.pack_forget()
@@ -51,43 +53,47 @@ class Vue():
         bouton_scores.pack(pady=10)
 
     def afficherMenu(self):
+        self.frame_gameover.pack_forget()
         self.frame_demarrage.pack_forget()
         self.frame_menu.pack()
 
         # sidebar
-        sidebar_creer = tk.Frame(self.frame_menu, bg="#99CCFF", width=200, height=self.hight, bd=2, relief="solid")
+        sidebar_creer = tk.Frame(self.frame_menu, bg="white", width=300, height=self.hight)
         sidebar_creer.pack(side="right", fill="y")
 
         tk.Label(sidebar_creer, text="MENU", font=("Arial", 18, "bold"), bg="#AAAAAA").pack(pady=10, fill="x")
 
         # Map
-        tk.Button(sidebar_creer, text="Map 1", command=lambda:self.parent.changerParcour(0)).pack(pady=5, padx=20, fill="x")
-        tk.Button(sidebar_creer, text="Map 2", command=lambda:self.parent.changerParcour(1)).pack(pady=5, padx=20, fill="x")
-        tk.Button(sidebar_creer, text="Map 3", command=lambda:self.parent.changerParcour(2)).pack(pady=5, padx=20, fill="x")
+        bouton_parcour_0 = tk.Button(sidebar_creer, text="Map 1", command=lambda:self.parent.changerParcour(0))
+        bouton_parcour_0.pack(pady=5, padx=20)
+        bouton_parcour_1 = tk.Button(sidebar_creer, text="Map 2", command=lambda:self.parent.changerParcour(1))
+        bouton_parcour_1.pack(pady=5, padx=20)
+        bouton_parcour_2 = tk.Button(sidebar_creer, text="Map 3", command=lambda:self.parent.changerParcour(2))
+        bouton_parcour_2.pack(pady=5, padx=20)
 
         # Difficulté
-        tk.Label(sidebar_creer, text="difficulte", font=("Arial", 12, "bold"), bg="#AAAAAA").pack(pady=(20, 0), fill="x")
-        diff_frame = tk.Frame(sidebar_creer, bg="#99CCFF")
+        text_diff = tk.Label(sidebar_creer, text="difficulte", font=("Arial", 12, "bold"), bg="#AAAAAA")
+        text_diff.pack(pady=(20, 0), fill="x")
+
+        diff_frame = tk.Frame(sidebar_creer, bg="white")
         diff_frame.pack(pady=10)
         
-        bouton_difficulte_facile = tk.Button(diff_frame, text="F", bg="lightgreen", command=lambda:self.parent.changerDifficulte(0))
-        bouton_difficulte_facile.pack(side="left", padx=2)
+        bouton_diff_facile = tk.Button(diff_frame, text="F", bg="lightgreen", command=lambda:self.parent.changerDifficulte(0))
+        bouton_diff_facile.pack(side="left", padx=2)
 
-        bouton_difficulte_moyenne = tk.Button(diff_frame, text="M", bg="orange", command=lambda:self.parent.changerDifficulte(1))
-        bouton_difficulte_moyenne.pack(side="left", padx=2)
+        bouton_diff_moyenne = tk.Button(diff_frame, text="M", bg="orange", command=lambda:self.parent.changerDifficulte(1))
+        bouton_diff_moyenne.pack(side="left", padx=2)
         
-        bouton_difficulte_difficile = tk.Button(diff_frame, text="D", bg="red",  command=lambda:self.parent.changerDifficulte(2))
-        bouton_difficulte_difficile.pack(side="left", padx=2)
+        bouton_diff_difficile = tk.Button(diff_frame, text="D", bg="red",  command=lambda:self.parent.changerDifficulte(2))
+        bouton_diff_difficile.pack(side="left", padx=2)
 
         # Démarrer
         bouton_demarrer = tk.Button(sidebar_creer, text="Demarrer", font=("Arial", 14, "bold"), bg="#A0EC2C", command=self.afficherInterfaceJeu)
         bouton_demarrer.pack(side="bottom", pady=10, padx=10)
 
-        # Dans afficherMenu :
+        # preview parcour
         conteneurPreviewParcours = tk.Frame(self.frame_menu, bg="gray", width=self.width, height=self.hight)
         conteneurPreviewParcours.pack(side="left", expand=True, fill="both")
-
-        # 
         self.previewParcours = tk.Canvas(conteneurPreviewParcours, width=self.width, height=self.hight)
         self.previewParcours.pack(expand=True, fill="both")
 
@@ -134,6 +140,22 @@ class Vue():
 
     def afficherScores(self):
         return        
+
+    def afficherGameover(self):
+        self.frame_menu.pack_forget()
+        self.frame_jeu.pack_forget()
+        self.frame_scores.pack_forget()
+        
+        self.frame_gameover.pack()
+        
+        titre = tk.Label(self.frame_gameover, text="GAME OVER", font=("Arial", 30))
+        titre.pack(pady=50)
+
+        bouton_menu = tk.Button(self.frame_gameover, text="menu", command=self.afficherEcranDemarrage)
+        bouton_menu.pack(pady=10)
+
+        bouton_rejouer = tk.Button(self.frame_gameover, text="rejouer", command=self.afficherMenu)
+        bouton_rejouer.pack(pady=10)
 
     def getPosTour(self, evt):
         x = evt.x / self.coefWidth
@@ -197,6 +219,6 @@ class Vue():
         self.canevas.delete("cash")
         self.canevas.delete("vie")
         self.canevas.delete("nivo")
-        self.canevas.create_text(625, 10, fill="#FCA510", text=self.parent.modele.partieCourante.cash, font=("Cooper Black", 24), anchor="nw", tags=("cash",))
-        self.canevas.create_text(500, 10, fill="#FF0000", text=self.parent.modele.partieCourante.vie, font=("Cooper Black", 24), anchor="nw", tags=("vie",))
-        self.canevas.create_text(300, 10, fill="#000000", text=self.parent.modele.partieCourante.nivo, font=("Cooper Black", 24), anchor="nw", tags=("nivo",))
+        self.canevas.create_text(600, 10, fill="#FCA510", text= str(self.parent.modele.partieCourante.cash) + "$", font=("Cooper Black", 24), anchor="nw", tags=("cash",))
+        self.canevas.create_text(15, 10, fill="#FF0000", text="health: " + str(self.parent.modele.partieCourante.vie), font=("Cooper Black", 24), anchor="nw", tags=("vie",))
+        self.canevas.create_text(15, 650, fill="#000000", text="wave: " + str(self.parent.modele.partieCourante.nivo + 1), font=("Cooper Black", 24), anchor="nw", tags=("nivo",))
