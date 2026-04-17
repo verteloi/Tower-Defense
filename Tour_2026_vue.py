@@ -25,6 +25,7 @@ class Vue():
         self.img_creep_raton = PhotoImage(file="images\\raton.png")
         self.img_creep_renard = PhotoImage(file="images\\renard.png")
         self.img_creep_ecur = PhotoImage(file="images\\squirrel.png")
+        self.img_tour_classique = PhotoImage(file="images\\tourfeu.png")
 
         self.frame_demarrage = tk.Frame(self.root, width=self.width, height=self.hight, bg="gray")
         self.frame_menu = tk.Frame(self.root, width=self.width, height=self.hight, bg="lightgray")
@@ -194,7 +195,8 @@ class Vue():
             x2 = i.pos[0] * self.coefWidth + 10
             y2 = i.pos[1] * self.coefHeight + 10
             # print("LOCtour",i.pos,x1,y1,x2,y2)
-            self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))
+            #self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))            
+            self.canevas.create_image(x1, y1, image=self.img_tour_classique, anchor="nw",tags=("tour",)) 
 
             #def afficher_projectile(self, projectiles):
         if len(self.parent.modele.partieCourante.projectiles) > 0:

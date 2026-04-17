@@ -65,6 +65,7 @@ class Projectile():
         self.y = parent.pos[1]
         self.x = parent.pos[0]
         self.speed = 3
+        self.degat = parent.force * 25
 
         dx = cible.pos[0] - parent.pos[0]
         dy = cible.pos[1] - parent.pos[1]
@@ -78,14 +79,15 @@ class Projectile():
 
 
 class Tour():
-    def __init__(self,parent,pos):
+    def __init__(self,parent,pos, vitesseTir):
         self.parent=parent
         self.pos=pos
         self.cible=[0,0]
         self.niveauTour = 1
         self.range = 15
         self.tag=parent.getTagTour()
-        self.compteurTir = 10
+        self.vitesseTir = vitesseTir               #à modif quand tour upgrade
+        self.compteurTir = 11 - vitesseTir    # à modif quand tour upgrade
         print(self.tag)
 
     def scan(self):
@@ -103,33 +105,33 @@ class Tour():
 
 class Tour_glace(Tour):
     def __init__(self, parent, pos):
-        Tour.__init__(self, parent, pos)
-        self.vitesseTir = 1
-        self.force = 1
+        self.vitesseTir = 1 # 1 le plus lent, 10 le plus rapide 
+        Tour.__init__(self, parent, pos, self.vitesseTir)
+        self.force = 1      # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.cout = 250
         self.effet = "ralentir"
 
 class Tour_poison(Tour):
     def __init__(self, parent, pos):
-        Tour.__init__(self, parent, pos)
         self.vitesseTir = 1
+        Tour.__init__(self, parent, pos, self.vitesseTir)
         self.force = 1
         self.cout = 250
         self.effet = "poison"  
 
 class Tour_laser(Tour):
     def __init__(self, parent, pos):
-        Tour.__init__(self, parent, pos)
         self.vitesseTir = 1
+        Tour.__init__(self, parent, pos, self.vitesseTir)
         self.force = 1
         self.cout = 300
         self.effet = "none"
 
 class Tour_classique(Tour):
     def __init__(self, parent, pos):
-        Tour.__init__(self, parent, pos)
-        self.vitesseTir = 1
-        self.force = 1
+        self.vitesseTir = 1    # 1 le plus lent, 10 le plus rapide 
+        Tour.__init__(self, parent, pos, self.vitesseTir)   
+        self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.cout = 150
         self.effet = "none"
 
@@ -189,11 +191,23 @@ class Creep():
             self.pos = [nouv_x, nouv_y]
 
     def perdre_vie_joueur(self):
-        for creep in self.parent.creepsEnCours:
+        for creep in self.parent.creepsEnCours: #quand le creep arrive à la fin, le joueur perd une vie et on le delete de la liste
             if (creep.pos[0] >= 100):
                 self.parent.parent.vie -= creep.degat 
                 self.parent.creepsEnCours.remove(creep)
                 print(str(creep.tag) + " was deleted")  
+
+    def scan_pour_projectiles(self):
+        a_supprimer = []
+
+        for projectile in self.parent.parent.projectiles.values():
+            if (projectile.x >= (self.pos[0]-4) and projectile.x <= (self.pos[0] + 4)): #projectile est dans le x du creep
+                if (projectile.y >= (self.pos[1]-4) and projectile.y <= (self.pos[1] + 4)): #projectile est dans le y du creep
+                    a_supprimer.append(projectile.tag)
+                    self.vie -= projectile.degat
+                
+        for tag in a_supprimer:
+                del self.parent.parent.projectiles[tag]
 
 # LENT ET FORT
 class Creep_ours(Creep):
@@ -260,15 +274,15 @@ class Nivo():
         for i in self.creepsDuNivo:
             match i: 
                 case 1 :
-                    self.creeps.append(Creep_ours(self, 1))
+                    self.creeps.append(Creep_ours(self, i))
                 case 2 :
-                    self.creeps.append(Creep_renard(self, 2))
+                    self.creeps.append(Creep_renard(self, i))
                 case 3 :
-                    self.creeps.append(Creep_ecureuil(self, 3))
+                    self.creeps.append(Creep_ecureuil(self, i))
                 case 4 :
-                    self.creeps.append(Creep_moufette(self, 4))
+                    self.creeps.append(Creep_moufette(self, i))
                 case 5 :
-                    self.creeps.append(Creep_porcepique(self, 5))
+                    self.creeps.append(Creep_porcepique(self, i))
                 
     def bougeCreep(self):
         if self.creeps:
@@ -289,12 +303,21 @@ class Nivo():
         n=0
         for i in self.creepsEnCours:
             n=n+1
-            i.bouge()
+            if i.vie > 0:
+                i.bouge()
+            else:
+                self.creepsEnCours.remove(i)
     
     def tourScan(self):
         if self.parent.toursEnJeu and self.creepsEnCours:
             for i in self.parent.toursEnJeu.values():
                 i.scan()
+
+    def creepScan(self):
+        if self.creepsEnCours:
+            for creep in self.creepsEnCours:
+                creep.scan_pour_projectiles()
+
 
 
 class Partie():
@@ -336,7 +359,7 @@ class Partie():
     
     def setTour(self,pos):
         print("MODELE",pos)
-        tour=Tour(self,pos)
+        tour=Tour_classique(self,pos)
         self.toursEnJeu[tour.tag] = tour
 
     def bougeProjectile(self):
