@@ -371,7 +371,7 @@ class Partie():
             case 1:
                 tour=Tour_classique(self,pos,1)
             case 2:
-                tour=Tour_classique(self,pos,2) # tour feu, electrique, poison, glace
+                tour=Tour_classique(self,pos,2) # tour feu
             case 3:
                 tour=Tour_laser(self,pos,3)
             case 4:
