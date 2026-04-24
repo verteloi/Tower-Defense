@@ -79,7 +79,7 @@ class Projectile():
 
 
 class Tour():
-    def __init__(self,parent,pos, vitesseTir):
+    def __init__(self,parent,pos, vitesseTir, cout):
         self.parent=parent
         self.pos=pos
         self.cible=[0,0]
@@ -88,6 +88,7 @@ class Tour():
         self.tag=parent.getTagTour()
         self.vitesseTir = vitesseTir               #à modif quand tour upgrade
         self.compteurTir = 11 - vitesseTir    # à modif quand tour upgrade
+        self.resellValue = cout*0.7
         print(self.tag)
 
     def scan(self):
@@ -104,33 +105,33 @@ class Tour():
 class Tour_glace(Tour):
     def __init__(self, parent, pos):
         self.vitesseTir = 1 # 1 le plus lent, 10 le plus rapide 
-        Tour.__init__(self, parent, pos, self.vitesseTir)
-        self.force = 1      # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.cout = 250
+        Tour.__init__(self, parent, pos, self.vitesseTir, self.cout)
+        self.force = 1      # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "ralentir"
 
 class Tour_poison(Tour):
     def __init__(self, parent, pos):
         self.vitesseTir = 1
-        Tour.__init__(self, parent, pos, self.vitesseTir)
-        self.force = 1
         self.cout = 250
+        Tour.__init__(self, parent, pos, self.vitesseTir, self.cout)        
+        self.force = 1
         self.effet = "poison"  
 
 class Tour_laser(Tour):
     def __init__(self, parent, pos):
         self.vitesseTir = 1
-        Tour.__init__(self, parent, pos, self.vitesseTir)
-        self.force = 1
         self.cout = 300
+        Tour.__init__(self, parent, pos, self.vitesseTir, self.cout)        
+        self.force = 1
         self.effet = "none"
 
 class Tour_classique(Tour):
     def __init__(self, parent, pos):
         self.vitesseTir = 1    # 1 le plus lent, 10 le plus rapide 
-        Tour.__init__(self, parent, pos, self.vitesseTir)   
-        self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.cout = 150
+        Tour.__init__(self, parent, pos, self.vitesseTir, self.cout)        
+        self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "none"
 
 class Creep():
@@ -358,10 +359,21 @@ class Partie():
         return "tour_"+str(self.tagProjectile)
     
     def setTour(self,pos):
-        print("MODELE",pos)
-        tour=Tour_classique(self,pos)
-        self.toursEnJeu[tour.tag] = tour
-        self.parent.parent.vue.afficherTours()   
+        print("TOUR",pos)
+        tour=Tour_classique(self,pos) #à ajouter case pour type tours
+        if(self.cash >= tour.cout):
+            self.toursEnJeu[tour.tag] = tour
+            self.cash -= tour.cout
+            self.parent.parent.vue.afficherTours()
+            self.parent.parent.vue.afficheInformationsPartie()   
+
+    def vendreTour(self, tag):
+        if tag in self.toursEnJeu:
+            tour = self.toursEnJeu[tag]
+            self.cash += tour.resellValue
+            del self.toursEnJeu[tag]
+            self.parent.parent.vue.afficherTours()
+            self.parent.parent.vue.afficheInformationsPartie()   
 
     def bougeProjectile(self):
         a_supprimer = []
