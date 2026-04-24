@@ -16,17 +16,23 @@ class Vue():
         self.info_degat = tk.StringVar(value="-")
         self.info_vitesse = tk.StringVar(value="-")
 
+        self.tourSelec = 1
+
         # --- Import des images ---
         try:
             self.img_parcour1 = PhotoImage(file="images\\img_parcour1.png")
             self.img_parcour2 = PhotoImage(file="images\\img_parcour2.png")
             self.img_parcour3 = PhotoImage(file="images\\img_parcour3.png")
-            self.img_creep_ours = PhotoImage(file="images\\ours.png")
-            self.img_creep_por = PhotoImage(file="images\\porcupine.png")
-            self.img_creep_raton = PhotoImage(file="images\\raton.png")
-            self.img_creep_renard = PhotoImage(file="images\\renard.png")
-            self.img_creep_ecur = PhotoImage(file="images\\squirrel.png")
-            self.img_tour_classique = PhotoImage(file="images\\tourfeu.png")
+            self.img_creep_ours = PhotoImage(file="images\\creep_ours.png")
+            self.img_creep_por = PhotoImage(file="images\\creep_porcupine.png")
+            self.img_creep_raton = PhotoImage(file="images\\creep_raton.png")
+            self.img_creep_renard = PhotoImage(file="images\\creep_renard.png")
+            self.img_creep_ecur = PhotoImage(file="images\\creep_squirrel.png")
+            self.img_tour_classique = PhotoImage(file="images\\tour_feu.png")
+            self.img_tour_feu = PhotoImage(file="images\\tour_feu.png")
+            self.img_tour_poison = PhotoImage(file="images\\tour_poison.png")
+            self.img_tour_glace = PhotoImage(file="images\\tour_glace.png")
+            self.img_tour_electrique = PhotoImage(file="images\\tour_electrique.png")
         except Exception as e:
             print(f"Erreur chargement images : {e}")
 
@@ -129,10 +135,29 @@ class Vue():
             tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour("jeu"), bd=1).pack(side="right", padx=5)
             tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour("jeu"), bd=1).pack(side="left", padx=5)
 
+            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda:self.selecTour(1), bd=1)
+            self.btn_achat_tour_classique.pack(side="right",pady=5, padx=5)
+
+            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_1, image=self.img_tour_feu, command=lambda:self.selecTour(2), bd=1)
+            self.btn_achat_tour_classique.pack(side="left", pady=5, padx=5)
+
             self.panneau_tours_range_2 = tk.Frame(self.sidebar, bg="white", bd=1)
             self.panneau_tours_range_2.pack(pady=5)
             tk.Button(self.panneau_tours_range_2, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour("jeu"), bd=1).pack(side="right", padx=5)
             tk.Button(self.panneau_tours_range_2, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour("jeu"), bd=1).pack(side="left", padx=5)
+
+            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_2, image=self.img_tour_electrique, command=lambda:self.selecTour(3), bd=1)
+            self.btn_achat_tour_classique.pack(side="right",pady=5, padx=5)
+
+            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_2, image=self.img_tour_poison, command=lambda:self.selecTour(4), bd=1)
+            self.btn_achat_tour_classique.pack(side="left", pady=5, padx=5)
+
+            # --- range 3 ---
+            self.panneau_tours_range_3 = tk.Frame(self.sidebar, bg="white", bd=1)
+            self.panneau_tours_range_3.pack(pady=5)
+
+            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_3, image=self.img_tour_glace, command=lambda:self.selecTour(5), bd=1)
+            self.btn_achat_tour_classique.pack(pady=5)
 
             # Zone Stats
             self.panneau_stats = tk.Frame(self.sidebar, bg="white")
@@ -164,6 +189,24 @@ class Vue():
         self.parent.modele.demarrePartie()
         self.afficheInformationsPartie()
 
+    def selecTour(self, type):
+        print("dans def select tour, le param passe : ", type)
+        self.tourSelec = type
+
+    def afficherScores(self):
+        self.changer_frame("scores")
+        if not self.frame_scores.winfo_children():
+            tk.Label(self.frame_scores, text="SCORES", font=("Arial", 30), fg="white", bg="black").pack(pady=50)
+            tk.Button(self.frame_scores, text="Retour", command=self.afficherEcranDemarrage).pack()
+
+    def afficherGameover(self):
+        self.changer_frame("gameover")
+        
+        if not self.frame_gameover.winfo_children():
+            tk.Label(self.frame_gameover, text="GAME OVER", font=("Arial", 30), fg="red", bg="black").pack(pady=50)
+            tk.Button(self.frame_gameover, text="Menu Principal", command=self.afficherEcranDemarrage).pack(pady=10)
+            tk.Button(self.frame_gameover, text="Rejouer", command=self.afficherMenu).pack(pady=10)
+
     def getPosTour(self, evt):
         item_under_mouse = self.canevas.find_withtag("current")  
         all_tags = self.canevas.gettags(item_under_mouse)
@@ -171,7 +214,8 @@ class Vue():
             return
         x = evt.x / self.coefWidth
         y = evt.y / self.coefHeight
-        self.parent.setTour([x, y])
+        print("type de tour selec ", self.tourSelec)
+        self.parent.setTour([x, y], self.tourSelec)
 
     def clickSurTour(self, event):
         tour = self.canevas.find_withtag("current")
@@ -212,6 +256,42 @@ class Vue():
         self.canevas.create_text(600, 10, fill="#FCA510", text= str(self.parent.modele.partieCourante.cash) + "$", font=("Cooper Black", 24), anchor="nw", tags=("info",))
         self.canevas.create_text(15, 10, fill="#FF0000", text="health: " + str(self.parent.modele.partieCourante.vie), font=("Cooper Black", 24), anchor="nw", tags=("info",))
         self.canevas.create_text(15, 650, fill="#000000", text="wave: " + str(self.parent.modele.partieCourante.nivo + 1), font=("Cooper Black", 24), anchor="nw", tags=("info",))
+
+    def afficherTours(self):
+        self.canevas.delete("tour")
+        # Logique originale pr�serv�e (via nivoActif)
+        for i in self.parent.modele.partieCourante.toursEnJeu.values():
+            x1 = i.pos[0] * self.coefWidth - 10
+            y1 = i.pos[1] * self.coefHeight - 10
+            x2 = i.pos[0] * self.coefWidth + 10
+            y2 = i.pos[1] * self.coefHeight + 10
+            # print("LOCtour",i.pos,x1,y1,x2,y2)
+            #self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))
+
+        if (self.parent.modele.partieCourante.toursEnJeu):
+            for i in self.parent.modele.partieCourante.toursEnJeu.values():
+                x1 = i.pos[0] * self.coefWidth - 10
+                y1 = i.pos[1] * self.coefHeight - 10
+                
+                img_tour = {1: self.img_tour_classique, 2: self.img_tour_feu, 
+                             3: self.img_tour_electrique, 4: self.img_tour_poison, 5: self.img_tour_glace}
+                
+                if i.type in img_tour:
+                    self.canevas.create_image(x1-10, y1-10, image=img_tour[i.type], anchor="nw", tags=("tour",))
+
+            #self.canevas.create_image(x1-10, y1-10, image=self.img_tour_classique, anchor="nw",tags=("tour",i.tag)) 
+            
+        self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
+
+    def clickSurTour(self, event):
+        # get le tag de la tour 
+        tour = self.canevas.find_withtag("current")
+        all_tags = self.canevas.gettags(tour)
+        id_tour = [t for t in all_tags if t != "tour" and t != "current"]
+
+        #vendre la tour
+        self.parent.modele.partieCourante.vendreTour(id_tour[0])
+
 
     def afficherScores(self):
         self.changer_frame("scores")

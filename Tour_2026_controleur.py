@@ -26,8 +26,8 @@ class Controleur():
             self.vue.afficheCreepTourBombe()    
             self.vue.root.after(self.delai, self.continuePartie)
 
-    def setTour(self, pos):
-        self.modele.partieCourante.setTour(pos)
+    def setTour(self, pos, type):
+        self.modele.partieCourante.setTour(pos, type)
 
     def changerDifficulte(self, difficulte):
         self.modele.difficulteChoisi = difficulte
