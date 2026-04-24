@@ -40,6 +40,7 @@ class Vue():
         self.frame_menu.pack_forget()
         self.frame_jeu.pack_forget()
         self.frame_scores.pack_forget()
+
         
         self.frame_demarrage.pack()
         
@@ -115,7 +116,8 @@ class Vue():
         self.sidebar.pack(side="right", fill="y")
         tk.Button(self.sidebar, text="Lancer Vague", command=self.parent.demarrePartie).pack(pady=20)
 
-        # Canva à gauche dans frame_jeu
+
+
         self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black")
         self.canevas.pack(side="left")
 
@@ -132,6 +134,9 @@ class Vue():
                 #image=self.img_parcour3
             
         self.canevas.bind("<Button-1>", self.getPosTour)
+
+        self.parent.modele.demarrePartie() # demarer PAS LA VAGUE
+        self.afficheInformationsPartie()
 
     def afficherScores(self):
         return        
@@ -171,34 +176,27 @@ class Vue():
         self.canevas.delete("tour")
         self.canevas.delete("bombe")
 
-        # Logique originale pr�serv�e (via nivoActif)
-        for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
-            x1 = i.pos[0] * self.coefWidth - 15
-            y1 = i.pos[1] * self.coefHeight - 15
-            #x2 = i.pos[0] * (self.width/100) + 15
-            #y2 = i.pos[1] * (self.hight/100) + 15
-            #self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
-            match i.type :
-                case 1 :
-                     self.canevas.create_image(x1, y1, image=self.img_creep_ours, anchor="nw",tags=("creep",))
-                case 2 :
-                     self.canevas.create_image(x1, y1, image=self.img_creep_renard, anchor="nw",tags=("creep",))
-                case 3 :
-                     self.canevas.create_image(x1, y1, image=self.img_creep_ecur, anchor="nw",tags=("creep",))
-                case 4 :
-                     self.canevas.create_image(x1, y1, image=self.img_creep_raton, anchor="nw",tags=("creep",))
-                case 5 :
-                     self.canevas.create_image(x1, y1, image=self.img_creep_por, anchor="nw",tags=("creep",)) 
+        self.afficherTours()
 
         # Logique originale pr�serv�e (via nivoActif)
-        for i in self.parent.modele.partieCourante.toursEnJeu.values():
-            x1 = i.pos[0] * self.coefWidth - 10
-            y1 = i.pos[1] * self.coefHeight - 10
-            x2 = i.pos[0] * self.coefWidth + 10
-            y2 = i.pos[1] * self.coefHeight + 10
-            # print("LOCtour",i.pos,x1,y1,x2,y2)
-            #self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))            
-            self.canevas.create_image(x1, y1, image=self.img_tour_classique, anchor="nw",tags=("tour",)) 
+        if (self.parent.modele.partieCourante.nivoActif.creepsEnCours):
+            for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
+                x1 = i.pos[0] * self.coefWidth - 15
+                y1 = i.pos[1] * self.coefHeight - 15
+                #x2 = i.pos[0] * (self.width/100) + 15
+                #y2 = i.pos[1] * (self.hight/100) + 15
+                #self.canevas.create_oval(x1, y1, x2, y2, width=2, fill="red", tags=("creep",))
+                match i.type :
+                    case 1 :
+                        self.canevas.create_image(x1, y1, image=self.img_creep_ours, anchor="nw",tags=("creep",))
+                    case 2 :
+                        self.canevas.create_image(x1, y1, image=self.img_creep_renard, anchor="nw",tags=("creep",))
+                    case 3 :
+                        self.canevas.create_image(x1, y1, image=self.img_creep_ecur, anchor="nw",tags=("creep",))
+                    case 4 :
+                        self.canevas.create_image(x1, y1, image=self.img_creep_raton, anchor="nw",tags=("creep",))
+                    case 5 :
+                        self.canevas.create_image(x1, y1, image=self.img_creep_por, anchor="nw",tags=("creep",)) 
 
             #def afficher_projectile(self, projectiles):
         if len(self.parent.modele.partieCourante.projectiles) > 0:
@@ -217,3 +215,14 @@ class Vue():
         self.canevas.create_text(600, 10, fill="#FCA510", text= str(self.parent.modele.partieCourante.cash) + "$", font=("Cooper Black", 24), anchor="nw", tags=("cash",))
         self.canevas.create_text(15, 10, fill="#FF0000", text="health: " + str(self.parent.modele.partieCourante.vie), font=("Cooper Black", 24), anchor="nw", tags=("vie",))
         self.canevas.create_text(15, 650, fill="#000000", text="wave: " + str(self.parent.modele.partieCourante.nivo + 1), font=("Cooper Black", 24), anchor="nw", tags=("nivo",))
+
+    def afficherTours(self):
+        # Logique originale pr�serv�e (via nivoActif)
+        for i in self.parent.modele.partieCourante.toursEnJeu.values():
+            x1 = i.pos[0] * self.coefWidth - 10
+            y1 = i.pos[1] * self.coefHeight - 10
+            x2 = i.pos[0] * self.coefWidth + 10
+            y2 = i.pos[1] * self.coefHeight + 10
+            # print("LOCtour",i.pos,x1,y1,x2,y2)
+            #self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))            
+            self.canevas.create_image(x1, y1, image=self.img_tour_classique, anchor="nw",tags=("tour",)) 

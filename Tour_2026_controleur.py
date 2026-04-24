@@ -12,7 +12,7 @@ class Controleur():
     def demarrePartie(self):
         if self.actif == 0:
             self.actif = 1
-            self.modele.demarrePartie()
+
             self.vue.afficheModele()
             self.continuePartie()
         else:
@@ -25,7 +25,6 @@ class Controleur():
             self.modele.partieCourante.nivoActif.creepScan()
             self.modele.partieCourante.bougeProjectile()
             self.vue.afficheCreepTourBombe()    
-            self.vue.afficheInformationsPartie()
             self.vue.root.after(self.delai, self.continuePartie)
 
     def setTour(self, pos):

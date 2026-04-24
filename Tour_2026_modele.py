@@ -323,7 +323,7 @@ class Nivo():
 class Partie():
     def __init__(self, parent, parcour):
         self.parent=parent
-        self.vie = 5
+        self.vie = 1
         self.cash = 500
         self.nivo = 0
         self.score = 0
@@ -361,6 +361,7 @@ class Partie():
         print("MODELE",pos)
         tour=Tour_classique(self,pos)
         self.toursEnJeu[tour.tag] = tour
+        self.parent.parent.vue.afficherTours()   
 
     def bougeProjectile(self):
         a_supprimer = []
