@@ -79,9 +79,10 @@ class Projectile():
 
 
 class Tour():
-    def __init__(self,parent,pos, vitesseTir, cout):
+    def __init__(self,parent,pos, type, vitesseTir, cout):
         self.parent=parent
         self.pos=pos
+        self.type = type
         self.cible=[0,0]
         self.niveauTour = 1
         self.range = 20
@@ -103,34 +104,34 @@ class Tour():
                         self.compteurTir = 100
 
 class Tour_glace(Tour):
-    def __init__(self, parent, pos):
+    def __init__(self, parent, pos, type):
         self.vitesseTir = 1 # 1 le plus lent, 10 le plus rapide 
         self.cout = 250
-        Tour.__init__(self, parent, pos, self.vitesseTir, self.cout)
+        Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)
         self.force = 1      # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "ralentir"
 
 class Tour_poison(Tour):
-    def __init__(self, parent, pos):
+    def __init__(self, parent, pos, type):
         self.vitesseTir = 1
         self.cout = 250
-        Tour.__init__(self, parent, pos, self.vitesseTir, self.cout)        
+        Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1
         self.effet = "poison"  
 
 class Tour_laser(Tour):
-    def __init__(self, parent, pos):
+    def __init__(self, parent, pos, type):
         self.vitesseTir = 1
         self.cout = 300
-        Tour.__init__(self, parent, pos, self.vitesseTir, self.cout)        
+        Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1
         self.effet = "none"
 
 class Tour_classique(Tour):
-    def __init__(self, parent, pos):
+    def __init__(self, parent, pos, type):
         self.vitesseTir = 1    # 1 le plus lent, 10 le plus rapide 
         self.cout = 150
-        Tour.__init__(self, parent, pos, self.vitesseTir, self.cout)        
+        Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "none"
 
@@ -325,7 +326,7 @@ class Partie():
     def __init__(self, parent, parcour):
         self.parent=parent
         self.vie = 1
-        self.cash = 500
+        self.cash = 50000
         self.nivo = 0
         self.score = 0
         self.tagCreep = 0
@@ -358,9 +359,21 @@ class Partie():
         self.tagProjectile = self.tagProjectile + 1
         return "tour_"+str(self.tagProjectile)
     
-    def setTour(self,pos):
+    def setTour(self,pos, type):
         print("TOUR",pos)
-        tour=Tour_classique(self,pos) #à ajouter case pour type tours
+        
+        match type:
+            case 1:
+                tour=Tour_classique(self,pos,1)
+            case 2:
+                tour=Tour_classique(self,pos,2) # tour feu, electrique, poison, glace
+            case 3:
+                tour=Tour_laser(self,pos,3)
+            case 4:
+                tour=Tour_poison(self,pos,4)
+            case 5:
+                tour=Tour_glace(self,pos,5)
+         
         if(self.cash >= tour.cout):
             self.toursEnJeu[tour.tag] = tour
             self.cash -= tour.cout
