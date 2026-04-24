@@ -196,14 +196,22 @@ class Vue():
             tk.Button(self.frame_gameover, text="Rejouer", command=self.afficherMenu).pack(pady=10)
 
     def getPosTour(self, evt):
+        
+        #pour que ça priorise le bind() sur la tour sur le bind() sur le canevas
+        item_under_mouse = self.canevas.find_withtag("current")  
+        all_tags = self.canevas.gettags(item_under_mouse)
+        for t in all_tags :
+            if t == "tour":
+                #si on vient d'appuyer sur une tour, ne fais rien, let tag_bind handle it
+                return
+        
         x = evt.x / self.coefWidth
         y = evt.y / self.coefHeight
         self.parent.setTour([x, y])
 
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
-        self.canevas.delete("tour")
-        self.canevas.delete("projectile")
+        self.canevas.delete("bombe")
 
         self.afficherTours()
 
@@ -233,7 +241,25 @@ class Vue():
         self.canevas.create_text(15, 650, fill="#000000", text="wave: " + str(self.parent.modele.partieCourante.nivo + 1), font=("Cooper Black", 24), anchor="nw", tags=("info",))
 
     def afficherTours(self):
+        self.canevas.delete("tour")
+        # Logique originale pr�serv�e (via nivoActif)
         for i in self.parent.modele.partieCourante.toursEnJeu.values():
             x1 = i.pos[0] * self.coefWidth - 10
             y1 = i.pos[1] * self.coefHeight - 10
-            self.canevas.create_image(x1, y1, image=self.img_tour_classique, anchor="nw", tags=("tour",))
+            x2 = i.pos[0] * self.coefWidth + 10
+            y2 = i.pos[1] * self.coefHeight + 10
+            # print("LOCtour",i.pos,x1,y1,x2,y2)
+            #self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))            
+            self.canevas.create_image(x1-10, y1-10, image=self.img_tour_classique, anchor="nw",tags=("tour",i.tag)) 
+            
+        self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
+
+    def clickSurTour(self, event):
+        # get le tag de la tour 
+        tour = self.canevas.find_withtag("current")
+        all_tags = self.canevas.gettags(tour)
+        id_tour = [t for t in all_tags if t != "tour" and t != "current"]
+
+        #vendre la tour
+        self.parent.modele.partieCourante.vendreTour(id_tour[0])
+
