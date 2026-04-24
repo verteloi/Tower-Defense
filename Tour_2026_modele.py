@@ -102,6 +102,10 @@ class Tour():
                         self.parent.projectiles[projectile.tag] = projectile
                         self.compteurTir = 100
 
+    
+        
+
+
 class Tour_glace(Tour):
     def __init__(self, parent, pos):
         self.vitesseTir = 1 # 1 le plus lent, 10 le plus rapide 
@@ -331,6 +335,7 @@ class Partie():
         self.tagCreep = 0
         self.tagTours = 0
         self.tagProjectile = 0
+        self.tourSelectionne = {}
         self.dictCreeps = {}
         self.toursEnJeu = {}
         self.projectiles = {}
@@ -387,6 +392,15 @@ class Partie():
             
             for tag in a_supprimer:
                 del self.projectiles[tag]
+
+    def changeTourSelectionne(self):
+        match self.tourSelectionne:
+            case None:
+                self.noeuds=self.noeuds0
+            case "feu":
+                self.noeuds=self.noeuds1
+            case "glace":
+                self.noeuds=self.noeuds2
 
 class Modele():
     def __init__(self, parent):

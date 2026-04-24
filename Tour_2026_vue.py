@@ -11,9 +11,12 @@ class Vue():
         self.width = 700
         self.coefHeight = self.hight/100
         self.coefWidth = self.width/100
+        self.info_effet = tk.StringVar(value="Aucune sélection")
+        self.info_prix = tk.StringVar(value="-")
+        self.info_degat = tk.StringVar(value="-")
+        self.info_vitesse = tk.StringVar(value="-")
 
         # --- Import des images ---
-        # Note : Assure-toi que le dossier 'images' existe avec ces fichiers
         try:
             self.img_parcour1 = PhotoImage(file="images\\img_parcour1.png")
             self.img_parcour2 = PhotoImage(file="images\\img_parcour2.png")
@@ -34,7 +37,6 @@ class Vue():
         self.frame_scores = tk.Frame(self.root, width=self.width, height=self.hight, bg="black")
         self.frame_gameover = tk.Frame(self.root, width=self.width, height=self.hight, bg="black")
 
-        # --- Dictionnaire de Frames ---
         self.frames = {
             "demarrage": self.frame_demarrage,
             "menu": self.frame_menu,
@@ -43,66 +45,54 @@ class Vue():
             "gameover": self.frame_gameover
         }
         
-        self.frame_actuelle = None  # Variable pour suivre la frame visible
-
-        # Affichage de l'écran de départ
+        self.frame_actuelle = None
         self.afficherEcranDemarrage()
 
     def changer_frame(self, cle_frame):
         if self.frame_actuelle is not None:
             self.frame_actuelle.pack_forget()
-        
         self.frame_actuelle = self.frames[cle_frame]
         self.frame_actuelle.pack()
 
     def afficherEcranDemarrage(self):
         self.changer_frame("demarrage")
-        
-        # On ne dessine les widgets que s'ils n'existent pas encore
         if not self.frame_demarrage.winfo_children():
             titre = tk.Label(self.frame_demarrage, text="Tower Defense", font=("Arial", 30))
             titre.pack(pady=50)
-
             bouton_demarrer = tk.Button(self.frame_demarrage, text="Demarrer", command=self.afficherMenu)
             bouton_demarrer.pack(pady=10)
-
             bouton_scores = tk.Button(self.frame_demarrage, text="Scores", command=self.afficherScores)
             bouton_scores.pack(pady=10)
 
     def afficherMenu(self):
         self.changer_frame("menu")
-
         if not self.frame_menu.winfo_children():
-            # sidebar
             sidebar_creer = tk.Frame(self.frame_menu, bg="white", width=300, height=self.hight)
             sidebar_creer.pack(side="right", fill="y")
 
+
             tk.Label(sidebar_creer, text="MENU", font=("Arial", 18, "bold"), bg="#AAAAAA").pack(pady=10, fill="x")
 
-            # Map
             tk.Button(sidebar_creer, text="Map 1", command=lambda:self.parent.changerParcour(0)).pack(pady=5, padx=20)
             tk.Button(sidebar_creer, text="Map 2", command=lambda:self.parent.changerParcour(1)).pack(pady=5, padx=20)
             tk.Button(sidebar_creer, text="Map 3", command=lambda:self.parent.changerParcour(2)).pack(pady=5, padx=20)
 
-            # Difficulté
             tk.Label(sidebar_creer, text="difficulte", font=("Arial", 12, "bold"), bg="#AAAAAA").pack(pady=(20, 0), fill="x")
-            
+
             diff_frame = tk.Frame(sidebar_creer, bg="white")
             diff_frame.pack(pady=10)
-            
+
             tk.Button(diff_frame, text="F", bg="lightgreen", command=lambda:self.parent.changerDifficulte(0)).pack(side="left", padx=2)
             tk.Button(diff_frame, text="M", bg="orange", command=lambda:self.parent.changerDifficulte(1)).pack(side="left", padx=2)
             tk.Button(diff_frame, text="D", bg="red", command=lambda:self.parent.changerDifficulte(2)).pack(side="left", padx=2)
-
-            # Démarrer
             tk.Button(sidebar_creer, text="Jouer", font=("Arial", 14, "bold"), bg="#A0EC2C", command=self.afficherInterfaceJeu).pack(side="bottom", pady=10, padx=10)
-
-            # preview parcour
+            
             conteneurPreviewParcours = tk.Frame(self.frame_menu, bg="gray", width=self.width, height=self.hight)
             conteneurPreviewParcours.pack(side="left", expand=True, fill="both")
+
             self.previewParcours = tk.Canvas(conteneurPreviewParcours, width=self.width, height=self.hight)
             self.previewParcours.pack(expand=True, fill="both")
-
+            
         self.actualiserPreviewParcour()
 
     def actualiserPreviewParcour(self):
@@ -112,66 +102,59 @@ class Vue():
         if choix in imgs:
             self.previewParcours.create_image(0, 0, image=imgs[choix], anchor="nw")
 
+    def actualiser_infos_tour(self, type_appel="bouton"):
+        tour = self.parent.modele.partieCourante.tourSelectionne
+        if tour:
+            self.info_prix.set(f"Prix: {tour.cout}$")
+            self.info_degat.set(f"Degat: {tour.force}$")
+            self.info_effet.set(f"Effet: {tour.effet}$")
+            self.info_vitesse.set(f"Vitesse de Tir: {tour.vitesseTir}$")
+        else:
+            self.info_prix.set("Aucune selection")
+            self.info_degat.set("-")
+            self.info_effet.set("-") 
+            self.info_vitesse.set("-")
+
     def afficherInterfaceJeu(self):
         self.changer_frame("jeu")
-
         if not self.frame_jeu.winfo_children():
-            # Sidebar de jeu (largeur fixe comme dans afficherMenu)
             self.sidebar = tk.Frame(self.frame_jeu, bg="white", width=250, height=self.hight)
             self.sidebar.pack(side="right", fill="y")
 
-            # --- Zone Boutique ---
             tk.Label(self.sidebar, text="TOURS", font=("Arial", 12, "bold"), bg="#AAAAAA").pack(pady=(10, 0), fill="x")
-            self.panneau_tours = tk.Frame(self.sidebar, bg="white", bd=1)
-            self.panneau_tours.pack(side="top", pady=5)
-
-            # --- range 1 ---
+            
+            # Grilles boutiques
             self.panneau_tours_range_1 = tk.Frame(self.sidebar, bg="white", bd=1)
             self.panneau_tours_range_1.pack(pady=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour("jeu"), bd=1).pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour("jeu"), bd=1).pack(side="left", padx=5)
 
-            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: print("Tour selectionnee"), bd=1)
-            self.btn_achat_tour_classique.pack(side="right",pady=5, padx=5)
-
-            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: print("Tour selectionnee"), bd=1)
-            self.btn_achat_tour_classique.pack(side="left", pady=5, padx=5)
-
-            # --- range 2 ---
             self.panneau_tours_range_2 = tk.Frame(self.sidebar, bg="white", bd=1)
             self.panneau_tours_range_2.pack(pady=5)
+            tk.Button(self.panneau_tours_range_2, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour("jeu"), bd=1).pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_2, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour("jeu"), bd=1).pack(side="left", padx=5)
 
-            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_2, image=self.img_tour_classique, command=lambda: print("Tour selectionnee"), bd=1)
-            self.btn_achat_tour_classique.pack(side="right",pady=5, padx=5)
-
-            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_2, image=self.img_tour_classique, command=lambda: print("Tour selectionnee"), bd=1)
-            self.btn_achat_tour_classique.pack(side="left", pady=5, padx=5)
-
-            # --- range 3 ---
-            self.panneau_tours_range_3 = tk.Frame(self.sidebar, bg="white", bd=1)
-            self.panneau_tours_range_3.pack(pady=5)
-
-            self.btn_achat_tour_classique = tk.Button(self.panneau_tours_range_3, image=self.img_tour_classique, command=lambda: print("Tour selectionnee"), bd=1)
-            self.btn_achat_tour_classique.pack(pady=5)
-
-            # --- Zone Info/Stats ---
+            # Zone Stats
             self.panneau_stats = tk.Frame(self.sidebar, bg="white")
             self.panneau_stats.pack(pady=10, fill="x")
-            
             tk.Label(self.panneau_stats, text="STATISTIQUES", font=("Arial", 12, "bold"), bg="#AAAAAA").pack(fill="x")
-            self.label_info_detail = tk.Label(self.panneau_stats, text="Cliquez une Tour...", bg="white")
-            self.label_info_detail.pack(pady=5)
+            tk.Label(self.panneau_stats, textvariable=self.info_prix, font=("Arial", 10, "bold")).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_degat, font=("Arial", 10, "bold")).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_effet, font=("Arial", 10, "bold")).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_vitesse, font=("Arial", 10, "bold")).pack()
 
-            # --- Zone Controles ---
+            # Zone Controles
             self.panneau_actions = tk.Frame(self.sidebar, bg="white")
             self.panneau_actions.pack(side="bottom", pady=20)
-
             tk.Button(self.panneau_actions, text="Lancer Vague", command=self.parent.demarrePartie).pack(pady=5)
             tk.Button(self.panneau_actions, text="Menu Principal", command=self.afficherMenu).pack(pady=5)
 
-            # --- Le Canvas de jeu ---
+            # Canvas
             self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black")
             self.canevas.pack(side="left")
-
             self.canevas.bind("<Button-1>", self.getPosTour)
+            # Bind unique ici pour éviter l'empilement
+            self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
 
         self.canevas.delete("all")
         choix = self.parent.modele.parcourChoisi
@@ -181,56 +164,46 @@ class Vue():
         self.parent.modele.demarrePartie()
         self.afficheInformationsPartie()
 
-    def afficherScores(self):
-        self.changer_frame("scores")
-        if not self.frame_scores.winfo_children():
-            tk.Label(self.frame_scores, text="SCORES", font=("Arial", 30), fg="white", bg="black").pack(pady=50)
-            tk.Button(self.frame_scores, text="Retour", command=self.afficherEcranDemarrage).pack()
-
-    def afficherGameover(self):
-        self.changer_frame("gameover")
-        
-        if not self.frame_gameover.winfo_children():
-            tk.Label(self.frame_gameover, text="GAME OVER", font=("Arial", 30), fg="red", bg="black").pack(pady=50)
-            tk.Button(self.frame_gameover, text="Menu Principal", command=self.afficherEcranDemarrage).pack(pady=10)
-            tk.Button(self.frame_gameover, text="Rejouer", command=self.afficherMenu).pack(pady=10)
-
     def getPosTour(self, evt):
-        
-        #pour que ça priorise le bind() sur la tour sur le bind() sur le canevas
         item_under_mouse = self.canevas.find_withtag("current")  
         all_tags = self.canevas.gettags(item_under_mouse)
-        for t in all_tags :
-            if t == "tour":
-                #si on vient d'appuyer sur une tour, ne fais rien, let tag_bind handle it
-                return
-        
+        if "tour" in all_tags:
+            return
         x = evt.x / self.coefWidth
         y = evt.y / self.coefHeight
         self.parent.setTour([x, y])
 
+    def clickSurTour(self, event):
+        tour = self.canevas.find_withtag("current")
+        all_tags = self.canevas.gettags(tour)
+        id_tour = [t for t in all_tags if t not in ["tour", "current"]]
+        if id_tour:
+            self.parent.modele.partieCourante.tourSelectionne = self.parent.modele.partieCourante.toursEnJeu[id_tour[0]]
+            self.actualiser_infos_tour("jeu")
+
+    def afficherTours(self):
+        self.canevas.delete("tour")
+        for i in self.parent.modele.partieCourante.toursEnJeu.values():
+            x1 = i.pos[0] * self.coefWidth - 10
+            y1 = i.pos[1] * self.coefHeight - 10
+            self.canevas.create_image(x1-10, y1-10, image=self.img_tour_classique, anchor="nw", tags=("tour", i.tag))
+
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
-        self.canevas.delete("bombe")
-
+        self.canevas.delete("projectile")
         self.afficherTours()
-
         if (self.parent.modele.partieCourante.nivoActif.creepsEnCours):
             for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
                 x1 = i.pos[0] * self.coefWidth - 15
                 y1 = i.pos[1] * self.coefHeight - 15
-                
-                img_creep = {1: self.img_creep_ours, 2: self.img_creep_renard, 
-                             3: self.img_creep_ecur, 4: self.img_creep_raton, 5: self.img_creep_por}
-                
+                img_creep = {1: self.img_creep_ours, 2: self.img_creep_renard, 3: self.img_creep_ecur, 4: self.img_creep_raton, 5: self.img_creep_por}
                 if i.type in img_creep:
                     self.canevas.create_image(x1, y1, image=img_creep[i.type], anchor="nw", tags=("creep",))
-
         if len(self.parent.modele.partieCourante.projectiles) > 0:
             for i in self.parent.modele.partieCourante.projectiles.values():
                 x1 = i.x * self.coefWidth - (i.largeur / self.coefWidth)
-                x2 = i.x * self.coefWidth + (i.largeur / self.coefWidth)
                 y1 = i.y * self.coefHeight - (i.hauteur / self.coefHeight)
+                x2 = i.x * self.coefWidth + (i.largeur / self.coefWidth)
                 y2 = i.y * self.coefHeight + (i.hauteur / self.coefHeight)
                 self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile",))
 
@@ -240,26 +213,15 @@ class Vue():
         self.canevas.create_text(15, 10, fill="#FF0000", text="health: " + str(self.parent.modele.partieCourante.vie), font=("Cooper Black", 24), anchor="nw", tags=("info",))
         self.canevas.create_text(15, 650, fill="#000000", text="wave: " + str(self.parent.modele.partieCourante.nivo + 1), font=("Cooper Black", 24), anchor="nw", tags=("info",))
 
-    def afficherTours(self):
-        self.canevas.delete("tour")
-        # Logique originale pr�serv�e (via nivoActif)
-        for i in self.parent.modele.partieCourante.toursEnJeu.values():
-            x1 = i.pos[0] * self.coefWidth - 10
-            y1 = i.pos[1] * self.coefHeight - 10
-            x2 = i.pos[0] * self.coefWidth + 10
-            y2 = i.pos[1] * self.coefHeight + 10
-            # print("LOCtour",i.pos,x1,y1,x2,y2)
-            #self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))            
-            self.canevas.create_image(x1-10, y1-10, image=self.img_tour_classique, anchor="nw",tags=("tour",i.tag)) 
-            
-        self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
+    def afficherScores(self):
+        self.changer_frame("scores")
+        if not self.frame_scores.winfo_children():
+            tk.Label(self.frame_scores, text="SCORES", font=("Arial", 30), fg="white", bg="black").pack(pady=50)
+            tk.Button(self.frame_scores, text="Retour", command=self.afficherEcranDemarrage).pack()
 
-    def clickSurTour(self, event):
-        # get le tag de la tour 
-        tour = self.canevas.find_withtag("current")
-        all_tags = self.canevas.gettags(tour)
-        id_tour = [t for t in all_tags if t != "tour" and t != "current"]
-
-        #vendre la tour
-        self.parent.modele.partieCourante.vendreTour(id_tour[0])
-
+    def afficherGameover(self):
+        self.changer_frame("gameover")
+        if not self.frame_gameover.winfo_children():
+            tk.Label(self.frame_gameover, text="GAME OVER", font=("Arial", 30), fg="red", bg="black").pack(pady=50)
+            tk.Button(self.frame_gameover, text="Menu Principal", command=self.afficherEcranDemarrage).pack(pady=10)
+            tk.Button(self.frame_gameover, text="Rejouer", command=self.afficherMenu).pack(pady=10)
