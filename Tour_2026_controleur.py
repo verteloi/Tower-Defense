@@ -12,8 +12,7 @@ class Controleur():
     def demarrePartie(self):
         if self.actif == 0:
             self.actif = 1
-
-            self.vue.afficheModele()
+            self.vue.afficheCreepTourBombe()
             self.continuePartie()
         else:
             self.actif = 0
