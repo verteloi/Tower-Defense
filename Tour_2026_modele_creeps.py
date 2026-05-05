@@ -1,0 +1,122 @@
+from helper import *
+
+class Creep():
+    def __init__(self,parent, type):
+        self.parent=parent
+        self.pos=self.parent.parcours.noeuds[0][:]
+        self.tag=parent.parent.getTagCreep()
+        self.type = type
+        print(self.tag)
+        self.cible=1 #indice du noeud de parcours a atteindre
+        if self.pos[0]!=self.parent.parcours.noeuds[1][0]: # on simplifie le mouvement en verifiant uniquement l'axe de deplacement
+            self.axe=0
+            if self.pos[0]<self.parent.parcours.noeuds[1][0]:
+                self.dir=1
+            else:
+                self.dir=-1
+        else:
+            self.axe=1
+            if self.pos[1]<self.parent.parcours.noeuds[1][1]:
+                self.dir=1
+            else:
+                self.dir=-1
+        self.vitesse=2
+        self.force=10
+
+    def bouge(self):
+        # 1. V�rifier si on a fini le parcours (S�curit�)
+        if self.cible >= len(self.parent.parcours.noeuds):
+            self.perdre_vie_joueur()
+            return
+
+        # 2. Identifier le point de destination imm�diat
+        cible_x, cible_y = self.parent.parcours.noeuds[self.cible]
+        curr_x, curr_y = self.pos
+
+        # 3. Calculer la distance restante vers ce point
+        # (Utilise votre nouveau Helper ou l'alias)
+        dist_restante = Helper.calcDistance(curr_x, curr_y, cible_x, cible_y)
+
+        # 4. Logique de mouvement
+        if dist_restante <= self.vitesse:
+            # CAS A : On d�passe ou on atteint la cible ce tour-ci
+            self.pos = [cible_x, cible_y]  # On se "snap" exactement sur le point
+            self.cible += 1  # On passe au prochain noeud
+
+            # Si c'�tait le dernier noeud, on blesse le joueur
+            if self.cible >= len(self.parent.parcours.noeuds):
+                self.perdre_vie_joueur()
+                
+        else:
+            # CAS B : On est encore en chemin
+            # On calcule l'angle vers la cible
+            angle = Helper.calcAngle(curr_x, curr_y, cible_x, cible_y)
+            # On avance exactement de "vitesse" dans cette direction
+            nouv_x, nouv_y = Helper.getAngledPoint(angle, self.vitesse, curr_x, curr_y)
+            self.pos = [nouv_x, nouv_y]
+
+    def perdre_vie_joueur(self):
+        for creep in self.parent.creepsEnCours: #quand le creep arrive à la fin, le joueur perd une vie et on le delete de la liste
+            if (creep.pos[0] >= 100):
+                self.parent.parent.vie -= creep.degat 
+                self.parent.creepsEnCours.remove(creep)
+                if (self.parent.parent.vie <= 0):
+                    self.parent.parent.parent.parent.partie_perdu()
+                print(str(creep.tag) + " was deleted")  
+
+    def scan_pour_projectiles(self):
+        a_supprimer = []
+
+        for projectile in self.parent.parent.projectiles.values():
+            if (projectile.x >= (self.pos[0]-4) and projectile.x <= (self.pos[0] + 4)): #projectile est dans le x du creep
+                if (projectile.y >= (self.pos[1]-4) and projectile.y <= (self.pos[1] + 4)): #projectile est dans le y du creep
+                    a_supprimer.append(projectile.tag)
+                    self.vie -= projectile.degat
+                
+        for tag in a_supprimer:
+                del self.parent.parent.projectiles[tag]
+
+# LENT ET FORT
+class Creep_ours(Creep):
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
+        self.degat = 25
+        self.vitesse = 0.5 / 10
+        self.argent = 100 * 3
+        self.vie = 1000
+
+# MOYEN VITE ET MOYEN FORT
+class Creep_renard(Creep):
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
+        self.degat = 15
+        self.vitesse = 1.2 / 10
+        self.argent = 100 * 2
+        self.vie = 200
+
+# VITE ET FAIBLE
+class Creep_ecureuil(Creep):
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
+        self.degat = 5
+        self.vitesse = 1.8 / 10
+        self.argent = 100 * 1.5
+        self.vie = 50
+
+# VITESSE NORMALE ET VIE NORMALE
+class Creep_moufette(Creep):
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
+        self.degat = 5
+        self.vitesse = 1 / 10
+        self.argent = 100
+        self.vie = 100
+
+# VITESSE NORMALE ET VIE NORMALE
+class Creep_porcepique(Creep):
+    def __init__(self,parent, type):
+        Creep.__init__(self,parent, type)
+        self.degat = 5
+        self.vitesse = 1 / 10
+        self.argent = 100
+        self.vie = 100
