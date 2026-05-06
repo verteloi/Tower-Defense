@@ -58,8 +58,7 @@ class Nivo():
         self.numeroVague = numero
         self.creeCreep()
         
-    def ajouteTour(self,pos):
-        self.tours.append(fichierTours.Tour(self,pos))
+
         
     # dependament quel numero de self.creep creer creep de ce type
     def creeCreep(self):
@@ -125,6 +124,7 @@ class Partie():
         self.tourSelectionne = {}
         self.dictCreeps = {}
         self.toursEnJeu = {}
+        self.toutesLesTours = [fichierTours.Tour_classique(self,(0,0),1), fichierTours.Tour_classique(self,(0,0),2), fichierTours.Tour_laser(self,(0,0),3), fichierTours.Tour_poison(self,(0,0),3), fichierTours.Tour_glace(self,(0,0),3)]
         self.projectiles = {}
         self.tousLesCreeps = [
             [1, 1, 1, 1, 2, 3, 4, 5],      # wave 0 - ours, ours         ------------------- J'ai enlevé un,
@@ -164,7 +164,6 @@ class Partie():
                 tour=fichierTours.Tour_poison(self,pos,4)
             case 5:
                 tour=fichierTours.Tour_glace(self,pos,5)
-         
         if(self.cash >= tour.cout):
             self.toursEnJeu[tour.tag] = tour
             self.cash -= tour.cout
