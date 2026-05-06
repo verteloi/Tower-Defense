@@ -36,15 +36,19 @@ class Tour():
         print(self.tag)
 
     def scan(self):
+        #pour que la tour compte régulièrement et non pas par creep
+        self.compteurTir-=1
         for creep in self.parent.nivoActif.creepsEnCours:
             #les if sont à recheck
             if creep.pos[0] > (self.pos[0]-self.range) and creep.pos[0] < (self.pos[0]+self.range): #si le x du creep est dans le range
-                if creep.pos[1] > (self.pos[1]-self.range) and creep.pos[1] < (self.pos[1]+self.range): #si le y du creep est dans le range
-                    self.compteurTir-=1
+                if creep.pos[1] > (self.pos[1]-self.range) and creep.pos[1] < (self.pos[1]+self.range): #si le y du creep est dans le range                
                     if self.compteurTir == 0: #le compteur compte jusqu'à 10 et tire 
                         projectile = Projectile(self,creep)
-                        self.parent.projectiles[projectile.tag] = projectile
-                        self.compteurTir = 100
+                        self.parent.projectiles[projectile.tag] = projectile 
+                        self.compteurTir = 100               
+        if self.compteurTir == 0:
+            self.compteurTir = 100
+                        
 
     
         

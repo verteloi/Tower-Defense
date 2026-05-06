@@ -127,7 +127,7 @@ class Partie():
         self.toursEnJeu = {}
         self.projectiles = {}
         self.tousLesCreeps = [
-            [1, 2, 3, 4, 5],      # wave 0 - ours, ours         ------------------- J'ai enlevé un
+            [1, 1, 1, 1, 2, 3, 4, 5],      # wave 0 - ours, ours         ------------------- J'ai enlevé un,
             [2, 2],      # wave 1 - renard, renard
             [1, 2],      # wave 2 - ours, renard
         ]
