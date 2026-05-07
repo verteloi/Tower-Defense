@@ -108,7 +108,7 @@ class Vue():
         if choix in imgs:
             self.previewParcours.create_image(0, 0, image=imgs[choix], anchor="nw")
 
-    def actualiser_infos_tour(self, type, type_appel="bouton"):
+    def actualiser_infos_tour(self, type=1, type_appel="jeu"):
         self.selecTour(type)
         tour = self.parent.modele.partieCourante.tourSelectionne
         if type_appel=="bouton":
@@ -141,13 +141,13 @@ class Vue():
             self.panneau_tours_range_3 = tk.Frame(self.sidebar, bg="white", bd=1)
             self.panneau_tours_range_3.pack(pady=5)
 
-            tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour(1), bd=1).pack(side="right", padx=5)
-            tk.Button(self.panneau_tours_range_1, image=self.img_tour_feu, command=lambda: self.actualiser_infos_tour(2), bd=1).pack(side="left", padx=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour(1, "bouton"), bd=1).pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_feu, command=lambda: self.actualiser_infos_tour(2, "bouton"), bd=1).pack(side="left", padx=5)
 
-            tk.Button(self.panneau_tours_range_2, image=self.img_tour_electrique, command=lambda: self.actualiser_infos_tour(3), bd=1).pack(side="right", padx=5)
-            tk.Button(self.panneau_tours_range_2, image=self.img_tour_poison, command=lambda: self.actualiser_infos_tour(4), bd=1).pack(side="left", padx=5)
+            tk.Button(self.panneau_tours_range_2, image=self.img_tour_electrique, command=lambda: self.actualiser_infos_tour(3, "bouton"), bd=1).pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_2, image=self.img_tour_poison, command=lambda: self.actualiser_infos_tour(4, "bouton"), bd=1).pack(side="left", padx=5)
 
-            tk.Button(self.panneau_tours_range_3, image=self.img_tour_glace, command=lambda: self.actualiser_infos_tour(5), bd=1).pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_3, image=self.img_tour_glace, command=lambda: self.actualiser_infos_tour(5, "bouton"), bd=1).pack(side="right", padx=5)
         
 
 
@@ -216,7 +216,7 @@ class Vue():
         print("dans click sur tour id trouve = ", id_tour)
         if id_tour:
             self.parent.modele.partieCourante.tourSelectionne = self.parent.modele.partieCourante.toursEnJeu[id_tour[0]]
-            self.actualiser_infos_tour(self.parent.modele.partieCourante.toursEnJeu[id_tour[0]].type,"jeu")
+            self.actualiser_infos_tour()
 
     #def clickSurTour(self, event):             -----------------------Celle que Elina avait fait
     #    # get le tag de la tour 
