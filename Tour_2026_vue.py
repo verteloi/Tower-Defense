@@ -113,7 +113,6 @@ class Vue():
         tour = self.parent.modele.partieCourante.tourSelectionne
         if type_appel=="bouton":
             tour = self.parent.modele.partieCourante.toutesLesTours[(type-1)]
-        print("dans actualiser infos type : ", type, " tour :", tour)
         if tour:
             self.info_prix.set(f"Prix: {tour.cout}$")
             self.info_degat.set(f"Degat: {tour.force}$")
@@ -211,9 +210,7 @@ class Vue():
     def clickSurTour(self, event):
         tour = self.canevas.find_withtag("current")
         all_tags = self.canevas.gettags(tour)
-        print(all_tags)
         id_tour = [t for t in all_tags if t not in ["tour", "current"]]
-        print("dans click sur tour id trouve = ", id_tour)
         if id_tour:
             self.parent.modele.partieCourante.tourSelectionne = self.parent.modele.partieCourante.toursEnJeu[id_tour[0]]
             self.actualiser_infos_tour()

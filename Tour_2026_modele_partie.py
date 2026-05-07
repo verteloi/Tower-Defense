@@ -124,7 +124,7 @@ class Partie():
         self.tourSelectionne = {}
         self.dictCreeps = {}
         self.toursEnJeu = {}
-        self.toutesLesTours = [fichierTours.Tour_classique(self,(0,0),1), fichierTours.Tour_classique(self,(0,0),2), fichierTours.Tour_laser(self,(0,0),3), fichierTours.Tour_poison(self,(0,0),3), fichierTours.Tour_glace(self,(0,0),3)]
+        self.toutesLesTours = [self.creerTour(self,1), self.creerTour(self,2), self.creerTour(self,3), self.creerTour(self,4), self.creerTour(self,5)]
         self.projectiles = {}
         self.tousLesCreeps = [
             [1, 1, 1, 1, 2, 3, 4, 5],      # wave 0 - ours, ours         ------------------- J'ai enlevé un,
@@ -155,20 +155,36 @@ class Partie():
         
         match type:
             case 1:
-                tour=fichierTours.Tour_classique(self,pos,1)
+                tour=self.creerTour(self, 1, pos)
             case 2:
-                tour=fichierTours.Tour_classique(self,pos,2) # tour feu
+                tour=self.creerTour(self,2,pos) # tour feu
             case 3:
-                tour=fichierTours.Tour_laser(self,pos,3)
+                tour=self.creerTour(self,3,pos)
             case 4:
-                tour=fichierTours.Tour_poison(self,pos,4)
+                tour=self.creerTour(self,4,pos)
             case 5:
-                tour=fichierTours.Tour_glace(self,pos,5)
+                tour=self.creerTour(self,5,pos)
         if(self.cash >= tour.cout):
             self.toursEnJeu[tour.tag] = tour
             self.cash -= tour.cout
             self.parent.parent.vue.afficherTours()
-            self.parent.parent.vue.afficheInformationsPartie()   
+            self.parent.parent.vue.afficheInformationsPartie()  
+
+    def creerTour(self, parent, type, pos=(0,0)):
+        tour=None
+        match type:
+            case 1:
+                tour=fichierTours.Tour_classique(parent,pos,1)
+            case 2:
+                tour=fichierTours.Tour_classique(parent,pos,2) # tour feu
+            case 3:
+                tour=fichierTours.Tour_laser(parent,pos,3)
+            case 4:
+                tour=fichierTours.Tour_poison(parent,pos,4)
+            case 5:
+                tour=fichierTours.Tour_glace(parent,pos,5)
+        return tour
+
 
     def vendreTour(self, tag):
         if tag in self.toursEnJeu:
