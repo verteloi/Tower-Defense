@@ -154,7 +154,7 @@ class Partie():
     def __init__(self, parent, parcour):
         self.parent=parent
         self.vie = 1
-        self.cash = 500
+        self.cash = 5000
         self.nivo = 0
         self.score = 0
         self.tagCreep = 0
@@ -231,7 +231,15 @@ class Partie():
             self.cash += tour.resellValue
             del self.toursEnJeu[tag]
             self.parent.parent.vue.afficherTours()
-            self.parent.parent.vue.afficheInformationsPartie()   
+            self.tourSelectionne = None
+            self.parent.parent.vue.actualiser_infos_tour()
+
+    def ameliorerTour(self, tag):
+        if tag in self.toursEnJeu:
+            tour = self.toursEnJeu[tag]
+            tour.niveauTour += 1
+            self.cash -= tour.cout
+            self.parent.parent.vue.afficheInformationsPartie()
 
     def bougeProjectile(self):
         a_supprimer = []
@@ -245,12 +253,3 @@ class Partie():
             
             for tag in a_supprimer:
                 del self.projectiles[tag]
-
-    def changeTourSelectionne(self):
-        match self.tourSelectionne:
-            case None:
-                self.noeuds=self.noeuds0
-            case "feu":
-                self.noeuds=self.noeuds1
-            case "glace":
-                self.noeuds=self.noeuds2

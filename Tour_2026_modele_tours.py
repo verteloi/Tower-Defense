@@ -27,7 +27,6 @@ class Tour():
         self.pos=pos
         self.type = type
         self.cible=[0,0]
-        self.niveauTour = 1
         self.range = 20
         self.tag=parent.getTagTour()
         self.vitesseTir = vitesseTir               #à modif quand tour upgrade
@@ -48,11 +47,6 @@ class Tour():
                         self.compteurTir = 100               
         if self.compteurTir == 0:
             self.compteurTir = 100
-                        
-
-    
-        
-
 
 class Tour_glace(Tour):
     def __init__(self, parent, pos, type):
@@ -61,6 +55,7 @@ class Tour_glace(Tour):
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)
         self.force = 1      # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "ralentir"
+        self.niveau = 1
 
 class Tour_poison(Tour):
     def __init__(self, parent, pos, type):
@@ -68,7 +63,8 @@ class Tour_poison(Tour):
         self.cout = 250
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1
-        self.effet = "poison"  
+        self.effet = "poison"
+        self.niveau = 1
 
 class Tour_laser(Tour):
     def __init__(self, parent, pos, type):
@@ -77,11 +73,13 @@ class Tour_laser(Tour):
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1
         self.effet = "none"
+        self.niveau = 1
 
 class Tour_classique(Tour):
     def __init__(self, parent, pos, type):
         self.vitesseTir = 1    # 1 le plus lent, 10 le plus rapide 
-        self.cout = 150
+        self.niveauTour = 1
+        self.cout = 150 * self.niveauTour
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "none"

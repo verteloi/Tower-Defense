@@ -18,6 +18,7 @@ class Vue():
         self.info_vie = tk.StringVar(value="Vie: -")
         self.info_argent = tk.StringVar(value="Argent: -")
         self.info_vague = tk.StringVar(value="Vague: -")
+        self.info_vente = tk.StringVar(value="-")
 
         self.tourSelec = 1
 
@@ -36,7 +37,6 @@ class Vue():
             self.img_tour_poison = PhotoImage(file="images\\tour_poison.png")
             self.img_tour_glace = PhotoImage(file="images\\tour_glace.png")
             self.img_tour_electrique = PhotoImage(file="images\\tour_electrique.png")
-            self.bg_right_sidebar = PhotoImage(file="images\\bg_right_sidebar.png")
         except Exception as e:
             print(f"Erreur chargement images : {e}")
 
@@ -122,11 +122,13 @@ class Vue():
             self.info_degat.set(f"Degat: {tour.force}")
             self.info_effet.set(f"Effet: {tour.effet}")
             self.info_vitesse.set(f"Vitesse de Tir: {tour.vitesseTir}")
+            self.info_vente.set(tour.resellValue)
         else:
-            self.info_prix.set("Aucune selection")
-            self.info_degat.set("")
-            self.info_effet.set("") 
-            self.info_vitesse.set("")
+            self.info_prix.set("-")
+            self.info_vente.set("-")
+            self.info_degat.set("-")
+            self.info_effet.set("-") 
+            self.info_vitesse.set("-")
 
     def afficherInterfaceJeu(self):
         self.changer_frame("jeu")
@@ -181,10 +183,10 @@ class Vue():
             tk.Label(self.panneau_actions_tours, text="ACTIONS", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
 
             tk.Label(self.panneau_actions_tours, text="Upgrade", bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
-            tk.Button(self.panneau_actions_tours, textvariable=self.info_argent, command=self.parent.demarrePartie, bg="#177245", fg="white", font=("Arial", 10, "bold"), width=10, bd=3).pack(pady=5)
+            tk.Button(self.panneau_actions_tours, textvariable=self.info_prix, command=lambda: self.parent.modele.partieCourante.ameliorerTour(self.parent.modele.partieCourante.tourSelectionne.tag), bg="#177245", fg="white", font=("Arial", 10, "bold"), width=10, bd=3).pack(pady=5)
             
             tk.Label(self.panneau_actions_tours, text="Sell", bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10, "bold")).pack()
-            tk.Button(self.panneau_actions_tours, textvariable=self.info_argent, command=self.parent.demarrePartie, bg="#ff4d4d", fg="white", font=("Arial", 10, "bold"), width=10, bd=3).pack(pady=5)
+            tk.Button(self.panneau_actions_tours, textvariable=self.info_vente, command=lambda: self.parent.modele.partieCourante.vendreTour(self.parent.modele.partieCourante.tourSelectionne.tag), bg="#ff4d4d", fg="white", font=("Arial", 10, "bold"), width=10, bd=3).pack(pady=5)
 
             self.panneau_actions = tk.Frame(self.sidebar, bg="#6f4e37")
             self.panneau_actions.pack(side="bottom", pady=20)
@@ -218,7 +220,6 @@ class Vue():
 
     def afficherGameover(self):
         self.changer_frame("gameover")
-        
         if not self.frame_gameover.winfo_children():
             tk.Label(self.frame_gameover, text="GAME OVER", font=("Arial", 30), fg="red", bg="black").pack(pady=50)
             tk.Button(self.frame_gameover, text="Menu Principal", command=self.afficherEcranDemarrage).pack(pady=10)
@@ -242,6 +243,7 @@ class Vue():
             self.parent.modele.partieCourante.tourSelectionne = self.parent.modele.partieCourante.toursEnJeu[id_tour[0]]
             self.actualiser_infos_tour()
 
+
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
         self.canevas.delete("projectile")
@@ -262,10 +264,11 @@ class Vue():
                 self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile",))
 
     def afficheInformationsPartie(self):
-            partie = self.parent.modele.partieCourante
-            self.info_vie.set(f"{partie.vie} hp")
-            self.info_argent.set(f"{partie.cash}$")
-            self.info_vague.set(f"{partie.nivo + 1} / 10")
+        partie = self.parent.modele.partieCourante
+        self.info_vie.set(f"{partie.vie} hp")
+        self.info_argent.set(f"{partie.cash}$")
+        self.info_vague.set(f"{partie.nivo + 1} / 10")
+        
 
     def afficherTours(self):
         self.canevas.delete("tour")
