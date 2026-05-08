@@ -181,6 +181,8 @@ class Vue():
             self.canevas.pack(side="left")
             self.canevas.bind("<Button-1>", self.getPosTour)
             self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
+            for tuple in self.parent.modele.partieCourante.parcourChoisi.noeudsTours:
+                self.canevas.create_rectangle(tuple[0], tuple[1], tuple[0]+10, tuple[1]+10, fill="gray", tags=("zoneTour",))
 
         self.canevas.delete("all")
         choix = self.parent.modele.parcourChoisi
@@ -242,7 +244,7 @@ class Vue():
                 y1 = i.y * self.coefHeight - (i.hauteur / self.coefHeight)
                 x2 = i.x * self.coefWidth + (i.largeur / self.coefWidth)
                 y2 = i.y * self.coefHeight + (i.hauteur / self.coefHeight)
-                self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile",))
+                self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile"))
 
     def afficheInformationsPartie(self):
         partie = self.parent.modele.partieCourante
