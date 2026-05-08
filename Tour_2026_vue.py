@@ -15,6 +15,9 @@ class Vue():
         self.info_prix = tk.StringVar(value="-")
         self.info_degat = tk.StringVar(value="-")
         self.info_vitesse = tk.StringVar(value="-")
+        self.info_vie = tk.StringVar(value="Vie: -")
+        self.info_argent = tk.StringVar(value="Argent: -")
+        self.info_vague = tk.StringVar(value="Vague: -")
 
         self.tourSelec = 1
 
@@ -33,6 +36,7 @@ class Vue():
             self.img_tour_poison = PhotoImage(file="images\\tour_poison.png")
             self.img_tour_glace = PhotoImage(file="images\\tour_glace.png")
             self.img_tour_electrique = PhotoImage(file="images\\tour_electrique.png")
+            self.bg_right_sidebar = PhotoImage(file="images\\bg_right_sidebar.png")
         except Exception as e:
             print(f"Erreur chargement images : {e}")
 
@@ -73,19 +77,19 @@ class Vue():
     def afficherMenu(self):
         self.changer_frame("menu")
         if not self.frame_menu.winfo_children():
-            sidebar_creer = tk.Frame(self.frame_menu, bg="white", width=300, height=self.hight)
+            sidebar_creer = tk.Frame(self.frame_menu, bg="#6f4e37", width=300, height=self.hight)
             sidebar_creer.pack(side="right", fill="y")
 
 
-            tk.Label(sidebar_creer, text="MENU", font=("Arial", 18, "bold"), bg="#AAAAAA").pack(pady=10, fill="x")
+            tk.Label(sidebar_creer, text="MENU", font=("Arial", 18, "bold"), bg="#6f4e37").pack(pady=10, fill="x")
 
             tk.Button(sidebar_creer, text="Map 1", command=lambda:self.parent.changerParcour(0)).pack(pady=5, padx=20)
             tk.Button(sidebar_creer, text="Map 2", command=lambda:self.parent.changerParcour(1)).pack(pady=5, padx=20)
             tk.Button(sidebar_creer, text="Map 3", command=lambda:self.parent.changerParcour(2)).pack(pady=5, padx=20)
 
-            tk.Label(sidebar_creer, text="difficulte", font=("Arial", 12, "bold"), bg="#AAAAAA").pack(pady=(20, 0), fill="x")
+            tk.Label(sidebar_creer, text="difficulte", font=("Arial", 12, "bold"), bg="#6f4e37").pack(pady=(20, 0), fill="x")
 
-            diff_frame = tk.Frame(sidebar_creer, bg="white")
+            diff_frame = tk.Frame(sidebar_creer, bg="#6f4e37")
             diff_frame.pack(pady=10)
 
             tk.Button(diff_frame, text="F", bg="lightgreen", command=lambda:self.parent.changerDifficulte(0)).pack(side="left", padx=2)
@@ -93,10 +97,10 @@ class Vue():
             tk.Button(diff_frame, text="D", bg="red", command=lambda:self.parent.changerDifficulte(2)).pack(side="left", padx=2)
             tk.Button(sidebar_creer, text="Jouer", font=("Arial", 14, "bold"), bg="#A0EC2C", command=self.afficherInterfaceJeu).pack(side="bottom", pady=10, padx=10)
             
-            conteneurPreviewParcours = tk.Frame(self.frame_menu, bg="gray", width=self.width, height=self.hight)
+            conteneurPreviewParcours = tk.Frame(self.frame_menu, bg="#6f4e37", width=self.width, height=self.hight)
             conteneurPreviewParcours.pack(side="left", expand=True, fill="both")
 
-            self.previewParcours = tk.Canvas(conteneurPreviewParcours, width=self.width, height=self.hight)
+            self.previewParcours = tk.Canvas(conteneurPreviewParcours, width=self.width, height=self.hight, highlightbackground="black", highlightthickness=3)
             self.previewParcours.pack(expand=True, fill="both")
             
         self.actualiserPreviewParcour()
@@ -120,56 +124,62 @@ class Vue():
             self.info_vitesse.set(f"Vitesse de Tir: {tour.vitesseTir}")
         else:
             self.info_prix.set("Aucune selection")
-            self.info_degat.set("-")
-            self.info_effet.set("-") 
-            self.info_vitesse.set("-")
+            self.info_degat.set("")
+            self.info_effet.set("") 
+            self.info_vitesse.set("")
 
     def afficherInterfaceJeu(self):
         self.changer_frame("jeu")
         if not self.frame_jeu.winfo_children():
-            self.sidebar = tk.Frame(self.frame_jeu, bg="white", width=250, height=self.hight)
+            # Zone du haut (Stats Vie, Argent, Vague)
+            self.sidebartop = tk.Frame(self.frame_jeu, bg="#808080", height=50)
+            self.sidebartop.pack(side="bottom", fill="x")
+            
+            tk.Label(self.sidebartop, textvariable=self.info_vie, fg="#FF0000", bg="#808080", font=("Cooper Black", 20)).pack(side="left", padx=15)
+            tk.Label(self.sidebartop, textvariable=self.info_argent, fg="#FCA510", bg="#808080", font=("Cooper Black", 20)).pack(side="left", padx=15)
+            tk.Label(self.sidebartop, textvariable=self.info_vague, fg="#000000", bg="#808080", font=("Cooper Black", 20)).pack(side="right", padx=15)
+
+            # Sidebar Droite
+            self.sidebar = tk.Frame(self.frame_jeu, bg="#6f4e37", width=250, height=self.hight)
             self.sidebar.pack(side="right", fill="y")
 
-            tk.Label(self.sidebar, text="TOURS", font=("Arial", 12, "bold"), bg="#AAAAAA").pack(pady=(10, 0), fill="x")
+            tk.Label(self.sidebar, text="TOURS", font=("Arial", 12, "bold"), bg="#808080", fg="white").pack(pady=(10, 0), fill="x")
             
             # Grilles boutiques
-            self.panneau_tours_range_1 = tk.Frame(self.sidebar, bg="white", bd=1)
+            self.panneau_tours_range_1 = tk.Frame(self.sidebar, bg="#6f4e37", bd=1)
             self.panneau_tours_range_1.pack(pady=5)
-            self.panneau_tours_range_2 = tk.Frame(self.sidebar, bg="white", bd=1)
+            self.panneau_tours_range_2 = tk.Frame(self.sidebar, bg="#6f4e37", bd=1)
             self.panneau_tours_range_2.pack(pady=5)
-            self.panneau_tours_range_3 = tk.Frame(self.sidebar, bg="white", bd=1)
+            self.panneau_tours_range_3 = tk.Frame(self.sidebar, bg="#6f4e37", bd=1)
             self.panneau_tours_range_3.pack(pady=5)
 
-            tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour(1, "bouton"), bd=1).pack(side="right", padx=5)
-            tk.Button(self.panneau_tours_range_1, image=self.img_tour_bombe, command=lambda: self.actualiser_infos_tour(2, "bouton"), bd=1).pack(side="left", padx=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, bg="#6f4e37", command=lambda: self.actualiser_infos_tour(1, "bouton"), bd=1).pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_bombe, bg="#6f4e37", command=lambda: self.actualiser_infos_tour(2, "bouton"), bd=1).pack(side="left", padx=5)
 
-            tk.Button(self.panneau_tours_range_2, image=self.img_tour_electrique, command=lambda: self.actualiser_infos_tour(3, "bouton"), bd=1).pack(side="right", padx=5)
-            tk.Button(self.panneau_tours_range_2, image=self.img_tour_poison, command=lambda: self.actualiser_infos_tour(4, "bouton"), bd=1).pack(side="left", padx=5)
+            tk.Button(self.panneau_tours_range_2, image=self.img_tour_electrique, bg="#6f4e37", command=lambda: self.actualiser_infos_tour(3, "bouton"), bd=1).pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_2, image=self.img_tour_poison, bg="#6f4e37" ,command=lambda: self.actualiser_infos_tour(4, "bouton"), bd=1).pack(side="left", padx=5)
 
-            tk.Button(self.panneau_tours_range_3, image=self.img_tour_glace, command=lambda: self.actualiser_infos_tour(5, "bouton"), bd=1).pack(side="right", padx=5)
-        
+            tk.Button(self.panneau_tours_range_3, image=self.img_tour_glace, bg="#6f4e37", command=lambda: self.actualiser_infos_tour(5, "bouton"), bd=1).pack(side="right", padx=5)
 
-
-            # Zone Stats
-            self.panneau_stats = tk.Frame(self.sidebar, bg="white")
+            # Zone Stats sélectionnée
+            self.panneau_stats = tk.Frame(self.sidebar, bg="#6f4e37")
             self.panneau_stats.pack(pady=10, fill="x")
-            tk.Label(self.panneau_stats, text="STATISTIQUES", font=("Arial", 12, "bold"), bg="#AAAAAA").pack(fill="x")
-            tk.Label(self.panneau_stats, textvariable=self.info_prix, font=("Arial", 10, "bold")).pack()
-            tk.Label(self.panneau_stats, textvariable=self.info_degat, font=("Arial", 10, "bold")).pack()
-            tk.Label(self.panneau_stats, textvariable=self.info_effet, font=("Arial", 10, "bold")).pack()
-            tk.Label(self.panneau_stats, textvariable=self.info_vitesse, font=("Arial", 10, "bold")).pack()
+            tk.Label(self.panneau_stats, text="STATISTIQUES", font=("Arial", 12, "bold"), bg="#808080", fg="white").pack(fill="x")
+            tk.Label(self.panneau_stats, textvariable=self.info_prix, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_degat, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_effet, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_vitesse, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack()
 
             # Zone Controles
-            self.panneau_actions = tk.Frame(self.sidebar, bg="white")
+            self.panneau_actions = tk.Frame(self.sidebar, bg="#6f4e37")
             self.panneau_actions.pack(side="bottom", pady=20)
             tk.Button(self.panneau_actions, text="Lancer Vague", command=self.parent.demarrePartie).pack(pady=5)
             tk.Button(self.panneau_actions, text="Menu Principal", command=self.afficherMenu).pack(pady=5)
 
-            # Canvas
-            self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black")
+            # Canvas de jeu
+            self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black", highlightbackground="black", highlightthickness=3)
             self.canevas.pack(side="left")
             self.canevas.bind("<Button-1>", self.getPosTour)
-            # Bind unique ici pour éviter l'empilement
             self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
 
         self.canevas.delete("all")
@@ -215,15 +225,6 @@ class Vue():
             self.parent.modele.partieCourante.tourSelectionne = self.parent.modele.partieCourante.toursEnJeu[id_tour[0]]
             self.actualiser_infos_tour()
 
-    #def clickSurTour(self, event):             -----------------------Celle que Elina avait fait
-    #    # get le tag de la tour 
-    #    tour = self.canevas.find_withtag("current")
-    #    all_tags = self.canevas.gettags(tour)
-    #    id_tour = [t for t in all_tags if t != "tour" and t != "current"]
-
-    #    vendre la tour
-    #    self.parent.modele.partieCourante.vendreTour(id_tour[0])
-
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
         self.canevas.delete("projectile")
@@ -244,10 +245,10 @@ class Vue():
                 self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile",))
 
     def afficheInformationsPartie(self):
-        self.canevas.delete("info")
-        self.canevas.create_text(600, 10, fill="#FCA510", text= str(self.parent.modele.partieCourante.cash) + "$", font=("Cooper Black", 24), anchor="nw", tags=("info",))
-        self.canevas.create_text(15, 10, fill="#FF0000", text="health: " + str(self.parent.modele.partieCourante.vie), font=("Cooper Black", 24), anchor="nw", tags=("info",))
-        self.canevas.create_text(15, 650, fill="#000000", text="wave: " + str(self.parent.modele.partieCourante.nivo + 1), font=("Cooper Black", 24), anchor="nw", tags=("info",))
+        partie = self.parent.modele.partieCourante
+        self.info_vie.set(f"'health': {partie.vie}")
+        self.info_argent.set(f"{partie.cash}$")
+        self.info_vague.set(f"wave: {partie.nivo + 1}")
 
     def afficherTours(self):
         self.canevas.delete("tour")
