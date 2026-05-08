@@ -29,7 +29,7 @@ class Vue():
             self.img_creep_renard = PhotoImage(file="images\\creep_renard.png")
             self.img_creep_ecur = PhotoImage(file="images\\creep_squirrel.png")
             self.img_tour_classique = PhotoImage(file="images\\tour_feu.png")
-            self.img_tour_feu = PhotoImage(file="images\\tour_feu.png")
+            self.img_tour_bombe = PhotoImage(file="images\\tour_bombe.png")
             self.img_tour_poison = PhotoImage(file="images\\tour_poison.png")
             self.img_tour_glace = PhotoImage(file="images\\tour_glace.png")
             self.img_tour_electrique = PhotoImage(file="images\\tour_electrique.png")
@@ -141,7 +141,7 @@ class Vue():
             self.panneau_tours_range_3.pack(pady=5)
 
             tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, command=lambda: self.actualiser_infos_tour(1, "bouton"), bd=1).pack(side="right", padx=5)
-            tk.Button(self.panneau_tours_range_1, image=self.img_tour_feu, command=lambda: self.actualiser_infos_tour(2, "bouton"), bd=1).pack(side="left", padx=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_bombe, command=lambda: self.actualiser_infos_tour(2, "bouton"), bd=1).pack(side="left", padx=5)
 
             tk.Button(self.panneau_tours_range_2, image=self.img_tour_electrique, command=lambda: self.actualiser_infos_tour(3, "bouton"), bd=1).pack(side="right", padx=5)
             tk.Button(self.panneau_tours_range_2, image=self.img_tour_poison, command=lambda: self.actualiser_infos_tour(4, "bouton"), bd=1).pack(side="left", padx=5)
@@ -265,7 +265,7 @@ class Vue():
                 x1 = i.pos[0] * self.coefWidth - 10
                 y1 = i.pos[1] * self.coefHeight - 10
                 
-                img_tour = {1: self.img_tour_classique, 2: self.img_tour_feu, 
+                img_tour = {1: self.img_tour_classique, 2: self.img_tour_bombe, 
                              3: self.img_tour_electrique, 4: self.img_tour_poison, 5: self.img_tour_glace}
                 
                 if i.type in img_tour:
