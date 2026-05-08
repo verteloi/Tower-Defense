@@ -207,6 +207,7 @@ class Vue():
         if choix in imgs:
             self.canevas.create_image(0, 0, image=imgs[choix], anchor="nw")
         self.parent.modele.demarrePartie()
+        self.afficheNoeudsTours()
         self.afficheInformationsPartie()
 
     def selecTour(self, type):
@@ -261,7 +262,13 @@ class Vue():
                 y1 = i.y * self.coefHeight - (i.hauteur / self.coefHeight)
                 x2 = i.x * self.coefWidth + (i.largeur / self.coefWidth)
                 y2 = i.y * self.coefHeight + (i.hauteur / self.coefHeight)
-                self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile",))
+                self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile"))
+
+    def afficheNoeudsTours(self):
+        for tuple in self.parent.modele.partieCourante.parcourChoisi.noeudsTours:
+            print(tuple[0], ", ", tuple[1])
+            self.canevas.create_rectangle(tuple[0]* self.coefWidth, tuple[1]* self.coefHeight, (tuple[0]+5)* self.coefWidth, (tuple[1]+5)* self.coefHeight, fill="gray", tags=("zoneTour",))
+
 
     def afficheInformationsPartie(self):
         partie = self.parent.modele.partieCourante
