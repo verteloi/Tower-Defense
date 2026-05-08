@@ -6,7 +6,6 @@ class Creep():
         self.pos=self.parent.parcours.noeuds[0][:]
         self.tag=parent.parent.getTagCreep()
         self.type = type
-        print(self.tag)
         self.cible=1 #indice du noeud de parcours a atteindre
         if self.pos[0]!=self.parent.parcours.noeuds[1][0]: # on simplifie le mouvement en verifiant uniquement l'axe de deplacement
             self.axe=0

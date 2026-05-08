@@ -4,7 +4,6 @@ import Tour_2026_modele_tours as fichierTours
 class Parcours():
     def __init__(self, parent, parcourChoisi):
         self.parcourChoisi=parcourChoisi
-        print(parcourChoisi)
         self.noeuds1=[[0,51],
                      [14,51],
                      [14,18],
@@ -38,6 +37,38 @@ class Parcours():
                        [30, 70],
                        [30, 91],
                        [100, 91]]
+        self.noeudsTours1=[[5,45], #fait
+                     [10,54],
+                     [10,22],
+                     [20,14],
+                     [33,23],
+                     [20,30],
+                     [33,74],
+                     [49,73],
+                     [49,33],
+                     [65,60],
+                     [74,33],
+                     [89,47],
+                     [92,63]]
+        self.noeudsTours2=[[0,27],
+                     [40,27],
+                     [50,16],
+                     [92,16],
+                     [92,48],
+                     [20,48],
+                     [20,90],
+                     [50,90],
+                     [62,68],
+                     [100,68]]
+        self.noeudsTours0 = [[0, 20],
+                       [20, 48], 
+                       [51, 48],
+                       [51, 27],
+                       [84, 27],
+                       [84, 70],
+                       [30, 70],
+                       [30, 91],
+                       [100, 91]]
         match parcourChoisi:
             case 0:
                 self.noeuds=self.noeuds0
@@ -45,6 +76,13 @@ class Parcours():
                 self.noeuds=self.noeuds1
             case 2:
                 self.noeuds=self.noeuds2
+        match parcourChoisi:
+            case 0:
+                self.noeudsTours=self.noeudsTours0
+            case 1:
+                self.noeudsTours=self.noeudsTours1
+            case 2:
+                self.noeudsTours=self.noeudsTours2
 
         
 class Nivo():
