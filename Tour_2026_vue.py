@@ -115,9 +115,9 @@ class Vue():
             tour = self.parent.modele.partieCourante.toutesLesTours[(type-1)]
         if tour:
             self.info_prix.set(f"Prix: {tour.cout}$")
-            self.info_degat.set(f"Degat: {tour.force}$")
-            self.info_effet.set(f"Effet: {tour.effet}$")
-            self.info_vitesse.set(f"Vitesse de Tir: {tour.vitesseTir}$")
+            self.info_degat.set(f"Degat: {tour.force}")
+            self.info_effet.set(f"Effet: {tour.effet}")
+            self.info_vitesse.set(f"Vitesse de Tir: {tour.vitesseTir}")
         else:
             self.info_prix.set("Aucune selection")
             self.info_degat.set("-")
