@@ -154,7 +154,7 @@ class Partie():
     def __init__(self, parent, parcour):
         self.parent=parent
         self.vie = 1
-        self.cash = 50000
+        self.cash = 500
         self.nivo = 0
         self.score = 0
         self.tagCreep = 0

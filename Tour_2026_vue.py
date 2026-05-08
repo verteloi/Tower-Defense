@@ -131,53 +131,70 @@ class Vue():
     def afficherInterfaceJeu(self):
         self.changer_frame("jeu")
         if not self.frame_jeu.winfo_children():
-            # Zone du haut (Stats Vie, Argent, Vague)
-            self.sidebartop = tk.Frame(self.frame_jeu, bg="#808080", height=50)
-            self.sidebartop.pack(side="bottom", fill="x")
+            # --- ZONE DU HAUT ---
+            self.sidebartop = tk.Frame(self.frame_jeu, bg="#4a3222", height=60, highlightbackground="black", highlightthickness=2)
+            self.sidebartop.pack(side="top", fill="x")
             
-            tk.Label(self.sidebartop, textvariable=self.info_vie, fg="#FF0000", bg="#808080", font=("Cooper Black", 20)).pack(side="left", padx=15)
-            tk.Label(self.sidebartop, textvariable=self.info_argent, fg="#FCA510", bg="#808080", font=("Cooper Black", 20)).pack(side="left", padx=15)
-            tk.Label(self.sidebartop, textvariable=self.info_vague, fg="#000000", bg="#808080", font=("Cooper Black", 20)).pack(side="right", padx=15)
+            tk.Label(self.sidebartop, textvariable=self.info_vie, fg="#ff4d4d", bg="#4a3222", font=("Cooper Black", 22)).pack(side="left", padx=20)
+            tk.Label(self.sidebartop, textvariable=self.info_argent, fg="#FCA510", bg="#4a3222", font=("Cooper Black", 22)).pack(side="left", padx=20)
+            tk.Label(self.sidebartop, textvariable=self.info_vague, fg="white", bg="#4a3222", font=("Cooper Black", 22)).pack(side="left", padx=20)
 
-            # Sidebar Droite
-            self.sidebar = tk.Frame(self.frame_jeu, bg="#6f4e37", width=250, height=self.hight)
+            # --- SIDEBAR DROITE ---
+            self.sidebar = tk.Frame(self.frame_jeu, bg="#6f4e37", width=250, highlightbackground="black", highlightthickness=2)
             self.sidebar.pack(side="right", fill="y")
 
-            tk.Label(self.sidebar, text="TOURS", font=("Arial", 12, "bold"), bg="#808080", fg="white").pack(pady=(10, 0), fill="x")
+            # BOUTIQUE DE TOURS
+
+            tk.Label(self.sidebar, text="BOUTIQUE", font=("Arial", 14, "bold"), bg="#4a3222", fg="white", bd=2, relief="raised").pack(pady=5, fill="x")
             
-            # Grilles boutiques
-            self.panneau_tours_range_1 = tk.Frame(self.sidebar, bg="#6f4e37", bd=1)
+            self.panneau_tours_range_1 = tk.Frame(self.sidebar, bg="#6f4e37")
             self.panneau_tours_range_1.pack(pady=5)
-            self.panneau_tours_range_2 = tk.Frame(self.sidebar, bg="#6f4e37", bd=1)
+            self.panneau_tours_range_2 = tk.Frame(self.sidebar, bg="#6f4e37")
             self.panneau_tours_range_2.pack(pady=5)
-            self.panneau_tours_range_3 = tk.Frame(self.sidebar, bg="#6f4e37", bd=1)
+            self.panneau_tours_range_3 = tk.Frame(self.sidebar, bg="#6f4e37")
             self.panneau_tours_range_3.pack(pady=5)
 
-            tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, bg="#6f4e37", command=lambda: self.actualiser_infos_tour(1, "bouton"), bd=1).pack(side="right", padx=5)
-            tk.Button(self.panneau_tours_range_1, image=self.img_tour_bombe, bg="#6f4e37", command=lambda: self.actualiser_infos_tour(2, "bouton"), bd=1).pack(side="left", padx=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_classique, bg="#8b5a2b", activebackground="#a0522d", command=lambda: self.actualiser_infos_tour(1, "bouton"), bd=3, relief="ridge").pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_1, image=self.img_tour_bombe, bg="#8b5a2b", activebackground="#a0522d", command=lambda: self.actualiser_infos_tour(2, "bouton"), bd=3, relief="ridge").pack(side="left", padx=5)
 
-            tk.Button(self.panneau_tours_range_2, image=self.img_tour_electrique, bg="#6f4e37", command=lambda: self.actualiser_infos_tour(3, "bouton"), bd=1).pack(side="right", padx=5)
-            tk.Button(self.panneau_tours_range_2, image=self.img_tour_poison, bg="#6f4e37" ,command=lambda: self.actualiser_infos_tour(4, "bouton"), bd=1).pack(side="left", padx=5)
+            tk.Button(self.panneau_tours_range_2, image=self.img_tour_electrique, bg="#8b5a2b", activebackground="#a0522d", command=lambda: self.actualiser_infos_tour(3, "bouton"), bd=3, relief="ridge").pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_2, image=self.img_tour_poison, bg="#8b5a2b", activebackground="#a0522d", command=lambda: self.actualiser_infos_tour(4, "bouton"), bd=3, relief="ridge").pack(side="left", padx=5)
 
-            tk.Button(self.panneau_tours_range_3, image=self.img_tour_glace, bg="#6f4e37", command=lambda: self.actualiser_infos_tour(5, "bouton"), bd=1).pack(side="right", padx=5)
+            tk.Button(self.panneau_tours_range_3, image=self.img_tour_glace, bg="#8b5a2b", activebackground="#a0522d", command=lambda: self.actualiser_infos_tour(5, "bouton"), bd=3, relief="ridge").pack(side="right", padx=5)
 
-            # Zone Stats sélectionnée
-            self.panneau_stats = tk.Frame(self.sidebar, bg="#6f4e37")
-            self.panneau_stats.pack(pady=10, fill="x")
-            tk.Label(self.panneau_stats, text="STATISTIQUES", font=("Arial", 12, "bold"), bg="#808080", fg="white").pack(fill="x")
-            tk.Label(self.panneau_stats, textvariable=self.info_prix, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack()
-            tk.Label(self.panneau_stats, textvariable=self.info_degat, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack()
-            tk.Label(self.panneau_stats, textvariable=self.info_effet, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack()
-            tk.Label(self.panneau_stats, textvariable=self.info_vitesse, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack()
+            # STATITSIQUE DE LA TOUR SELECTIONNER
 
-            # Zone Controles
+            self.panneau_stats = tk.Frame(self.sidebar, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
+            self.panneau_stats.pack(pady=10, padx=10, fill="x")
+            
+            tk.Label(self.panneau_stats, text="STATISTIQUES", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
+            tk.Label(self.panneau_stats, textvariable=self.info_prix, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
+            tk.Label(self.panneau_stats, textvariable=self.info_degat, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_effet, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_vitesse, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack(pady=(0, 5))
+
+            self.panneau_actions_tours = tk.Frame(self.sidebar, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
+            self.panneau_actions_tours.pack(pady=10, padx=10, fill="x")
+
+            # ACTIONS POUR TOURS
+
+            tk.Label(self.panneau_actions_tours, text="ACTIONS", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
+
+            tk.Label(self.panneau_actions_tours, text="Upgrade", bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
+            tk.Button(self.panneau_actions_tours, textvariable=self.info_argent, command=self.parent.demarrePartie, bg="#177245", fg="white", font=("Arial", 10, "bold"), width=10, bd=3).pack(pady=5)
+            
+            tk.Label(self.panneau_actions_tours, text="Sell", bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10, "bold")).pack()
+            tk.Button(self.panneau_actions_tours, textvariable=self.info_argent, command=self.parent.demarrePartie, bg="#ff4d4d", fg="white", font=("Arial", 10, "bold"), width=10, bd=3).pack(pady=5)
+
             self.panneau_actions = tk.Frame(self.sidebar, bg="#6f4e37")
             self.panneau_actions.pack(side="bottom", pady=20)
-            tk.Button(self.panneau_actions, text="Lancer Vague", command=self.parent.demarrePartie).pack(pady=5)
-            tk.Button(self.panneau_actions, text="Menu Principal", command=self.afficherMenu).pack(pady=5)
+            
+            # ACTION PARTIE (LANCER VAGUE ET MENU)
+            
+            tk.Button(self.panneau_actions, text="Lancer Vague", command=self.parent.demarrePartie, bg="grey", fg="white", font=("Arial", 10, "bold"), width=15, bd=3).pack(pady=5)
+            tk.Button(self.panneau_actions, text="Menu Principal", command=self.afficherMenu, bg="grey", fg="white", font=("Arial", 10, "bold"), width=15, bd=3).pack(pady=5)
 
-            # Canvas de jeu
-            self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black", highlightbackground="black", highlightthickness=3)
+            self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black", highlightbackground="black", highlightthickness=2)
             self.canevas.pack(side="left")
             self.canevas.bind("<Button-1>", self.getPosTour)
             self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
@@ -245,10 +262,10 @@ class Vue():
                 self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile",))
 
     def afficheInformationsPartie(self):
-        partie = self.parent.modele.partieCourante
-        self.info_vie.set(f"'health': {partie.vie}")
-        self.info_argent.set(f"{partie.cash}$")
-        self.info_vague.set(f"wave: {partie.nivo + 1}")
+            partie = self.parent.modele.partieCourante
+            self.info_vie.set(f"{partie.vie} hp")
+            self.info_argent.set(f"{partie.cash}$")
+            self.info_vague.set(f"{partie.nivo + 1} / 10")
 
     def afficherTours(self):
         self.canevas.delete("tour")
