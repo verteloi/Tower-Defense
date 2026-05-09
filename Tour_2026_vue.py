@@ -266,7 +266,6 @@ class Vue():
 
     def afficheNoeudsTours(self):
         for tuple in self.parent.modele.partieCourante.parcourChoisi.noeudsTours:
-            print(tuple[0], ", ", tuple[1])
             self.canevas.create_rectangle(tuple[0]* self.coefWidth, tuple[1]* self.coefHeight, (tuple[0]+5)* self.coefWidth, (tuple[1]+5)* self.coefHeight, fill="#CC9767", tags=("zoneTour",))
 
 
