@@ -47,38 +47,44 @@ class Tour():
         if self.compteurTir == 0:
             self.compteurTir = 100
 
+    def ameliorer(self):
+        self.niveau += 1
+        self.cout *= self.niveau
+        self.resellValue = self.cout*0.7
+
 class Tour_glace(Tour):
     def __init__(self, parent, pos, type):
         self.vitesseTir = 1 # 1 le plus lent, 10 le plus rapide 
+        self.niveau = 1
         self.cout = 250
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)
         self.force = 1      # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "ralentir"
-        self.niveau = 1
 
 class Tour_poison(Tour):
     def __init__(self, parent, pos, type):
         self.vitesseTir = 1
+        self.niveau = 1
         self.cout = 250
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1
         self.effet = "poison"
-        self.niveau = 1
 
 class Tour_laser(Tour):
     def __init__(self, parent, pos, type):
         self.vitesseTir = 1
+        self.niveau = 1
         self.cout = 300
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1
         self.effet = "none"
-        self.niveau = 1
+        
 
 class Tour_classique(Tour):
     def __init__(self, parent, pos, type):
         self.vitesseTir = 1    # 1 le plus lent, 10 le plus rapide 
-        self.niveauTour = 1
-        self.cout = 150 * self.niveauTour
+        self.niveau = 1
+        self.cout = 150 * self.niveau
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "none"

@@ -168,7 +168,7 @@ class Partie():
         self.tagCreep = 0
         self.tagTours = 0
         self.tagProjectile = 0
-        self.tourSelectionne = {}
+        self.tourSelectionne = None
         self.dictCreeps = {}
         self.toursEnJeu = {}
         self.toutesLesTours = [self.creerTour(self,1), self.creerTour(self,2), self.creerTour(self,3), self.creerTour(self,4), self.creerTour(self,5)]
@@ -213,7 +213,8 @@ class Partie():
             self.toursEnJeu[tour.tag] = tour
             self.cash -= tour.cout
             self.parent.parent.vue.afficherTours()
-            self.parent.parent.vue.afficheInformationsPartie()  
+            self.parent.parent.vue.afficheInformationsPartie() 
+            return self.toursEnJeu[tour.tag]
 
     def creerTour(self, parent, type, pos=(0,0)):
         tour=None
@@ -243,9 +244,11 @@ class Partie():
     def ameliorerTour(self, tag):
         if tag in self.toursEnJeu:
             tour = self.toursEnJeu[tag]
-            tour.niveauTour += 1
-            self.cash -= tour.cout
-            self.parent.parent.vue.afficheInformationsPartie()
+            if self.cash >= tour.cout:
+                self.cash -= tour.cout
+                tour.ameliorer()
+                self.parent.parent.vue.afficheInformationsPartie()
+                self.parent.parent.vue.actualiser_infos_tour()
 
     def bougeProjectile(self):
         a_supprimer = []

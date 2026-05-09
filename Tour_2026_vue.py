@@ -12,6 +12,7 @@ class Vue():
         self.coefHeight = self.hight/100
         self.coefWidth = self.width/100
         self.info_effet = tk.StringVar(value="-")
+        self.info_niveau = tk.StringVar(value="-")
         self.info_prix = tk.StringVar(value="-")
         self.info_degat = tk.StringVar(value="-")
         self.info_vitesse = tk.StringVar(value="-")
@@ -120,7 +121,8 @@ class Vue():
         if tour:
             self.info_prix.set(f"Prix: {tour.cout}$")
             self.info_degat.set(f"Degat: {tour.force}")
-            self.info_effet.set(f"Effet: {tour.effet}")
+            self.info_effet.set(f"Effet: {tour.effet}")       
+            self.info_niveau.set(f"Niveau: {tour.niveau}") 
             self.info_vitesse.set(f"Vitesse de Tir: {tour.vitesseTir}")
             self.info_vente.set(tour.resellValue)
         else:
@@ -128,6 +130,7 @@ class Vue():
             self.info_vente.set("-")
             self.info_degat.set("-")
             self.info_effet.set("-") 
+            self.info_niveau.set("-") 
             self.info_vitesse.set("-")
 
     def afficherInterfaceJeu(self):
@@ -173,20 +176,22 @@ class Vue():
             tk.Label(self.panneau_stats, textvariable=self.info_prix, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
             tk.Label(self.panneau_stats, textvariable=self.info_degat, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack()
             tk.Label(self.panneau_stats, textvariable=self.info_effet, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack()
+            tk.Label(self.panneau_stats, textvariable=self.info_niveau, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack(pady=1)
             tk.Label(self.panneau_stats, textvariable=self.info_vitesse, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack(pady=(0, 5))
 
             self.panneau_actions_tours = tk.Frame(self.sidebar, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
             self.panneau_actions_tours.pack(pady=10, padx=10, fill="x")
 
-            # ACTIONS POUR TOURS
-
+            # ACTIONS POUR TOURS 
             tk.Label(self.panneau_actions_tours, text="ACTIONS", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
 
             tk.Label(self.panneau_actions_tours, text="Upgrade", bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
-            tk.Button(self.panneau_actions_tours, textvariable=self.info_prix, command=lambda: self.parent.modele.partieCourante.ameliorerTour(self.parent.modele.partieCourante.tourSelectionne.tag), bg="#177245", fg="white", font=("Arial", 10, "bold"), width=10, bd=3).pack(pady=5)
+            self.boutonAmeliorer = tk.Button(self.panneau_actions_tours, textvariable=self.info_prix, command=lambda: self.parent.modele.partieCourante.ameliorerTour(self.parent.modele.partieCourante.tourSelectionne.tag), bg="#177245", fg="white", font=("Arial", 10, "bold"),state="disabled", width=10, bd=3)
+            self.boutonAmeliorer.pack(pady=5)
             
             tk.Label(self.panneau_actions_tours, text="Sell", bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10, "bold")).pack()
-            tk.Button(self.panneau_actions_tours, textvariable=self.info_vente, command=lambda: self.parent.modele.partieCourante.vendreTour(self.parent.modele.partieCourante.tourSelectionne.tag), bg="#ff4d4d", fg="white", font=("Arial", 10, "bold"), width=10, bd=3).pack(pady=5)
+            self.boutonVente = tk.Button(self.panneau_actions_tours, textvariable=self.info_vente, command=lambda: self.parent.modele.partieCourante.vendreTour(self.parent.modele.partieCourante.tourSelectionne.tag), bg="#ff4d4d", fg="white", font=("Arial", 10, "bold"), state="disabled", width=10, bd=3)
+            self.boutonVente.pack(pady=5)
 
             self.panneau_actions = tk.Frame(self.sidebar, bg="#6f4e37")
             self.panneau_actions.pack(side="bottom", pady=20)
@@ -209,6 +214,7 @@ class Vue():
         self.parent.modele.demarrePartie()
         self.afficheNoeudsTours()
         self.afficheInformationsPartie()
+        
 
     def selecTour(self, type):
         self.tourSelec = type
@@ -231,11 +237,8 @@ class Vue():
         all_tags = self.canevas.gettags(item_under_mouse)
         if "zoneTour" in all_tags:   
             id_zone = [t for t in all_tags if t not in ["zoneTour", "current"]]
-            print("Zone #",id_zone)
-            if id_zone:    
-                
-                self.parent.setTour(self.parent.modele.partieCourante.parcourChoisi.noeudsTours[int(id_zone[0])], self.tourSelec)
-
+            if id_zone:                   
+                self.parent.modele.partieCourante.tourSelectionne = self.parent.setTour(self.parent.modele.partieCourante.parcourChoisi.noeudsTours[int(id_zone[0])], self.tourSelec)
     def clickSurTour(self, event):
         tour = self.canevas.find_withtag("current")
         all_tags = self.canevas.gettags(tour)

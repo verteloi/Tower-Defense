@@ -14,6 +14,8 @@ class Controleur():
             self.actif = 1
             self.vue.afficheCreepTourBombe()
             self.continuePartie()
+            self.vue.boutonVente.config(state="normal")
+            self.vue.boutonAmeliorer.config(state="normal")
         else:
             self.actif = 0
 
@@ -27,7 +29,7 @@ class Controleur():
             self.vue.root.after(self.delai, self.continuePartie)
 
     def setTour(self, pos, type):
-        self.modele.partieCourante.setTour(pos, type)
+        return self.modele.partieCourante.setTour(pos, type)
 
     def changerDifficulte(self, difficulte):
         self.modele.difficulteChoisi = difficulte
