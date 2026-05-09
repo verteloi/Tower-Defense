@@ -27,6 +27,9 @@ class Controleur():
             self.modele.partieCourante.bougeProjectile()
             self.vue.afficheCreepTourBombe()    
             self.vue.root.after(self.delai, self.continuePartie)
+            if self.modele.partieCourante.nivoActif.creepsEnCours:
+                self.actif = 0
+                self.modele.partieCourante
 
     def setTour(self, pos, type):
         return self.modele.partieCourante.setTour(pos, type)

@@ -1,26 +1,5 @@
 from helper import *
 
-class Projectile():                                  
-    def __init__(self, parent, cible): #la cible est passée en param, puis on calcule la direction 
-        self.tag = parent.parent.getTagProjectile()
-        self.largeur = 25
-        self.hauteur = 25
-        self.y = parent.pos[1]
-        self.x = parent.pos[0]
-        self.speed = 1
-        self.degat = parent.force * 25
-
-        dx = cible.pos[0] - parent.pos[0]
-        dy = cible.pos[1] - parent.pos[1]
-        angleRad = math.atan2(dy, dx)
-        self.aimX = math.cos(angleRad) * self.speed
-        self.aimY = math.sin(angleRad) * self.speed
-
-    def deplacer(self):
-        self.x += self.aimX
-        self.y += self.aimY
-
-
 class Tour():
     def __init__(self,parent,pos, type, vitesseTir, cout):
         self.parent=parent
@@ -77,8 +56,7 @@ class Tour_laser(Tour):
         self.cout = 300
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1
-        self.effet = "none"
-        
+        self.effet = "none"    
 
 class Tour_classique(Tour):
     def __init__(self, parent, pos, type):
@@ -88,3 +66,23 @@ class Tour_classique(Tour):
         Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
         self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "none"
+
+class Projectile():                                  
+    def __init__(self, parent, cible): #la cible est passée en param, puis on calcule la direction 
+        self.tag = parent.parent.getTagProjectile()
+        self.largeur = 25
+        self.hauteur = 25
+        self.y = parent.pos[1]
+        self.x = parent.pos[0]
+        self.speed = 1
+        self.degat = parent.force * 25
+
+        dx = cible.pos[0] - parent.pos[0]
+        dy = cible.pos[1] - parent.pos[1]
+        angleRad = math.atan2(dy, dx)
+        self.aimX = math.cos(angleRad) * self.speed
+        self.aimY = math.sin(angleRad) * self.speed
+
+    def deplacer(self):
+        self.x += self.aimX
+        self.y += self.aimY
