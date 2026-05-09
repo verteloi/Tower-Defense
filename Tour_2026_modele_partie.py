@@ -197,12 +197,10 @@ class Partie():
         self.tagProjectile = self.tagProjectile + 1
         return "tour_"+str(self.tagProjectile)
     
-    def setTour(self,pos, type):
-        print("TOUR",pos)
-        
+    def setTour(self,pos, type): 
         match type:
             case 1:
-                tour=self.creerTour(self, 1, pos)
+                tour=self.creerTour(self, 1,pos)
             case 2:
                 tour=self.creerTour(self,2,pos) # tour feu
             case 3:

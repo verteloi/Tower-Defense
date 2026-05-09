@@ -229,12 +229,12 @@ class Vue():
     def getPosTour(self, evt):
         item_under_mouse = self.canevas.find_withtag("current")  
         all_tags = self.canevas.gettags(item_under_mouse)
-        if "tour" in all_tags:
-            return
-        x = evt.x / self.coefWidth
-        y = evt.y / self.coefHeight
-        print("type de tour selec ", self.tourSelec)
-        self.parent.setTour([x, y], self.tourSelec)
+        if "zoneTour" in all_tags:   
+            id_zone = [t for t in all_tags if t not in ["zoneTour", "current"]]
+            print("Zone #",id_zone)
+            if id_zone:    
+                
+                self.parent.setTour(self.parent.modele.partieCourante.parcourChoisi.noeudsTours[int(id_zone[0])], self.tourSelec)
 
     def clickSurTour(self, event):
         tour = self.canevas.find_withtag("current")
@@ -265,9 +265,10 @@ class Vue():
                 self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile"))
 
     def afficheNoeudsTours(self):
+        i=0
         for tuple in self.parent.modele.partieCourante.parcourChoisi.noeudsTours:
-            self.canevas.create_rectangle(tuple[0]* self.coefWidth, tuple[1]* self.coefHeight, (tuple[0]+5)* self.coefWidth, (tuple[1]+5)* self.coefHeight, fill="#CC9767", tags=("zoneTour",))
-
+            self.canevas.create_rectangle(tuple[0]* self.coefWidth, tuple[1]* self.coefHeight, (tuple[0]+5)* self.coefWidth, (tuple[1]+5)* self.coefHeight, fill="#CC9767", tags=("zoneTour",i))
+            i=i+1
 
     def afficheInformationsPartie(self):
         partie = self.parent.modele.partieCourante
@@ -278,15 +279,6 @@ class Vue():
 
     def afficherTours(self):
         self.canevas.delete("tour")
-        # Logique originale pr�serv�e (via nivoActif)
-        for i in self.parent.modele.partieCourante.toursEnJeu.values():
-            x1 = i.pos[0] * self.coefWidth - 10
-            y1 = i.pos[1] * self.coefHeight - 10
-            x2 = i.pos[0] * self.coefWidth + 10
-            y2 = i.pos[1] * self.coefHeight + 10
-            # print("LOCtour",i.pos,x1,y1,x2,y2)
-            #self.canevas.create_rectangle(x1, y1, x2, y2, width=1, fill="green", tags=("tour",))
-
         if (self.parent.modele.partieCourante.toursEnJeu):
             for i in self.parent.modele.partieCourante.toursEnJeu.values():
                 x1 = i.pos[0] * self.coefWidth - 10
@@ -296,7 +288,7 @@ class Vue():
                              3: self.img_tour_electrique, 4: self.img_tour_poison, 5: self.img_tour_glace}
                 
                 if i.type in img_tour:
-                    self.canevas.create_image(x1-10, y1-10, image=img_tour[i.type], anchor="nw", tags=("tour",i.tag))
+                    self.canevas.create_image(x1+8, y1+6, image=img_tour[i.type], anchor="nw", tags=("tour",i.tag))
             
         self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
 

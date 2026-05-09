@@ -32,7 +32,6 @@ class Tour():
         self.vitesseTir = vitesseTir               #à modif quand tour upgrade
         self.compteurTir = 11 - vitesseTir    # à modif quand tour upgrade
         self.resellValue = cout*0.7
-        print(self.tag)
 
     def scan(self):
         #pour que la tour compte régulièrement et non pas par creep
