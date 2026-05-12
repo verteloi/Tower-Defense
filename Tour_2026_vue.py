@@ -318,3 +318,9 @@ class Vue():
             tk.Label(self.frame_gameover, text="GAME OVER", font=("Arial", 30), fg="red", bg="black").pack(pady=50)
             tk.Button(self.frame_gameover, text="Menu Principal", command=self.afficherEcranDemarrage).pack(pady=10)
             tk.Button(self.frame_gameover, text="Rejouer", command=self.afficherMenu).pack(pady=10)
+
+    def demarrerPartie(self):
+        self.afficheCreepTourBombe()
+        self.boutonVente.config(state="normal")
+        self.boutonAmeliorer.config(state="normal")
+        self.boutonLancerVague.config(state="disabled")

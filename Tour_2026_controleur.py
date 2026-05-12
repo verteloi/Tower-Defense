@@ -12,12 +12,9 @@ class Controleur():
     def demarrePartie(self):
         if self.actif == 0:
             self.actif = 1
+            self.vue.demarrerPartie()
             self.modele.partieCourante.demarrerVague()
-            self.vue.afficheCreepTourBombe()
-            self.continuePartie()
-            self.vue.boutonVente.config(state="normal")
-            self.vue.boutonAmeliorer.config(state="normal")
-            self.vue.boutonLancerVague.config(state="disabled")
+            self.continuePartie() 
         else:
             self.actif = 0
 
