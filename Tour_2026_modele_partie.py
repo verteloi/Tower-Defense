@@ -109,10 +109,11 @@ class Partie():
                 del self.projectiles[tag]
 
     def continuerPartie(self):
-        self.nivoActif.bougeCreep()
-        self.nivoActif.tourScan()
-        self.nivoActif.creepScan()
-        self.bougeProjectile()
+        if self.nivoActif :
+            self.nivoActif.bougeCreep()
+            self.nivoActif.tourScan()
+            self.nivoActif.creepScan()
+            self.bougeProjectile()
 
 class Nivo():
     def __init__(self,parent, numero):

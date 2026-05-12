@@ -22,6 +22,8 @@ class Vue():
         self.info_vente = tk.StringVar(value="-")
 
         self.tourSelec = 1
+        self.zoneSelec = -1
+        self.zonesTours = {}
 
         # --- Import des images ---
         try:
@@ -69,8 +71,15 @@ class Vue():
         self.frame_actuelle = self.frames[cle_frame]
         self.frame_actuelle.pack()
 
+    def reset(self):
+        self.parent.modele.partieCourante = None
+        self.tourSelec = 1
+        self.zoneSelec = -1
+        self.zonesTours = {}
+
     def afficherEcranDemarrage(self):
         self.changer_frame("demarrage")
+        self.reset()
         if not self.frame_demarrage.winfo_children():
             self.canevas_menu = tk.Canvas(self.frame_demarrage, width=self.width, height=self.hight, highlightthickness=0)
             self.canevas_menu.pack()
@@ -246,7 +255,13 @@ class Vue():
         if "zoneTour" in all_tags:   
             id_zone = [t for t in all_tags if t not in ["zoneTour", "current"]]
             if id_zone:                   
-                self.parent.modele.partieCourante.tourSelectionne = self.parent.setTour(self.parent.modele.partieCourante.parcourChoisi.noeudsTours[int(id_zone[0])], self.tourSelec)
+                self.zoneSelec = int(id_zone[0])
+                pos = self.parent.modele.partieCourante.parcourChoisi.noeudsTours[self.zoneSelec]
+                #self.canevas.delete("zoneSelec")
+                #self.canevas.create_rectangle((pos[0]* self.coefWidth)-10, (pos[1]* self.coefHeight)-10, ((pos[0]+5)* self.coefWidth)+10, ((pos[1]+5)* self.coefHeight)+10, fill="yellow", tags=("zoneSelec"))
+                self.afficheNoeudsTours()
+                self.parent.modele.partieCourante.tourSelectionne = self.parent.setTour(pos, self.tourSelec)
+                self.zonesTours[self.parent.modele.partieCourante.tourSelectionne] = self.zoneSelec
     
     def clickSurTour(self, event):
         tour = self.canevas.find_withtag("current")
@@ -254,19 +269,28 @@ class Vue():
         id_tour = [t for t in all_tags if t not in ["tour", "current"]]
         if id_tour:
             self.parent.modele.partieCourante.tourSelectionne = self.parent.modele.partieCourante.toursEnJeu[id_tour[0]]
+            self.zoneSelec = self.zonesTours[self.parent.modele.partieCourante.tourSelectionne]
+            self.actualiser_infos_tour()
+            self.afficheCreepTourBombe()
+        else:
+            self.zoneSelec = -1
+            self.selecTour(0)
+            self.afficheCreepTourBombe()
             self.actualiser_infos_tour()
 
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
         self.canevas.delete("projectile")
+        self.afficheNoeudsTours()
         self.afficherTours()
-        if (self.parent.modele.partieCourante.nivoActif.creepsEnCours):
-            for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
-                x1 = i.pos[0] * self.coefWidth - 15
-                y1 = i.pos[1] * self.coefHeight - 15
-                img_creep = {1: self.img_creep_ours, 2: self.img_creep_renard, 3: self.img_creep_ecur, 4: self.img_creep_raton, 5: self.img_creep_por}
-                if i.type in img_creep:
-                    self.canevas.create_image(x1, y1, image=img_creep[i.type], anchor="nw", tags=("creep",))
+        if(self.parent.modele.partieCourante.nivoActif):
+            if (self.parent.modele.partieCourante.nivoActif.creepsEnCours):
+                for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
+                    x1 = i.pos[0] * self.coefWidth - 15
+                    y1 = i.pos[1] * self.coefHeight - 15
+                    img_creep = {1: self.img_creep_ours, 2: self.img_creep_renard, 3: self.img_creep_ecur, 4: self.img_creep_raton, 5: self.img_creep_por}
+                    if i.type in img_creep:
+                        self.canevas.create_image(x1, y1, image=img_creep[i.type], anchor="nw", tags=("creep",))
         if len(self.parent.modele.partieCourante.projectiles) > 0:
             for i in self.parent.modele.partieCourante.projectiles.values():
                 x1 = i.x * self.coefWidth - (i.largeur / self.coefWidth)
@@ -277,8 +301,12 @@ class Vue():
 
     def afficheNoeudsTours(self):
         i=0
+        self.canevas.delete("zoneSelec")
         for tuple in self.parent.modele.partieCourante.parcourChoisi.noeudsTours:
-            self.canevas.create_rectangle(tuple[0]* self.coefWidth, tuple[1]* self.coefHeight, (tuple[0]+5)* self.coefWidth, (tuple[1]+5)* self.coefHeight, fill="#CC9767", tags=("zoneTour",i))
+            if i == self.zoneSelec:
+                self.canevas.create_rectangle((tuple[0]* self.coefWidth)-8, (tuple[1]* self.coefHeight)-8, ((tuple[0]+5)* self.coefWidth)+8, ((tuple[1]+5)* self.coefHeight)+8, fill="#A57E37", tags=("zoneSelec"))
+            else :
+                self.canevas.create_rectangle(tuple[0]* self.coefWidth, tuple[1]* self.coefHeight, (tuple[0]+5)* self.coefWidth, (tuple[1]+5)* self.coefHeight, fill="#CC9767", tags=("zoneTour",i))
             i=i+1
 
     def afficheInformationsPartie(self):
