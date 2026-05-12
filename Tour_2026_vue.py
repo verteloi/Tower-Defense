@@ -308,7 +308,7 @@ class Vue():
         self.canevas.delete("zoneSelec")
         for tuple in self.parent.modele.partieCourante.parcourChoisi.noeudsTours:
             if i == self.zoneSelec:
-                self.canevas.create_rectangle((tuple[0]* self.coefWidth)-8, (tuple[1]* self.coefHeight)-8, ((tuple[0]+5)* self.coefWidth)+8, ((tuple[1]+5)* self.coefHeight)+8, fill="#A57E37", tags=("zoneSelec"))
+                self.canevas.create_rectangle((tuple[0]* self.coefWidth)-8, (tuple[1]* self.coefHeight)-8, ((tuple[0]+5)* self.coefWidth)+8, ((tuple[1]+5)* self.coefHeight)+8, fill="#a0522d", tags=("zoneSelec"))
             else :
                 self.canevas.create_rectangle(tuple[0]* self.coefWidth, tuple[1]* self.coefHeight, (tuple[0]+5)* self.coefWidth, (tuple[1]+5)* self.coefHeight, fill="#CC9767", tags=("zoneTour",i))
             i=i+1
