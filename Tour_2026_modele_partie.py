@@ -109,6 +109,12 @@ class Partie():
             for tag in a_supprimer:
                 del self.projectiles[tag]
 
+    def continuerPartie(self):
+        self.nivoActif.bougeCreep()
+        self.nivoActif.tourScan()
+        self.nivoActif.creepScan()
+        self.bougeProjectile()
+
 class Nivo():
     def __init__(self,parent, numero):
         self.parent = parent

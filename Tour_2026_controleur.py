@@ -23,10 +23,7 @@ class Controleur():
 
     def continuePartie(self):
         if self.actif:
-            self.modele.partieCourante.nivoActif.bougeCreep()
-            self.modele.partieCourante.nivoActif.tourScan()
-            self.modele.partieCourante.nivoActif.creepScan()
-            self.modele.partieCourante.bougeProjectile()
+            self.modele.partieCourante.continuerPartie()
             self.vue.afficheCreepTourBombe()    
             self.vue.root.after(self.delai, self.continuePartie)
             if not self.modele.partieCourante.nivoActif.creepsEnCours:
