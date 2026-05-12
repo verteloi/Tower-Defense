@@ -38,6 +38,10 @@ class Vue():
             self.img_tour_poison = PhotoImage(file="images\\tour_poison.png")
             self.img_tour_glace = PhotoImage(file="images\\tour_glace.png")
             self.img_tour_electrique = PhotoImage(file="images\\tour_electrique.png")
+            self.img_bg = tk.PhotoImage(file="images\\bg.png")
+            self.img_title = tk.PhotoImage(file="images\\title.png")
+            self.img_play = tk.PhotoImage(file="images\\play.png")
+            self.img_scores = tk.PhotoImage(file="images\\score.png")
         except Exception as e:
             print(f"Erreur chargement images : {e}")
 
@@ -68,12 +72,17 @@ class Vue():
     def afficherEcranDemarrage(self):
         self.changer_frame("demarrage")
         if not self.frame_demarrage.winfo_children():
-            titre = tk.Label(self.frame_demarrage, text="Tower Defense", font=("Arial", 30))
-            titre.pack(pady=50)
-            bouton_demarrer = tk.Button(self.frame_demarrage, text="Demarrer", command=self.afficherMenu)
-            bouton_demarrer.pack(pady=10)
-            bouton_scores = tk.Button(self.frame_demarrage, text="Scores", command=self.afficherScores)
-            bouton_scores.pack(pady=10)
+            self.canevas_menu = tk.Canvas(self.frame_demarrage, width=self.width, height=self.hight, highlightthickness=0)
+            self.canevas_menu.pack()
+
+            self.canevas_menu.create_image(self.width/2, self.hight/2, image=self.img_bg)
+            self.canevas_menu.create_image(self.width/2, self.hight/4 - 30, image=self.img_title)
+
+            btn_play = self.canevas_menu.create_image(self.width/2, self.hight/2 + 35, image=self.img_play); 
+            self.canevas_menu.tag_bind(btn_play, "<Button-1>", lambda event:self.afficherMenu())
+
+            btn_score = self.canevas_menu.create_image(self.width/2, self.hight/2 + 200, image=self.img_scores); 
+            self.canevas_menu.tag_bind(btn_score, "<Button-1>", lambda event:self.afficherScores())
 
     def afficherMenu(self):
         self.changer_frame("menu")
