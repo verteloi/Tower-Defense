@@ -12,8 +12,8 @@ class Controleur():
     def demarrePartie(self):
         if self.actif == 0:
             self.actif = 1
-            self.vue.demarrerPartie()
             self.modele.partieCourante.demarrerVague()
+            self.vue.demarrerPartie()
             self.continuePartie() 
         else:
             self.actif = 0
