@@ -45,7 +45,7 @@ class Vue():
         except Exception as e:
             print(f"Erreur chargement images : {e}")
 
-        # --- Initialisation des Frames ---
+        # --- initialisation des frames ---
         self.frame_demarrage = tk.Frame(self.root, width=self.width, height=self.hight, bg="gray")
         self.frame_menu = tk.Frame(self.root, width=self.width, height=self.hight, bg="lightgray")
         self.frame_jeu = tk.Frame(self.root)
@@ -87,24 +87,28 @@ class Vue():
     def afficherMenu(self):
         self.changer_frame("menu")
         if not self.frame_menu.winfo_children():
-            sidebar_creer = tk.Frame(self.frame_menu, bg="#6f4e37", width=300, height=self.hight)
+            sidebar_creer = tk.Frame(self.frame_menu, bg="#6f4e37")
             sidebar_creer.pack(side="right", fill="y")
 
-            tk.Label(sidebar_creer, text="MENU", font=("Arial", 18, "bold"), bg="#6f4e37").pack(pady=10, fill="x")
+            tk.Label(sidebar_creer, text="Options", font=("Arial", 14, "bold"), bg="#4a3222", fg="white", bd=2, pady=3, padx=10, relief="raised").pack(pady=(15, 5), padx=25)
 
-            tk.Button(sidebar_creer, text="Map 1", command=lambda:self.parent.changerParcour(0)).pack(pady=5, padx=20)
-            tk.Button(sidebar_creer, text="Map 2", command=lambda:self.parent.changerParcour(1)).pack(pady=5, padx=20)
-            tk.Button(sidebar_creer, text="Map 3", command=lambda:self.parent.changerParcour(2)).pack(pady=5, padx=20)
+            map_frame = tk.Frame(sidebar_creer, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
+            map_frame.pack(pady=20)
 
-            tk.Label(sidebar_creer, text="difficulte", font=("Arial", 12, "bold"), bg="#6f4e37").pack(pady=(20, 0), fill="x")
+            tk.Label(map_frame, text="Choisir Carte", font=("Arial", 11, "bold"), bg="#4a3222", fg="white", padx=12).pack(fill="x")
+            tk.Button(map_frame, text="Map 1", bg="#4a3222", fg="white", font=("Arial", 10, "bold"), command=lambda:self.parent.changerParcour(0)).pack(pady=5)
+            tk.Button(map_frame, text="Map 2", bg="#4a3222", fg="white", font=("Arial", 10, "bold"), command=lambda:self.parent.changerParcour(1)).pack(pady=5)
+            tk.Button(map_frame, text="Map 3", bg="#4a3222", fg="white", font=("Arial", 10, "bold"), command=lambda:self.parent.changerParcour(2)).pack(pady=5)
 
-            diff_frame = tk.Frame(sidebar_creer, bg="#6f4e37")
+            diff_frame = tk.Frame(sidebar_creer, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
             diff_frame.pack(pady=10)
 
-            tk.Button(diff_frame, text="F", bg="lightgreen", command=lambda:self.parent.changerDifficulte(0)).pack(side="left", padx=2)
-            tk.Button(diff_frame, text="M", bg="orange", command=lambda:self.parent.changerDifficulte(1)).pack(side="left", padx=2)
-            tk.Button(diff_frame, text="D", bg="red", command=lambda:self.parent.changerDifficulte(2)).pack(side="left", padx=2)
-            tk.Button(sidebar_creer, text="Jouer", font=("Arial", 14, "bold"), bg="#A0EC2C", command=self.afficherInterfaceJeu).pack(side="bottom", pady=10, padx=10)
+            tk.Label(diff_frame, text="Choisir Difficulte", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
+            tk.Button(diff_frame, text="Facile", bg="green", fg="white", font=("Arial", 10, "bold"), command=lambda:self.parent.changerDifficulte(0)).pack(side="top", pady=5)
+            tk.Button(diff_frame, text="Moyen", bg="orange", fg="white", font=("Arial", 10, "bold"), command=lambda:self.parent.changerDifficulte(1)).pack(side="top", pady=5)
+            tk.Button(diff_frame, text="Difficile", bg="red", fg="white", font=("Arial", 10, "bold"),command=lambda:self.parent.changerDifficulte(2)).pack(side="top", pady=5)
+
+            tk.Button(sidebar_creer, text="Jouer", font=("Arial", 14, "bold"), fg="white", bg="green", command=self.afficherInterfaceJeu).pack(side="top", pady=(20,30), padx=10)
             
             conteneurPreviewParcours = tk.Frame(self.frame_menu, bg="#6f4e37", width=self.width, height=self.hight)
             conteneurPreviewParcours.pack(side="left", expand=True, fill="both")
