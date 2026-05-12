@@ -94,6 +94,7 @@ class Vue():
             self.canevas_menu.tag_bind(btn_score, "<Button-1>", lambda event:self.afficherScores())
 
     def afficherMenu(self):
+        self.reset()
         self.changer_frame("menu")
         if not self.frame_menu.winfo_children():
 
@@ -139,10 +140,11 @@ class Vue():
             self.previewParcours.create_image(0, 0, image=imgs[choix], anchor="nw")
 
     def actualiser_infos_tour(self, type=1, type_appel="jeu"):
-        self.selecTour(type)
         tour = self.parent.modele.partieCourante.tourSelectionne
         if type_appel=="bouton":
+            self.selecTour(type)
             tour = self.parent.modele.partieCourante.toutesLesTours[(type-1)]
+            self.disableBoutonsVendreAmeliorer()
         if tour:
             self.info_prix.set(f"Prix: {tour.cout}$")
             self.info_degat.set(f"Degat: {tour.force}")
@@ -262,14 +264,24 @@ class Vue():
         all_tags = self.canevas.gettags(item_under_mouse)
         if "zoneTour" in all_tags:   
             id_zone = [t for t in all_tags if t not in ["zoneTour", "current"]]
-            if id_zone:                   
+            if id_zone and self.tourSelec:                   
                 self.zoneSelec = int(id_zone[0])
                 pos = self.parent.modele.partieCourante.parcourChoisi.noeudsTours[self.zoneSelec]
-                #self.canevas.delete("zoneSelec")
-                #self.canevas.create_rectangle((pos[0]* self.coefWidth)-10, (pos[1]* self.coefHeight)-10, ((pos[0]+5)* self.coefWidth)+10, ((pos[1]+5)* self.coefHeight)+10, fill="yellow", tags=("zoneSelec"))
-                self.afficheNoeudsTours()
                 self.parent.modele.partieCourante.tourSelectionne = self.parent.setTour(pos, self.tourSelec)
                 self.zonesTours[self.parent.modele.partieCourante.tourSelectionne] = self.zoneSelec
+                self.ableBoutonsVendreAmeliorer()
+        elif "tour" in all_tags:
+            self.ableBoutonsVendreAmeliorer()
+            self.clickSurTour(evt)
+        else:
+            print("apuye ailleurs")
+            self.zoneSelec = -1
+            self.selecTour(0)
+            self.parent.modele.partieCourante.tourSelectionne = None
+            self.disableBoutonsVendreAmeliorer()
+        self.afficheNoeudsTours()
+        self.afficheCreepTourBombe()
+        self.actualiser_infos_tour()
     
     def clickSurTour(self, event):
         tour = self.canevas.find_withtag("current")
@@ -278,18 +290,11 @@ class Vue():
         if id_tour:
             self.parent.modele.partieCourante.tourSelectionne = self.parent.modele.partieCourante.toursEnJeu[id_tour[0]]
             self.zoneSelec = self.zonesTours[self.parent.modele.partieCourante.tourSelectionne]
-            self.actualiser_infos_tour()
-            self.afficheCreepTourBombe()
-        else:
-            self.zoneSelec = -1
-            self.selecTour(0)
-            self.afficheCreepTourBombe()
-            self.actualiser_infos_tour()
+            
 
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
         self.canevas.delete("projectile")
-        # self.afficheNoeudsTours()
         self.afficherTours()
         if(self.parent.modele.partieCourante.nivoActif):
             if (self.parent.modele.partieCourante.nivoActif.creepsEnCours):
@@ -354,6 +359,13 @@ class Vue():
     def demarrerPartie(self):
         self.afficheCreepTourBombe()
         self.afficheInformationsPartie()
+        self.disableBoutonsVendreAmeliorer()
+        self.boutonLancerVague.config(state="disabled")
+
+    def disableBoutonsVendreAmeliorer(self):
+        self.boutonVente.config(state="disabled")
+        self.boutonAmeliorer.config(state="disabled")
+
+    def ableBoutonsVendreAmeliorer(self):
         self.boutonVente.config(state="normal")
         self.boutonAmeliorer.config(state="normal")
-        self.boutonLancerVague.config(state="disabled")

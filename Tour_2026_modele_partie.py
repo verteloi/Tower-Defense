@@ -42,23 +42,24 @@ class Partie():
         return "tour_"+str(self.tagProjectile)
     
     def setTour(self,pos, type): 
-        match type:
-            case 1:
-                tour=self.creerTour(self, 1,pos)
-            case 2:
-                tour=self.creerTour(self,2,pos) # tour feu
-            case 3:
-                tour=self.creerTour(self,3,pos)
-            case 4:
-                tour=self.creerTour(self,4,pos)
-            case 5:
-                tour=self.creerTour(self,5,pos)
-        if(self.cash >= tour.cout):
-            self.toursEnJeu[tour.tag] = tour
-            self.cash -= tour.cout
-            self.parent.parent.vue.afficherTours()
-            self.parent.parent.vue.afficheInformationsPartie() 
-            return self.toursEnJeu[tour.tag]
+        if type >0 and type<6:    
+            match type:
+                case 1:
+                    tour=self.creerTour(self, 1,pos)
+                case 2:
+                    tour=self.creerTour(self,2,pos) # tour feu
+                case 3:
+                    tour=self.creerTour(self,3,pos)
+                case 4:
+                    tour=self.creerTour(self,4,pos)
+                case 5:
+                    tour=self.creerTour(self,5,pos)
+            if(self.cash >= tour.cout):
+                self.toursEnJeu[tour.tag] = tour
+                self.cash -= tour.cout
+                self.parent.parent.vue.afficherTours()
+                self.parent.parent.vue.afficheInformationsPartie() 
+                return self.toursEnJeu[tour.tag]
 
     def creerTour(self, parent, type, pos=(0,0)):
         tour=None

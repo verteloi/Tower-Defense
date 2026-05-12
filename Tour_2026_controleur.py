@@ -19,14 +19,14 @@ class Controleur():
             self.actif = 0
 
     def continuePartie(self):
-        if self.actif:
+        if self.actif and self.modele.partieCourante:
             self.modele.partieCourante.continuerPartie()
             self.vue.afficheCreepTourBombe()    
             self.vue.root.after(self.delai, self.continuePartie)
-            if not self.modele.partieCourante.nivoActif.creepsEnCours:
-                self.actif = 0
-                self.modele.partieCourante.nivoActif = None
-                self.vue.boutonLancerVague.config(state="normal")
+            if self.modele.partieCourante.nivoActif:
+                if not self.modele.partieCourante.nivoActif.creepsEnCours:
+                    self.modele.partieCourante.nivoActif = None
+                    self.vue.boutonLancerVague.config(state="normal")
 
     def setTour(self, pos, type):
         return self.modele.partieCourante.setTour(pos, type)
