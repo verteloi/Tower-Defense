@@ -27,7 +27,7 @@ class Controleur():
             self.modele.partieCourante.bougeProjectile()
             self.vue.afficheCreepTourBombe()    
             self.vue.root.after(self.delai, self.continuePartie)
-            if self.modele.partieCourante.nivoActif.creepsEnCours:
+            if not self.modele.partieCourante.nivoActif.creepsEnCours:
                 self.actif = 0
                 self.modele.partieCourante
 

@@ -83,6 +83,7 @@ class Partie():
             self.parent.parent.vue.afficherTours()
             self.tourSelectionne = None
             self.parent.parent.vue.actualiser_infos_tour()
+            self.parent.parent.vue.afficheInformationsPartie()
 
     def ameliorerTour(self, tag):
         if tag in self.toursEnJeu:

@@ -28,8 +28,9 @@ class Tour():
 
     def ameliorer(self):
         self.niveau += 1
-        self.cout *= self.niveau
-        self.resellValue = self.cout*0.7
+        self.resellValue = round((self.cout*0.7),2)
+        self.cout = round((self.cout + 100 )*1.3, 2)
+    
 
 class Tour_glace(Tour):
     def __init__(self, parent, pos, type):
