@@ -90,7 +90,6 @@ class Vue():
             sidebar_creer = tk.Frame(self.frame_menu, bg="#6f4e37", width=300, height=self.hight)
             sidebar_creer.pack(side="right", fill="y")
 
-
             tk.Label(sidebar_creer, text="MENU", font=("Arial", 18, "bold"), bg="#6f4e37").pack(pady=10, fill="x")
 
             tk.Button(sidebar_creer, text="Map 1", command=lambda:self.parent.changerParcour(0)).pack(pady=5, padx=20)
@@ -224,7 +223,6 @@ class Vue():
         self.parent.modele.demarrePartie()
         self.afficheNoeudsTours()
         self.afficheInformationsPartie()
-        
 
     def selecTour(self, type):
         self.tourSelec = type
@@ -249,6 +247,7 @@ class Vue():
             id_zone = [t for t in all_tags if t not in ["zoneTour", "current"]]
             if id_zone:                   
                 self.parent.modele.partieCourante.tourSelectionne = self.parent.setTour(self.parent.modele.partieCourante.parcourChoisi.noeudsTours[int(id_zone[0])], self.tourSelec)
+    
     def clickSurTour(self, event):
         tour = self.canevas.find_withtag("current")
         all_tags = self.canevas.gettags(tour)
@@ -256,7 +255,6 @@ class Vue():
         if id_tour:
             self.parent.modele.partieCourante.tourSelectionne = self.parent.modele.partieCourante.toursEnJeu[id_tour[0]]
             self.actualiser_infos_tour()
-
 
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
@@ -289,7 +287,6 @@ class Vue():
         self.info_argent.set(f"{partie.cash}$")
         self.info_vague.set(f"{partie.nivo + 1} / 10")
         
-
     def afficherTours(self):
         self.canevas.delete("tour")
         if (self.parent.modele.partieCourante.toursEnJeu):
@@ -304,7 +301,6 @@ class Vue():
                     self.canevas.create_image(x1+8, y1+6, image=img_tour[i.type], anchor="nw", tags=("tour",i.tag))
             
         self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
-
 
     def afficherScores(self):
         self.changer_frame("scores")
