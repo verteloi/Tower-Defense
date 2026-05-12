@@ -285,7 +285,7 @@ class Vue():
         partie = self.parent.modele.partieCourante
         self.info_vie.set(f"{partie.vie} hp")
         self.info_argent.set(f"{partie.cash}$")
-        self.info_vague.set(f"{partie.nivo + 1} / 10")
+        self.info_vague.set(f"{partie.nivo} / 10")
         
     def afficherTours(self):
         self.canevas.delete("tour")
@@ -317,6 +317,7 @@ class Vue():
 
     def demarrerPartie(self):
         self.afficheCreepTourBombe()
+        self.afficheInformationsPartie()
         self.boutonVente.config(state="normal")
         self.boutonAmeliorer.config(state="normal")
         self.boutonLancerVague.config(state="disabled")

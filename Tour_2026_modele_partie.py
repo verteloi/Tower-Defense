@@ -6,7 +6,7 @@ class Partie():
         self.parent=parent
         self.vie = 1
         self.cash = 5000
-        self.nivo = 1
+        self.nivo = 0
         self.score = 0
         self.tagCreep = 0
         self.tagTours = 0
@@ -23,12 +23,11 @@ class Partie():
             [5, 5, 5, 1, 1, 3, 3, 3],      
         ]
         self.parcourChoisi = Parcours(self, parcour)
-        self.nivoActif = Nivo(self, self.nivo-1)
 
     def demarrerVague(self):
         if(not self.nivoActif):
+            self.nivoActif = Nivo(self, self.nivo)
             self.nivo = self.nivo + 1
-            self.nivoActif = Nivo(self, self.nivo-1)
 
     def getTagCreep(self):
         self.tagCreep = self.tagCreep + 1
