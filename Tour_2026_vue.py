@@ -96,7 +96,11 @@ class Vue():
     def afficherMenu(self):
         self.changer_frame("menu")
         if not self.frame_menu.winfo_children():
-            sidebar_creer = tk.Frame(self.frame_menu, bg="#6f4e37")
+
+            self.sidebartopmenu = tk.Frame(self.frame_menu, bg="#4a3222", height=40, highlightbackground="black", highlightthickness=1)
+            self.sidebartopmenu.pack(side="top", fill="x")
+
+            sidebar_creer = tk.Frame(self.frame_menu, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
             sidebar_creer.pack(side="right", fill="y")
 
             tk.Label(sidebar_creer, text="Options", font=("Arial", 14, "bold"), bg="#4a3222", fg="white", bd=2, pady=3, padx=10, relief="raised").pack(pady=(15, 5), padx=25)
@@ -285,7 +289,7 @@ class Vue():
     def afficheCreepTourBombe(self):
         self.canevas.delete("creep")
         self.canevas.delete("projectile")
-        self.afficheNoeudsTours()
+        # self.afficheNoeudsTours()
         self.afficherTours()
         if(self.parent.modele.partieCourante.nivoActif):
             if (self.parent.modele.partieCourante.nivoActif.creepsEnCours):
