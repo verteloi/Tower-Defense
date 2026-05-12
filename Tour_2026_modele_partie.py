@@ -12,21 +12,23 @@ class Partie():
         self.tagTours = 0
         self.tagProjectile = 0
         self.tourSelectionne = None
+        self.nivoActif = None
         self.dictCreeps = {}
         self.toursEnJeu = {}
         self.toutesLesTours = [self.creerTour(self,1), self.creerTour(self,2), self.creerTour(self,3), self.creerTour(self,4), self.creerTour(self,5)]
         self.projectiles = {}
-        self.tousLesCreeps = [
-            [1, 1, 1, 1, 2, 3, 4, 5],      
+        self.tousLesCreeps = [ #1 ours,  #2 renard,  #3 ecureuil,  #4 moufette,  #5 porcepine
+            [5, 5, 5, 5, 2, 3, 4, 5],      
             [2, 2, 2, 3, 3, 4, 4, 4],      
             [5, 5, 5, 1, 1, 3, 3, 3],      
         ]
         self.parcourChoisi = Parcours(self, parcour)
-        self.nivoActif = Nivo(self, self.nivo)
+        self.nivoActif = Nivo(self, self.nivo-1)
 
     def demarrerVague(self):
-        self.nivo = self.nivo + 1
-        self.nivoActif = Nivo(self, self.nivo)
+        if(not self.nivoActif):
+            self.nivo = self.nivo + 1
+            self.nivoActif = Nivo(self, self.nivo-1)
 
     def getTagCreep(self):
         self.tagCreep = self.tagCreep + 1
@@ -150,13 +152,14 @@ class Nivo():
                 c.pos=self.parcours.noeuds[0][:] # on positionne le creep sur le prmier noeud
                 c.cible=1 #on vise le prochain noeud, le deuxieme
                 self.creepsEnCours.insert(0,c)
-        n=0
-        for i in self.creepsEnCours:
-            n=n+1
-            if i.vie > 0:
-                i.bouge()
-            else:
-                self.creepsEnCours.remove(i)
+        if self.creepsEnCours:
+            for i in self.creepsEnCours:
+                if i.vie > 0:
+                    i.bouge()
+                else:
+                    self.creepsEnCours.remove(i)
+        else:
+            self.wave_active = False
     
     def tourScan(self):
         if self.parent.toursEnJeu and self.creepsEnCours:

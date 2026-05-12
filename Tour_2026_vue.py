@@ -198,7 +198,8 @@ class Vue():
             
             # ACTION PARTIE (LANCER VAGUE ET MENU)
             
-            tk.Button(self.panneau_actions, text="Lancer Vague", command=self.parent.demarrePartie, bg="grey", fg="white", font=("Arial", 10, "bold"), width=15, bd=3).pack(pady=5)
+            self.boutonLancerVague = tk.Button(self.panneau_actions, text="Lancer Vague", command=self.parent.demarrePartie, bg="grey", fg="white", font=("Arial", 10, "bold"), width=15, bd=3)
+            self.boutonLancerVague.pack(pady=5)
             tk.Button(self.panneau_actions, text="Menu Principal", command=self.afficherMenu, bg="grey", fg="white", font=("Arial", 10, "bold"), width=15, bd=3).pack(pady=5)
 
             self.canevas = tk.Canvas(self.frame_jeu, width=self.width, height=self.hight, bg="black", highlightbackground="black", highlightthickness=2)
