@@ -71,11 +71,14 @@ class Vue():
         self.frame_actuelle = self.frames[cle_frame]
         self.frame_actuelle.pack()
 
+    def resetPartie(self):
+        pass
     def reset(self):
         self.parent.modele.partieCourante = None
         self.tourSelec = 1
         self.zoneSelec = -1
         self.zonesTours = {}
+        self.parent.actif = 0
 
     def afficherEcranDemarrage(self):
         self.changer_frame("demarrage")
@@ -234,6 +237,7 @@ class Vue():
             self.canevas.bind("<Button-1>", self.getPosTour)
             self.canevas.tag_bind("tour", "<Button-1>", self.clickSurTour)
 
+        self.boutonLancerVague.config(state="normal")
         self.canevas.delete("all")
         choix = self.parent.modele.parcourChoisi
         imgs = {0: self.img_parcour1, 1: self.img_parcour3, 2: self.img_parcour2}
