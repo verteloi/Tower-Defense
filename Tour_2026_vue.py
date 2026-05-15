@@ -346,9 +346,9 @@ class Vue():
                 y1 = i.y * self.coefHeight - (i.hauteur / self.coefHeight)
                 x2 = i.x * self.coefWidth + (i.largeur / self.coefWidth)
                 y2 = i.y * self.coefHeight + (i.hauteur / self.coefHeight)
-                match i.type:
-                    case 1:
-                        self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile"))
+                type_projectile = {1: "OrangeRed2", 2: "black", 3: "deep sky blue", 4: "green", 5: "powder blue"}
+                if i.type in type_projectile:
+                    self.canevas.create_oval(x1, y1, x2, y2, fill=type_projectile[i.type], tags=("projectile"))
 
     def afficheNoeudsTours(self):
         i=0
