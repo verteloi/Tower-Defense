@@ -21,9 +21,12 @@ class Modele():
         self.partieCourante = None
         self.parcourChoisi = 0
         self.difficulteChoisi = 0
+        self.difficulteMultiplicateur = 0
+        self.tempArgent = 0
+        self.tempVie = 0
         
     def demarrePartie(self):
-        self.partieCourante = fichierPartie.Partie(self, self.parcourChoisi)
+        self.partieCourante = fichierPartie.Partie(self, self.parcourChoisi, self.tempVie, self.tempArgent)
 
     def parcourCliquer(self, numero):
         self.parcourChoisi=numero

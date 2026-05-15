@@ -138,10 +138,11 @@ class Vue():
             info_frame = tk.Frame(sidebar_creer, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
             info_frame.pack(pady=10)
 
-            tk.Label(info_frame, text="Infos Partie", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
+            tk.Label(info_frame, text="Config. Partie", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
+            tk.Label(info_frame, textvariable=self.map_selectionne, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
             tk.Label(info_frame, textvariable=self.argent_depart, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
-            tk.Label(info_frame, textvariable=self.argent_depart, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
-
+            tk.Label(info_frame, textvariable=self.force_creep, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
+            tk.Label(info_frame, textvariable=self.vie_creep, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
 
             tk.Button(sidebar_creer, text="Jouer", font=("Arial", 14, "bold"), fg="white", bg="green", command=self.afficherInterfaceJeu).pack(side="top", pady=(20,30), padx=10)
             
@@ -160,13 +161,11 @@ class Vue():
         if choix in imgs:
             self.previewParcours.create_image(0, 0, image=imgs[choix], anchor="nw")
 
-    def actualiser_info_difficulte(self, difficulte):
-        self.argent_depart.set(f"Argent Depart: {self.argent_depart}$")
-        self.map_selectionne.set(f"Map Selectionne: {self.map_selectionne}$")
-        self.force_creep.set(f"Force Creep: {self.force_creep}$")
-        self.vie_creep.set(f"Vie Creep: {self.vie_creep}$")
-
-
+    def actualiser_info_difficulte(self):
+        self.map_selectionne.set(f"Map: {self.parent.modele.parcourChoisi + 1}")
+        self.argent_depart.set(f"Argent: {self.parent.modele.tempArgent}$")
+        self.force_creep.set(f"Vie: {self.parent.modele.tempVie}")
+        self.vie_creep.set(f"Force Creep: {self.parent.modele.difficulteMultiplicateur}x")
 
     def actualiser_infos_tour(self, type=1, type_appel="jeu"):
         tour = self.parent.modele.partieCourante.tourSelectionne
