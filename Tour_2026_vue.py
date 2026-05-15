@@ -21,6 +21,10 @@ class Vue():
         self.info_argent = tk.StringVar(value="Argent: -")
         self.info_vague = tk.StringVar(value="Vague: -")
         self.info_vente = tk.StringVar(value="-")
+        self.map_selectionne = tk.StringVar(value="-")
+        self.argent_depart = tk.StringVar(value="-")
+        self.force_creep = tk.StringVar(value="-")
+        self.vie_creep = tk.StringVar(value="-")
 
         self.tourSelec = 1
         self.zoneSelec = -1
@@ -131,6 +135,14 @@ class Vue():
             tk.Button(diff_frame, text="Moyen", bg="orange", fg="white", font=("Arial", 10, "bold"), command=lambda:self.parent.changerDifficulte(1)).pack(side="top", pady=5)
             tk.Button(diff_frame, text="Difficile", bg="red", fg="white", font=("Arial", 10, "bold"),command=lambda:self.parent.changerDifficulte(2)).pack(side="top", pady=5)
 
+            info_frame = tk.Frame(sidebar_creer, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
+            info_frame.pack(pady=10)
+
+            tk.Label(info_frame, text="Infos Partie", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
+            tk.Label(info_frame, textvariable=self.argent_depart, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
+            tk.Label(info_frame, textvariable=self.argent_depart, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
+
+
             tk.Button(sidebar_creer, text="Jouer", font=("Arial", 14, "bold"), fg="white", bg="green", command=self.afficherInterfaceJeu).pack(side="top", pady=(20,30), padx=10)
             
             conteneurPreviewParcours = tk.Frame(self.frame_menu, bg="#6f4e37", width=self.width, height=self.hight)
@@ -147,6 +159,14 @@ class Vue():
         imgs = {0: self.img_parcour1, 1: self.img_parcour3, 2: self.img_parcour2}
         if choix in imgs:
             self.previewParcours.create_image(0, 0, image=imgs[choix], anchor="nw")
+
+    def actualiser_info_difficulte(self, difficulte):
+        self.argent_depart.set(f"Argent Depart: {self.argent_depart}$")
+        self.map_selectionne.set(f"Map Selectionne: {self.map_selectionne}$")
+        self.force_creep.set(f"Force Creep: {self.force_creep}$")
+        self.vie_creep.set(f"Vie Creep: {self.vie_creep}$")
+
+
 
     def actualiser_infos_tour(self, type=1, type_appel="jeu"):
         tour = self.parent.modele.partieCourante.tourSelectionne
@@ -398,7 +418,7 @@ class Vue():
                 self.parent.actif = 0
             case "speedup":
                 if (self.parent.delai > 2):
-                    self.parent.delai -= 2
+                    self.parent.delai -= 10
             case "speeddown":
-                if (self.parent.delai < 40):
-                    self.parent.delai += 2
+                if (self.parent.delai < 50):
+                    self.parent.delai += 10
