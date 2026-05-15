@@ -68,9 +68,19 @@ class Tour_classique(Tour):
         self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
         self.effet = "none"
 
+class Tour_bombe(Tour):
+    def __init__(self, parent, pos, type):
+        self.vitesseTir = 1    # 1 le plus lent, 10 le plus rapide 
+        self.niveau = 1
+        self.cout = 200 * self.niveau
+        Tour.__init__(self, parent, pos, type, self.vitesseTir, self.cout)        
+        self.force = 1        # 1 le plus faible (25 vies) 10 le plus fort (1000) 
+        self.effet = "none"
+
 class Projectile():                                  
     def __init__(self, parent, cible): #la cible est passée en param, puis on calcule la direction 
         self.tag = parent.parent.getTagProjectile()
+        self.type = parent.type
         self.largeur = 25
         self.hauteur = 25
         self.y = parent.pos[1]

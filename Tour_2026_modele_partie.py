@@ -67,7 +67,7 @@ class Partie():
             case 1:
                 tour=fichierTours.Tour_classique(parent,pos,1)
             case 2:
-                tour=fichierTours.Tour_classique(parent,pos,2) # tour feu
+                tour=fichierTours.Tour_bombe(parent,pos,2) 
             case 3:
                 tour=fichierTours.Tour_laser(parent,pos,3)
             case 4:

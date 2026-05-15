@@ -314,7 +314,9 @@ class Vue():
                 y1 = i.y * self.coefHeight - (i.hauteur / self.coefHeight)
                 x2 = i.x * self.coefWidth + (i.largeur / self.coefWidth)
                 y2 = i.y * self.coefHeight + (i.hauteur / self.coefHeight)
-                self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile"))
+                match i.type:
+                    case 1:
+                        self.canevas.create_rectangle(x1, y1, x2, y2, fill="yellow", tags=("projectile"))
 
     def afficheNoeudsTours(self):
         i=0
