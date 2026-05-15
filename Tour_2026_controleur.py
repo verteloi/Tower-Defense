@@ -26,6 +26,7 @@ class Controleur():
             if self.modele.partieCourante.nivoActif:
                 if not self.modele.partieCourante.nivoActif.creepsEnCours:
                     self.modele.partieCourante.nivoActif = None
+                    self.actif = 0
                     self.vue.boutonLancerVague.config(state="normal")
 
     def setTour(self, pos, type):

@@ -81,8 +81,8 @@ class Projectile():
     def __init__(self, parent, cible): #la cible est passée en param, puis on calcule la direction 
         self.tag = parent.parent.getTagProjectile()
         self.type = parent.type
-        self.largeur = 25
-        self.hauteur = 25
+        self.largeur = 40
+        self.hauteur = 40
         self.y = parent.pos[1]
         self.x = parent.pos[0]
         self.speed = 1
