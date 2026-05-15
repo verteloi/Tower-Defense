@@ -21,7 +21,14 @@ class Partie():
         self.tousLesCreeps = [ #1 ours,  #2 renard,  #3 ecureuil,  #4 moufette,  #5 porcepine
             [5, 5, 5, 5, 2, 3, 4, 5],      
             [2, 2, 2, 3, 3, 4, 4, 4],      
-            [5, 5, 5, 1, 1, 3, 3, 3],      
+            [5, 5, 5, 1, 1, 3, 3, 3],
+            [5, 5, 5, 5, 2, 3, 4, 5],      
+            [2, 2, 2, 3, 3, 4, 4, 4],      
+            [5, 5, 5, 1, 1, 3, 3, 3],
+            [5, 5, 5, 5, 2, 3, 4, 5],      
+            [2, 2, 2, 3, 3, 4, 4, 4],      
+            [4, 4, 4, 1, 1, 1, 2, 2],  
+            [1, 1, 1, 1, 1, 3, 3, 3]    
         ]
         self.parcourChoisi = Parcours(self, parcour)
 
@@ -116,6 +123,16 @@ class Partie():
             self.nivoActif.tourScan()
             self.nivoActif.creepScan()
             self.bougeProjectile()
+
+    def lancerBombe(self, creep):
+        #print("bombe")
+        pass
+    def lancerPoison(self, creep):
+        #print("poison")
+        pass
+    def lancerGlace(self, creep):
+        #print("glace")
+        pass
 
 class Nivo():
     def __init__(self,parent, numero, tempDiff):
@@ -216,7 +233,7 @@ class Parcours():
                        [30, 70],
                        [30, 91],
                        [100, 91]]
-        self.noeudsTours1=[[5,42], #fait
+        self.noeudsTours1=[[5,42],
                      [10,55],
                      [5,22],
                      [20,10],
@@ -242,7 +259,7 @@ class Parcours():
                      [66,74],
                      [76,60],
                      [88,74],]
-        self.noeudsTours0 = [[10,25], #fait
+        self.noeudsTours0 = [[10,25], 
                        [5,45], 
                        [30,40],
                        [39,55],

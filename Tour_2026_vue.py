@@ -32,19 +32,33 @@ class Vue():
 
         # --- Import des images ---
         try:
+            #parcours
             self.img_parcour1 = PhotoImage(file="images\\img_parcour1.png")
             self.img_parcour2 = PhotoImage(file="images\\img_parcour2.png")
             self.img_parcour3 = PhotoImage(file="images\\img_parcour3.png")
+            #creeps
             self.img_creep_ours = PhotoImage(file="images\\creep_ours.png")
             self.img_creep_por = PhotoImage(file="images\\creep_porcupine.png")
             self.img_creep_raton = PhotoImage(file="images\\creep_raton.png")
             self.img_creep_renard = PhotoImage(file="images\\creep_renard.png")
             self.img_creep_ecur = PhotoImage(file="images\\creep_squirrel.png")
+            self.img_creep_ours_empoisone = PhotoImage(file="images\\creep_ours_empoisone.png")
+            self.img_creep_por_empoisone = PhotoImage(file="images\\creep_porcupine_empoisone.png")
+            self.img_creep_raton_empoisone = PhotoImage(file="images\\creep_raton_empoisone.png")
+            self.img_creep_renard_empoisone = PhotoImage(file="images\\creep_renard_empoisone.png")
+            self.img_creep_ecur_empoisone = PhotoImage(file="images\\creep_squirrel_empoisone.png")
+            self.img_creep_ours_glace = PhotoImage(file="images\\creep_ours_frozen.png")
+            self.img_creep_por_glace = PhotoImage(file="images\\creep_porcupine_frozen.png")
+            self.img_creep_raton_glace = PhotoImage(file="images\\creep_raton_frozen.png")
+            #self.img_creep_renard_glace = PhotoImage(file="images\\creep_renard_frozen.png")
+            #self.img_creep_ecur_glace = PhotoImage(file="images\\creep_squirrel_frozen.png")
+            #tours
             self.img_tour_classique = PhotoImage(file="images\\tour_feu.png")
             self.img_tour_bombe = PhotoImage(file="images\\tour_bombe.png")
             self.img_tour_poison = PhotoImage(file="images\\tour_poison.png")
             self.img_tour_glace = PhotoImage(file="images\\tour_glace.png")
             self.img_tour_electrique = PhotoImage(file="images\\tour_electrique.png")
+            #config
             self.img_bg = tk.PhotoImage(file="images\\bg.png")
             self.img_title = tk.PhotoImage(file="images\\title.png")
             self.img_scores = tk.PhotoImage(file="images\\score.png")
@@ -317,7 +331,7 @@ class Vue():
             self.parent.modele.partieCourante.tourSelectionne = None
             self.disableBoutonsVendreAmeliorer()
         self.afficheNoeudsTours()
-        self.afficheCreepTourBombe()
+        self.afficherTours()
         self.actualiser_infos_tour()
     
     def clickSurTour(self, event):
@@ -333,14 +347,23 @@ class Vue():
         self.canevas.delete("creep")
         self.canevas.delete("projectile")
         self.afficherTours()
+        #afficher creeps
         if(self.parent.modele.partieCourante.nivoActif):
             if (self.parent.modele.partieCourante.nivoActif.creepsEnCours):
                 for i in self.parent.modele.partieCourante.nivoActif.creepsEnCours:
+                    
                     x1 = i.pos[0] * self.coefWidth - 15
                     y1 = i.pos[1] * self.coefHeight - 15
-                    img_creep = {1: self.img_creep_ours, 2: self.img_creep_renard, 3: self.img_creep_ecur, 4: self.img_creep_raton, 5: self.img_creep_por}
+                    if i.empoisone:
+                        img_creep = {1: self.img_creep_ours_empoisone, 2: self.img_creep_renard_empoisone, 3: self.img_creep_ecur_empoisone, 4: self.img_creep_raton_empoisone, 5: self.img_creep_por_empoisone}
+                    elif i.glace: #manquent images pour ecureuil et renard
+                        img_creep = {1: self.img_creep_ours_glace, 2: self.img_creep_renard, 3: self.img_creep_ecur, 4: self.img_creep_raton_glace, 5: self.img_creep_por_glace}
+                    else:
+                        img_creep = {1: self.img_creep_ours, 2: self.img_creep_renard, 3: self.img_creep_ecur, 4: self.img_creep_raton, 5: self.img_creep_por}
                     if i.type in img_creep:
                         self.canevas.create_image(x1, y1, image=img_creep[i.type], anchor="nw", tags=("creep",))
+
+        #afficher projectiles
         if len(self.parent.modele.partieCourante.projectiles) > 0:
             for i in self.parent.modele.partieCourante.projectiles.values():
                 x1 = i.x * self.coefWidth - (i.largeur / self.coefWidth)
