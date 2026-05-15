@@ -6,6 +6,7 @@ class Creep():
         self.pos=self.parent.parcours.noeuds[0][:]
         self.tag=parent.parent.getTagCreep()
         self.type = type
+        self.diffMulti = parent.parent.diffMulti
         self.cible=1 #indice du noeud de parcours a atteindre
         if self.pos[0]!=self.parent.parcours.noeuds[1][0]: # on simplifie le mouvement en verifiant uniquement l'axe de deplacement
             self.axe=0
@@ -79,43 +80,43 @@ class Creep():
 class Creep_ours(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
-        self.degat = 25
+        self.degat = 25 * self.diffMulti
         self.vitesse = 0.5 / 10
         self.argent = 100 * 3
-        self.vie = 1000
+        self.vie = 1000 * self.diffMulti
 
 # MOYEN VITE ET MOYEN FORT
 class Creep_renard(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
-        self.degat = 15
+        self.degat = 15 * self.diffMulti
         self.vitesse = 1.2 / 10
         self.argent = 100 * 2
-        self.vie = 200
+        self.vie = 200 * self.diffMulti
 
 # VITE ET FAIBLE
 class Creep_ecureuil(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
-        self.degat = 5
+        self.degat = 5 * self.diffMulti
         self.vitesse = 1.8 / 10
         self.argent = 100 * 1.5
-        self.vie = 50
+        self.vie = 50 * self.diffMulti
 
 # VITESSE NORMALE ET VIE NORMALE
 class Creep_moufette(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
-        self.degat = 5
+        self.degat = 5 * self.diffMulti
         self.vitesse = 1 / 10
         self.argent = 100
-        self.vie = 100
+        self.vie = 100 * self.diffMulti
 
 # VITESSE NORMALE ET VIE NORMALE
 class Creep_porcepique(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
-        self.degat = 5
+        self.degat = 5 * self.diffMulti
         self.vitesse = 1 / 10
         self.argent = 100
-        self.vie = 100
+        self.vie = 100 * self.diffMulti

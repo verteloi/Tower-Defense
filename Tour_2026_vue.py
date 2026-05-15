@@ -161,11 +161,13 @@ class Vue():
         if choix in imgs:
             self.previewParcours.create_image(0, 0, image=imgs[choix], anchor="nw")
 
-    def actualiser_info_difficulte(self):
+    def actualiser_info_map(self):
         self.map_selectionne.set(f"Map: {self.parent.modele.parcourChoisi + 1}")
+
+    def actualiser_info_difficulte(self):
         self.argent_depart.set(f"Argent: {self.parent.modele.tempArgent}$")
         self.force_creep.set(f"Vie: {self.parent.modele.tempVie}")
-        self.vie_creep.set(f"Force Creep: {self.parent.modele.difficulteMultiplicateur}x")
+        self.vie_creep.set(f"Force Creep: {self.parent.modele.tempDiff}x")
 
     def actualiser_infos_tour(self, type=1, type_appel="jeu"):
         tour = self.parent.modele.partieCourante.tourSelectionne

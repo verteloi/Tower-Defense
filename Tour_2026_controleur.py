@@ -37,22 +37,22 @@ class Controleur():
         match difficulte:
             case 0:
                 self.modele.tempArgent = 500
-                self.modele.difficulteMultiplicateur = 1
+                self.modele.tempDiff = 1
                 self.modele.tempVie = 100
             case 1:
                 self.modele.tempArgent = 750
-                self.modele.difficulteMultiplicateur = 1.25
+                self.modele.tempDiff = 1.25
                 self.modele.tempVie = 50
             case 2:
                 self.modele.tempArgent = 1000
-                self.modele.difficulteMultiplicateur = 1.5
+                self.modele.tempDiff = 1.5
                 self.modele.tempVie = 10
         self.vue.actualiser_info_difficulte()
 
     def changerParcour(self, parcour):
         self.modele.parcourChoisi = parcour
         self.vue.actualiserPreviewParcour()
-        self.vue.actualiser_info_difficulte()
+        self.vue.actualiser_info_map()
 
     def partie_perdu(self):
         self.actif = 0

@@ -2,10 +2,10 @@ import Tour_2026_modele_creeps as fichierCreeps
 import Tour_2026_modele_tours as fichierTours
 
 class Partie():
-    def __init__(self, parent, parcour, vie, cash):
+    def __init__(self, parent, parcour, vie, cash, tempDiff):
         self.parent=parent
-        self.vie = 1
-        self.cash = 5000
+        self.vie = vie
+        self.cash = cash
         self.nivo = 0
         self.score = 0
         self.tagCreep = 0
@@ -13,6 +13,7 @@ class Partie():
         self.tagProjectile = 0
         self.tourSelectionne = None
         self.nivoActif = None
+        self.diffMulti = tempDiff
         self.dictCreeps = {}
         self.toursEnJeu = {}
         self.toutesLesTours = [self.creerTour(self,1), self.creerTour(self,2), self.creerTour(self,3), self.creerTour(self,4), self.creerTour(self,5)]
@@ -26,7 +27,7 @@ class Partie():
 
     def demarrerVague(self):
         if(not self.nivoActif):
-            self.nivoActif = Nivo(self, self.nivo)
+            self.nivoActif = Nivo(self, self.nivo, self.diffMulti)
             self.nivo = self.nivo + 1
 
     def getTagCreep(self):
@@ -117,7 +118,7 @@ class Partie():
             self.bougeProjectile()
 
 class Nivo():
-    def __init__(self,parent, numero):
+    def __init__(self,parent, numero, tempDiff):
         self.parent = parent
         self.wave_active = True
         self.parcours = parent.parcourChoisi
@@ -126,6 +127,7 @@ class Nivo():
         self.creeps = []
         self.creepsEnCours = []
         self.numeroVague = numero
+        self.diffMulti = tempDiff
         self.creeCreep()
         
     # dependament quel numero de self.creep creer creep de ce type
