@@ -6,6 +6,8 @@ class Creep():
         self.pos=self.parent.parcours.noeuds[0][:]
         self.tag=parent.parent.getTagCreep()
         self.type = type
+        self.empoisone = False
+        self.glace = False
         self.cible=1 #indice du noeud de parcours a atteindre
         if self.pos[0]!=self.parent.parcours.noeuds[1][0]: # on simplifie le mouvement en verifiant uniquement l'axe de deplacement
             self.axe=0
@@ -54,6 +56,20 @@ class Creep():
             nouv_x, nouv_y = Helper.getAngledPoint(angle, self.vitesse, curr_x, curr_y)
             self.pos = [nouv_x, nouv_y]
 
+        #si on est empoisoné ou figé dans la glace
+        if self.glace:
+            if self.compteurGlace>0:
+                self.compteurGlace-=1
+            else:
+                self.glace = False
+                self.vitesse = self.vitesseBase
+        if self.empoisone:
+            if self.compteurEmpoisone>0:
+                self.compteurEmpoisone-=1
+            else:
+                self.empoisone = False
+                self.vitesse = self.vitesseBase
+
     def perdre_vie_joueur(self):
         for creep in self.parent.creepsEnCours: #quand le creep arrive à la fin, le joueur perd une vie et on le delete de la liste
             if (creep.pos[0] >= 100):
@@ -67,11 +83,32 @@ class Creep():
         a_supprimer = []
 
         for projectile in self.parent.parent.projectiles.values():
-            if (projectile.x >= (self.pos[0]-4) and projectile.x <= (self.pos[0] + 4)): #projectile est dans le x du creep
-                if (projectile.y >= (self.pos[1]-4) and projectile.y <= (self.pos[1] + 4)): #projectile est dans le y du creep
-                    a_supprimer.append(projectile.tag)
+            if (projectile.x >= (self.pos[0]-3) and projectile.x <= (self.pos[0] + 3)): #projectile est dans le x du creep
+                if (projectile.y >= (self.pos[1]-3) and projectile.y <= (self.pos[1] + 3)): #projectile est dans le y du creep
+                    
+                    match projectile.type:
+                        case 1: #feu
+                            a_supprimer.append(projectile.tag)
+                        case 2 : #bombe
+                            a_supprimer.append(projectile.tag) 
+                            self.parent.parent.lancerBombe(self)         
+                        case 3 : #laser
+                            pass
+                        case 4 : #poison
+                            a_supprimer.append(projectile.tag) 
+                            self.parent.parent.lancerPoison(self)
+                            self.empoisone = True
+                            self.vitesse /=2
+                            self.compteurEmpoisone = 100
+                        case 5 : #glace
+                            a_supprimer.append(projectile.tag) 
+                            self.parent.parent.lancerGlace(self)
+                            self.glace = True
+                            self.vitesse =0
+                            self.compteurGlace = 100
+                    
                     self.vie -= projectile.degat
-                
+        
         for tag in a_supprimer:
                 del self.parent.parent.projectiles[tag]
 
@@ -80,7 +117,8 @@ class Creep_ours(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 25
-        self.vitesse = 0.5 / 10
+        self.vitesse = 0.05
+        self.vitesseBase = 0.05
         self.argent = 100 * 3
         self.vie = 1000
 
@@ -89,33 +127,37 @@ class Creep_renard(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 15
-        self.vitesse = 1.2 / 10
+        self.vitesseBase = 0.15
+        self.vitesse = self.vitesseBase
         self.argent = 100 * 2
-        self.vie = 200
+        self.vie = 300
 
 # VITE ET FAIBLE
 class Creep_ecureuil(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 5
-        self.vitesse = 1.8 / 10
+        self.vitesseBase = 0.2
+        self.vitesse = self.vitesseBase
         self.argent = 100 * 1.5
-        self.vie = 50
+        self.vie = 100
 
 # VITESSE NORMALE ET VIE NORMALE
 class Creep_moufette(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 5
-        self.vitesse = 1 / 10
+        self.vitesseBase = 0.1
+        self.vitesse = self.vitesseBase
         self.argent = 100
-        self.vie = 100
+        self.vie = 200
 
 # VITESSE NORMALE ET VIE NORMALE
 class Creep_porcepique(Creep):
     def __init__(self,parent, type):
         Creep.__init__(self,parent, type)
         self.degat = 5
-        self.vitesse = 1 / 10
+        self.vitesseBase = 0.1
+        self.vitesse = self.vitesseBase
         self.argent = 100
-        self.vie = 100
+        self.vie = 200
