@@ -22,9 +22,9 @@ class Tour():
                     if self.compteurTir == 0: #le compteur compte jusqu'à 10 et tire 
                         projectile = Projectile(self,creep)
                         self.parent.projectiles[projectile.tag] = projectile 
-                        self.compteurTir = 100               
+                        self.compteurTir = 50               
         if self.compteurTir == 0:
-            self.compteurTir = 100
+            self.compteurTir = 50
 
     def ameliorer(self):
         self.niveau += 1

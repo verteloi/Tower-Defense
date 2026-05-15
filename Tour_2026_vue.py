@@ -11,6 +11,7 @@ class Vue():
         self.width = 700
         self.coefHeight = self.hight/100
         self.coefWidth = self.width/100
+        self.button = "none"
         self.info_effet = tk.StringVar(value="-")
         self.info_niveau = tk.StringVar(value="-")
         self.info_prix = tk.StringVar(value="-")
@@ -42,8 +43,13 @@ class Vue():
             self.img_tour_electrique = PhotoImage(file="images\\tour_electrique.png")
             self.img_bg = tk.PhotoImage(file="images\\bg.png")
             self.img_title = tk.PhotoImage(file="images\\title.png")
-            self.img_play = tk.PhotoImage(file="images\\play.png")
             self.img_scores = tk.PhotoImage(file="images\\score.png")
+            self.img_play = tk.PhotoImage(file="images\\play.png")
+            self.img_game_play_button = tk.PhotoImage(file="images\\playbutton.png")
+            self.img_pause = tk.PhotoImage(file="images\\pausebutton.png")
+            self.img_speedup = tk.PhotoImage(file="images\\speedupbutton.png")
+            self.img_speeddown = tk.PhotoImage(file="images\\speeddownbutton.png")
+            
         except Exception as e:
             print(f"Erreur chargement images : {e}")
 
@@ -147,10 +153,10 @@ class Vue():
             self.disableBoutonsVendreAmeliorer()
         if tour:
             self.info_prix.set(f"Prix: {tour.cout}$")
-            self.info_degat.set(f"Degat: {tour.force}")
-            self.info_effet.set(f"Effet: {tour.effet}")       
+            self.info_degat.set(f"Degat: {tour.force}")     
             self.info_niveau.set(f"Niveau: {tour.niveau}") 
             self.info_vitesse.set(f"Vitesse de Tir: {tour.vitesseTir}")
+            self.info_effet.set(f"Effet: {tour.effet}")  
             self.info_vente.set(tour.resellValue)
         else:
             self.info_prix.set("-")
@@ -170,6 +176,12 @@ class Vue():
             tk.Label(self.sidebartop, textvariable=self.info_vie, fg="#ff4d4d", bg="#4a3222", font=("Cooper Black", 22)).pack(side="left", padx=20)
             tk.Label(self.sidebartop, textvariable=self.info_argent, fg="#FCA510", bg="#4a3222", font=("Cooper Black", 22)).pack(side="left", padx=20)
             tk.Label(self.sidebartop, textvariable=self.info_vague, fg="white", bg="#4a3222", font=("Cooper Black", 22)).pack(side="left", padx=20)
+
+            tk.Button(self.sidebartop, image=self.img_speedup, bg="#4a3222", borderwidth=0, highlightthickness=0, command=lambda: self.changer_etat_partie("speedup")).pack(side="right", padx=2)
+            tk.Button(self.sidebartop, image=self.img_game_play_button, bg="#4a3222", borderwidth=0, highlightthickness=0, command=lambda: self.changer_etat_partie("play")).pack(side="right", padx=2)
+            tk.Button(self.sidebartop, image=self.img_pause, bg="#4a3222", borderwidth=0, highlightthickness=0, command=lambda: self.changer_etat_partie("pause")).pack(side="right", padx=2)
+            tk.Button(self.sidebartop, image=self.img_speeddown, bg="#4a3222", borderwidth=0, highlightthickness=0, command=lambda: self.changer_etat_partie("speeddown")).pack(side="right", padx=2)
+
 
             # --- SIDEBAR DROITE ---
             self.sidebar = tk.Frame(self.frame_jeu, bg="#6f4e37", width=250, highlightbackground="black", highlightthickness=2)
@@ -202,9 +214,9 @@ class Vue():
             tk.Label(self.panneau_stats, text="STATISTIQUES", font=("Arial", 11, "bold"), bg="#4a3222", fg="white").pack(fill="x")
             tk.Label(self.panneau_stats, textvariable=self.info_prix, bg="#6f4e37", fg="white", font=("Arial", 10, "bold")).pack(pady=2)
             tk.Label(self.panneau_stats, textvariable=self.info_degat, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack()
-            tk.Label(self.panneau_stats, textvariable=self.info_effet, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack()
             tk.Label(self.panneau_stats, textvariable=self.info_niveau, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack(pady=1)
             tk.Label(self.panneau_stats, textvariable=self.info_vitesse, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack(pady=(0, 5))
+            tk.Label(self.panneau_stats, textvariable=self.info_effet, bg="#6f4e37", fg="#e0e0e0", font=("Arial", 10)).pack()
 
             self.panneau_actions_tours = tk.Frame(self.sidebar, bg="#6f4e37", highlightbackground="black", highlightthickness=1)
             self.panneau_actions_tours.pack(pady=10, padx=10, fill="x")
@@ -369,3 +381,18 @@ class Vue():
     def ableBoutonsVendreAmeliorer(self):
         self.boutonVente.config(state="normal")
         self.boutonAmeliorer.config(state="normal")
+
+    def changer_etat_partie(self, button):
+        match button:
+            case "play":
+                if (not self.parent.actif):
+                    self.parent.actif = 1
+                    self.parent.continuePartie()
+            case "pause":
+                self.parent.actif = 0
+            case "speedup":
+                if (self.parent.delai > 2):
+                    self.parent.delai -= 2
+            case "speeddown":
+                if (self.parent.delai < 40):
+                    self.parent.delai += 2

@@ -7,7 +7,7 @@ class Controleur():
         self.modele = mod.Modele(self)
         self.vue = vue.Vue(self)
         self.actif = 0
-        self.delai = 10  # Vitesse du jeu
+        self.delai = 11  # Vitesse du jeu
 
     def demarrePartie(self):
         if self.actif == 0:
