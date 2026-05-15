@@ -2,7 +2,7 @@ import Tour_2026_modele_creeps as fichierCreeps
 import Tour_2026_modele_tours as fichierTours
 
 class Partie():
-    def __init__(self, parent, parcour):
+    def __init__(self, parent, parcour, vie, cash):
         self.parent=parent
         self.vie = 1
         self.cash = 5000
